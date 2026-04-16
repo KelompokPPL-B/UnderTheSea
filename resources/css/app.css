@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Keyboard navigation focus states */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* Alert and notification styling - Consistent messaging */
+.alert-success,
+.notification-success {
+    @apply bg-green-100 text-green-800 px-6 py-3 rounded-lg shadow-lg;
+}
+
+.alert-error,
+.notification-error {
+    @apply bg-red-100 text-red-800 px-6 py-3 rounded-lg shadow-lg;
+}
+
+.alert-warning,
+.notification-warning {
+    @apply bg-yellow-100 text-yellow-800 px-6 py-3 rounded-lg shadow-lg;
+}
+
+.alert-info,
+.notification-info {
+    @apply bg-blue-100 text-blue-800 px-6 py-3 rounded-lg shadow-lg;
+}
+
+/* Mobile responsiveness - Touch-friendly targets (44px minimum) */
+@media (max-width: 640px) {
+    button, a[class*="px-"], input, textarea, select {
+        min-height: 44px;
+    }
+
+    button, a[class*="px-"] {
+        min-width: 44px;
+    }
+
+    /* Ensure adequate touch spacing */
+    button + button,
+    a + a,
+    button + a,
+    a + button {
+        margin-left: 0.5rem;
+    }
+}
+
+/* Print-friendly styles */
+@media print {
+    /* Hide navigation and non-essential elements */
+    nav,
+    .mb-8 > button,
+    .share-btn,
+    .delete-btn,
+    .like-btn,
+    .like-btn-card,
+    .bookmark-btn,
+    .bookmark-btn-card,
+    .copy-link-btn,
+    .remove-bookmark,
+    select,
+    .pagination,
+    footer {
+        display: none;
+    }
+
+    /* Adjust page background and text */
+    body {
+        background: white;
+        color: #000;
+        font-size: 12pt;
+    }
+
+    /* Adjust heading sizes for print */
+    h1 {
+        font-size: 24pt;
+        margin-bottom: 0.5in;
+    }
+
+    h2 {
+        font-size: 14pt;
+        margin-top: 0.3in;
+    }
+
+    /* Show page breaks after main sections */
+    article,
+    .bg-white {
+        page-break-inside: avoid;
+    }
+
+    /* Optimize link display */
+    a {
+        color: #000;
+        text-decoration: underline;
+    }
+
+    /* Remove shadows and backgrounds for print */
+    .shadow,
+    .shadow-lg,
+    .bg-gradient-to-r,
+    .bg-gray-50 {
+        box-shadow: none;
+        background: white;
+    }
+
+    /* Adjust spacing for print */
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body > * {
+        margin-bottom: 0.25in;
+    }
+
+    /* Preserve image aspect ratio */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
