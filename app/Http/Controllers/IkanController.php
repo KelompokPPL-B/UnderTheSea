@@ -15,54 +15,36 @@ class IkanController extends Controller
         $this->pointsService = $pointsService;
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-09: Manage Fish Content
-     * PBI-19: Pagination UI
-     * PBI-21: Sort Options
-     * 🔥 UPDATED: Added Search Feature
-     */
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest');
-        $search = $request->query('search'); // 🔍 search input
+        $search = $request->query('search');
 
         $query = Ikan::query();
 
-        // 🔍 SEARCH LOGIC
-        if ($search) {
+        // 🔍 SEARCH (optimized)
+        if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('habitat', 'like', "%{$search}%")
-                  ->orWhere('deskripsi', 'like', "%{$search}%");
+                  ->orWhere('habitat', 'like', "%{$search}%");
+                  // ❌ deskripsi gak dipakai karena TEXT (biar cepat)
             });
         }
 
-        // SORT LOGIC
-        if ($sort === 'oldest') {
-            $query->orderBy('created_at', 'asc');
-        } else {
-            $query->orderBy('created_at', 'desc');
-        }
+        // 🔽 SORT
+        $query->orderBy('created_at', $sort === 'oldest' ? 'asc' : 'desc');
 
+        // 📄 PAGINATION
         $ikan = $query->paginate(10)->appends($request->query());
 
         return view('ikan.index', compact('ikan', 'sort', 'search'));
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-15: Form Validation UI
-     */
     public function create()
     {
         return view('ikan.create');
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-10: View Fish Detail + Award Points
-     */
     public function show($id)
     {
         $ikan = Ikan::findOrFail($id);
@@ -74,20 +56,12 @@ class IkanController extends Controller
         return view('ikan.show', compact('ikan'));
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-15: Form Validation UI
-     */
     public function edit($id)
     {
         $ikan = Ikan::findOrFail($id);
         return view('ikan.edit', compact('ikan'));
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-09: Manage Fish Content
-     */
     public function store(Request $request)
     {
         $this->authorize('admin');
@@ -107,6 +81,7 @@ class IkanController extends Controller
         }
 
         $validated['created_by'] = auth()->id();
+
         $ikan = Ikan::create($validated);
 
         return response()->json([
@@ -116,10 +91,6 @@ class IkanController extends Controller
         ], 201);
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-09: Manage Fish Content
-     */
     public function update(Request $request, $id)
     {
         $this->authorize('admin');
@@ -149,10 +120,6 @@ class IkanController extends Controller
         ]);
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-09: Manage Fish Content
-     */
     public function destroy($id)
     {
         $this->authorize('admin');
