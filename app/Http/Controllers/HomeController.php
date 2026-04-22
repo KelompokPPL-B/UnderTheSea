@@ -6,45 +6,72 @@ use App\Models\Ikan;
 use App\Models\Ekosistem;
 use App\Models\AksiPelestarian;
 use App\Models\User;
-use App\Models\Like;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     /**
      * Owner: Keziah
      * PBI-08: Homepage
+     * PBI-Search: Global Search
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = $request->input('q', '');
+
+        $searchIkan = collect();
+        $searchEkosistem = collect();
+        $searchAksi = collect();
+        $totalResults = 0;
+
+        if ($query) {
+            $searchIkan = Ikan::where('nama', 'like', "%{$query}%")
+                ->orWhere('deskripsi', 'like', "%{$query}%")
+                ->orWhere('habitat', 'like', "%{$query}%")
+                ->orWhere('status_konservasi', 'like', "%{$query}%")
+                ->limit(10)
+                ->get();
+
+            $searchEkosistem = Ekosistem::where('nama_ekosistem', 'like', "%{$query}%")
+                ->orWhere('deskripsi', 'like', "%{$query}%")
+                ->orWhere('lokasi', 'like', "%{$query}%")
+                ->limit(10)
+                ->get();
+
+            $searchAksi = AksiPelestarian::where('judul_aksi', 'like', "%{$query}%")
+                ->orWhere('deskripsi', 'like', "%{$query}%")
+                ->orWhere('manfaat', 'like', "%{$query}%")
+                ->limit(10)
+                ->get();
+
+            $totalResults = $searchIkan->count() + $searchEkosistem->count() + $searchAksi->count();
+        }
+
         $randomContent = $this->getRandomContent();
         $popularActions = $this->getPopularActions();
         $leaderboard = $this->leaderboard();
 
-        return view('home', compact('randomContent', 'popularActions', 'leaderboard'));
+        return view('home', compact(
+            'query',
+            'searchIkan',
+            'searchEkosistem',
+            'searchAksi',
+            'totalResults',
+            'randomContent',
+            'popularActions',
+            'leaderboard'
+        ));
     }
 
-    /**
-     * Owner: Keziah
-     * PBI-08: Homepage
-     */
     public function getRandomContent()
     {
-        $ikan = Ikan::inRandomOrder()->take(3)->get();
-        $ekosistem = Ekosistem::inRandomOrder()->take(3)->get();
-        $aksi = AksiPelestarian::inRandomOrder()->take(3)->get();
-
         return [
-            'ikan' => $ikan,
-            'ekosistem' => $ekosistem,
-            'aksi' => $aksi,
+            'ikan' => Ikan::inRandomOrder()->take(3)->get(),
+            'ekosistem' => Ekosistem::inRandomOrder()->take(3)->get(),
+            'aksi' => AksiPelestarian::inRandomOrder()->take(3)->get(),
         ];
     }
 
-    /**
-     * Owner: Keziah
-     * PBI-08: Homepage
-     */
     public function getPopularActions()
     {
         return AksiPelestarian::withCount('likes')
@@ -65,10 +92,6 @@ class HomeController extends Controller
             });
     }
 
-    /**
-     * Owner: Keziah
-     * PBI-06: Leaderboard
-     */
     public function leaderboard()
     {
         return User::orderByDesc('points')
