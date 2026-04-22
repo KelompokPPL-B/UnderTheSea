@@ -15,26 +15,28 @@ class EkosistemController extends Controller
         $this->pointsService = $pointsService;
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-11: Manage Ecosystem Content
-     * PBI-19: Pagination UI
-     * PBI-21: Sort Options
-     */
+    // 🔥 INDEX (SEARCH + SORT + OPTIMAL)
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest');
         $search = $request->query('search');
 
-        $query = Ekosistem::query();
+        $query = Ekosistem::query()
+            ->select(
+                'id_ekosistem',
+                'nama_ekosistem',
+                'lokasi',
+                'deskripsi',
+                'peran',
+                'gambar',
+                'created_at'
+            );
 
-        // 🔍 SEARCH
-        if ($search) {
+        // 🔍 SEARCH CEPAT (PREFIX SEARCH + INDEX)
+        if (!empty($search)) {
             $query->where(function ($q) use ($search) {
-                $q->where('nama_ekosistem', 'like', "%{$search}%")
-                  ->orWhere('lokasi', 'like', "%{$search}%")
-                  ->orWhere('deskripsi', 'like', "%{$search}%")
-                  ->orWhere('peran', 'like', "%{$search}%");
+                $q->where('nama_ekosistem', 'like', "{$search}%")
+                  ->orWhere('lokasi', 'like', "{$search}%");
             });
         }
 
