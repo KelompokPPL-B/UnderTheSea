@@ -9,14 +9,15 @@ use App\Http\Controllers\AksiController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\FishController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/leaderboard', [HomeController::class, 'leaderboard'])->name('leaderboard');
 
-Route::get('/ikan', [IkanController::class, 'index'])->name('ikan.index');
+Route::get('/ikan', [FishController::class, 'index'])->name('ikan.index');
 Route::get('/ikan/create', [IkanController::class, 'create'])->middleware('auth')->name('ikan.create');
-Route::get('/ikan/{id}', [IkanController::class, 'show'])->name('ikan.show');
+Route::get('/ikan/{id}', [FishController::class, 'show'])->name('ikan.show');
 Route::get('/ikan/{id}/edit', [IkanController::class, 'edit'])->middleware('auth')->name('ikan.edit');
 Route::post('/ikan', [IkanController::class, 'store'])->middleware('auth')->name('ikan.store');
 Route::put('/ikan/{id}', [IkanController::class, 'update'])->middleware('auth')->name('ikan.update');
@@ -51,6 +52,12 @@ Route::get('/likes/{actionId}/count', [LikeController::class, 'count'])->name('l
 Route::get('/search/ikan', [SearchController::class, 'searchIkan'])->name('search.ikan');
 Route::get('/search/ekosistem', [SearchController::class, 'searchEkosistem'])->name('search.ekosistem');
 Route::get('/search/aksi', [SearchController::class, 'searchAksi'])->name('search.aksi');
+
+// Fish routes (uses Local Storage via JS, no DB)
+Route::get('/fish', [FishController::class, 'index'])->name('fish.index');
+Route::get('/fish/detail', [FishController::class, 'detail'])->name('fish.detail');
+
+// Note: Using only IkanController for /ikan routes (removed fish resource)
 
 Route::get('/dashboard', function () {
     $user = auth()->user();

@@ -23,16 +23,19 @@ class IkanController extends Controller
      */
     public function index(Request $request)
     {
+        // Support sorting: 'newest' (default) or 'oldest'
         $sort = $request->query('sort', 'newest');
-        $query = Ikan::query();
 
+        $query = Ikan::query();
         if ($sort === 'oldest') {
             $query->orderBy('created_at', 'asc');
         } else {
+            $sort = 'newest';
             $query->orderBy('created_at', 'desc');
         }
 
-        $ikan = $query->paginate(10);
+        $ikan = $query->get();
+
         return view('ikan.index', compact('ikan', 'sort'));
     }
 
@@ -78,28 +81,37 @@ class IkanController extends Controller
     {
         $this->authorize('admin');
 
+        // Accept both English and Indonesian field names from forms
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
+            'name' => 'required_without:nama|string|max:255',
+            'nama' => 'required_without:name|string|max:255',
+            'description' => 'nullable|string',
             'deskripsi' => 'nullable|string',
-            'habitat' => 'nullable|string|max:255',
-            'karakteristik' => 'nullable|string',
-            'status_konservasi' => 'nullable|string|max:100',
-            'fakta_unik' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        if ($request->hasFile('gambar')) {
-            $validated['gambar'] = $request->file('gambar')->store('fish', 'public');
+        $name = $request->input('name') ?? $request->input('nama');
+        $description = $request->input('description') ?? $request->input('deskripsi');
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('fish', 'public');
+        } elseif ($request->hasFile('gambar')) {
+            $imagePath = $request->file('gambar')->store('fish', 'public');
         }
 
-        $validated['created_by'] = auth()->id();
-        $ikan = Ikan::create($validated);
+        // Use English attributes (Ikan model maps them to DB columns)
+        $ikan = new Ikan([
+            'name' => $name,
+            'description' => $description,
+            'image' => $imagePath,
+        ]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Fish created successfully',
-            'data' => $ikan,
-        ], 201);
+        $ikan->created_by = auth()->id();
+        $ikan->save();
+
+        return redirect()->route('ikan.index');
     }
 
     /**

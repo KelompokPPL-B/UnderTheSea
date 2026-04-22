@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@php($sort = $sort ?? 'newest')
 <!-- PBI-IkanIndex -->
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-7xl mx-auto px-6 py-6">
@@ -25,78 +26,15 @@
             </select>
         </div>
 
-        @if($ikan->isEmpty())
-            <div class="bg-white rounded-2xl shadow-card p-12 text-center">
-                <p class="text-ocean-600 text-lg font-semibold">No fish species found yet.</p>
-            </div>
+        @if($ikan->count() > 0)
+            @foreach($ikan as $i)
+                <div class="bg-white rounded p-4 mb-4">
+                    <h3 class="h5">{{ $i->name }}</h3>
+                    <p>{{ $i->description }}</p>
+                </div>
+            @endforeach
         @else
-            <!-- Fish Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($ikan as $item)
-                    <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] animate-fade overflow-hidden">
-                        <!-- Image -->
-                        @if($item->gambar)
-                            <div class="overflow-hidden h-48">
-                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
-                            </div>
-                        @else
-                            <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
-                                <span class="text-ocean-400">No image</span>
-                            </div>
-                        @endif
-
-                        <!-- Content -->
-                        <div class="p-6 space-y-4">
-                            <!-- Title -->
-                            <a href="{{ route('ikan.show', $item->id_ikan) }}" class="block group-hover:text-ocean-600 transition">
-                                <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->nama }}</h3>
-                            </a>
-
-                            <!-- Habitat -->
-                            @if($item->habitat)
-                                <p class="text-xs text-gray-500 font-semibold">🌊 {{ $item->habitat }}</p>
-                            @endif
-
-                            <!-- Description -->
-                            <p class="text-gray-600 text-sm line-clamp-2">{{ $item->deskripsi ?? 'No description' }}</p>
-
-                            <!-- Conservation Status -->
-                            @if($item->status_konservasi)
-                                <div class="pt-2 border-t border-ocean-100">
-                                    <p class="text-xs"><span class="font-semibold text-ocean-900">Status:</span> <span class="text-gray-600">{{ $item->status_konservasi }}</span></p>
-                                </div>
-                            @endif
-
-                            <!-- Bookmark Section -->
-                            @auth
-                                <div class="pt-2">
-                                    <button class="bookmark-btn-card w-full btn btn-outline btn-sm" data-type="ikan" data-item-id="{{ $item->id_ikan }}">
-                                        <span class="bookmark-text">Bookmark</span>
-                                    </button>
-                                </div>
-                            @else
-                                <div class="pt-2">
-                                    <a href="{{ route('login') }}" class="block text-center text-xs text-ocean-600 hover:underline font-semibold">Sign in to bookmark</a>
-                                </div>
-                            @endauth
-
-                            <!-- Action Buttons -->
-                            <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-primary btn-sm flex-1">View</a>
-                                @if(auth()->check() && auth()->user()->isAdmin())
-                                    <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
-                                    <button class="delete-btn-card btn btn-error btn-sm" data-ikan-id="{{ $item->id_ikan }}">Delete</button>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <!-- Pagination -->
-            <div class="mt-8 flex justify-center">
-                {{ $ikan->appends(request()->query())->links() }}
-            </div>
+            <p>No fish species found yet.</p>
         @endif
     </div>
 </div>
