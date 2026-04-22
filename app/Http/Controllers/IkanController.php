@@ -95,11 +95,8 @@ class IkanController extends Controller
         $validated['created_by'] = auth()->id();
         $ikan = Ikan::create($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Fish created successfully',
-            'data' => $ikan,
-        ], 201);
+        return redirect()->route('ikan.show', $ikan->id_ikan)
+            ->with('success', 'Ikan berhasil ditambahkan!');
     }
 
     /**
@@ -128,11 +125,8 @@ class IkanController extends Controller
 
         $ikan->update($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Fish updated successfully',
-            'data' => $ikan,
-        ]);
+        return redirect()->route('ikan.show', $ikan->id_ikan)
+            ->with('success', 'Ikan berhasil diperbarui!');
     }
 
     /**
@@ -146,10 +140,7 @@ class IkanController extends Controller
         $ikan = Ikan::findOrFail($id);
         $ikan->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Fish deleted successfully',
-            'data' => null,
-        ]);
+        return redirect()->route('ikan.index')
+            ->with('success', 'Ikan berhasil dihapus!');
     }
 }
