@@ -16,21 +16,18 @@ class AksiController extends Controller
         $this->pointsService = $pointsService;
     }
 
+    // 🔥 INDEX (SEARCH + SORT + OPTIMIZED)
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest');
         $search = $request->query('search');
 
-        $query = AksiPelestarian::query();
+        $query = AksiPelestarian::query()
+            ->select('id_aksi', 'judul_aksi', 'deskripsi', 'gambar', 'created_at');
 
-        // 🔍 SEARCH
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('judul_aksi', 'like', "%{$search}%")
-                  ->orWhere('deskripsi', 'like', "%{$search}%")
-                  ->orWhere('manfaat', 'like', "%{$search}%")
-                  ->orWhere('cara_melakukan', 'like', "%{$search}%");
-            });
+        // 🔍 SEARCH (lebih cepat karena pakai prefix + index)
+        if (!empty($search)) {
+            $query->where('judul_aksi', 'like', "{$search}%");
         }
 
         // 🔽 SORT
@@ -42,6 +39,7 @@ class AksiController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
+        // 📄 PAGINATION
         $aksi = $query->paginate(10)->appends($request->query());
 
         return view('aksi.index', compact('aksi', 'sort', 'search'));
