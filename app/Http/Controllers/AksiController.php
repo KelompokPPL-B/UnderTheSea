@@ -16,17 +16,24 @@ class AksiController extends Controller
         $this->pointsService = $pointsService;
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-13: Manage Action Content
-     * PBI-19: Pagination UI
-     * PBI-21: Sort Options
-     */
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest');
+        $search = $request->query('search');
+
         $query = AksiPelestarian::query();
 
+        // 🔍 SEARCH
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('judul_aksi', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%")
+                  ->orWhere('manfaat', 'like', "%{$search}%")
+                  ->orWhere('cara_melakukan', 'like', "%{$search}%");
+            });
+        }
+
+        // 🔽 SORT
         if ($sort === 'oldest') {
             $query->orderBy('created_at', 'asc');
         } elseif ($sort === 'popular') {
@@ -35,23 +42,16 @@ class AksiController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $aksi = $query->paginate(10);
-        return view('aksi.index', compact('aksi', 'sort'));
+        $aksi = $query->paginate(10)->appends($request->query());
+
+        return view('aksi.index', compact('aksi', 'sort', 'search'));
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-15: Form Validation UI
-     */
     public function create()
     {
         return view('aksi.create');
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-13: Manage Action Content
-     */
     public function show($id)
     {
         $aksi = AksiPelestarian::findOrFail($id);
@@ -63,10 +63,6 @@ class AksiController extends Controller
         return view('aksi.show', compact('aksi'));
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-15: Form Validation UI
-     */
     public function edit($id)
     {
         $aksi = AksiPelestarian::findOrFail($id);
@@ -78,11 +74,6 @@ class AksiController extends Controller
         return view('aksi.edit', compact('aksi'));
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-14: User Contribution + Award Points
-     * PBI-18: Input Sanitization & Escaping
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -116,11 +107,6 @@ class AksiController extends Controller
         ], 201);
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-13: Manage Action Content
-     * PBI-18: Input Sanitization & Escaping
-     */
     public function update(Request $request, $id)
     {
         $aksi = AksiPelestarian::findOrFail($id);
@@ -155,10 +141,6 @@ class AksiController extends Controller
         ]);
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-13: Manage Action Content
-     */
     public function destroy($id)
     {
         $aksi = AksiPelestarian::findOrFail($id);
