@@ -20,20 +20,34 @@ class IkanController extends Controller
      * PBI-09: Manage Fish Content
      * PBI-19: Pagination UI
      * PBI-21: Sort Options
+     * 🔥 UPDATED: Added Search Feature
      */
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest');
+        $search = $request->query('search'); // 🔍 search input
+
         $query = Ikan::query();
 
+        // 🔍 SEARCH LOGIC
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('habitat', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%");
+            });
+        }
+
+        // SORT LOGIC
         if ($sort === 'oldest') {
             $query->orderBy('created_at', 'asc');
         } else {
             $query->orderBy('created_at', 'desc');
         }
 
-        $ikan = $query->paginate(10);
-        return view('ikan.index', compact('ikan', 'sort'));
+        $ikan = $query->paginate(10)->appends($request->query());
+
+        return view('ikan.index', compact('ikan', 'sort', 'search'));
     }
 
     /**

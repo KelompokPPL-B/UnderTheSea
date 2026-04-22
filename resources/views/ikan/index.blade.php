@@ -1,43 +1,79 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- PBI-IkanIndex -->
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-7xl mx-auto px-6 py-6">
-        <!-- Header -->
-        <div class="flex justify-between items-start mb-10">
-            <div>
-                <h1 class="text-4xl font-bold text-ocean-900 mb-3">Fish Species</h1>
-                <p class="text-gray-600">Explore the diverse and fascinating fish species in our oceans.</p>
-            </div>
-            @auth
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ route('ikan.create') }}" class="btn btn-primary btn-sm">+ Add New Fish</a>
-                @endif
-            @endauth
+
+        <!-- HEADER -->
+        <div class="mb-10 text-center">
+            <h1 class="text-4xl font-bold text-ocean-900 mb-2">Fish Species</h1>
+            <p class="text-gray-600">Explore the diverse and fascinating fish species in our oceans.</p>
         </div>
 
-        <!-- Sort Controls -->
-        <div class="mb-6 flex justify-end">
-            <select onchange="window.location.href='{{ route('ikan.index') }}?sort=' + this.value" class="select select-bordered select-sm">
-                <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Newest First</option>
-                <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
-            </select>
+        <!-- SEARCH CENTER + SORT RIGHT -->
+        <div class="relative mb-10">
+
+            <!-- SEARCH -->
+            <form method="GET" action="{{ route('ikan.index') }}" class="flex justify-center">
+                <div class="relative w-full max-w-md">
+
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-ocean-400">🔍</span>
+
+                    <input 
+                        type="text" 
+                        name="search" 
+                        value="{{ request('search') }}"
+                        placeholder="Search fish..." 
+                        class="w-full input input-bordered pl-10 pr-4 py-2 
+                               rounded-full shadow-md border-ocean-200
+                               focus:ring-2 focus:ring-ocean-400 focus:border-ocean-400 
+                               transition"
+                    >
+                </div>
+            </form>
+
+            <!-- SORT -->
+            <div class="absolute right-0 top-0">
+                <select 
+                    onchange="window.location.href='{{ route('ikan.index') }}?sort=' + this.value + '&search={{ request('search') }}'" 
+                    class="select select-bordered select-sm rounded-full border-ocean-200 shadow-sm">
+                    
+                    <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Newest First</option>
+                    <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
+                
+                </select>
+            </div>
+
         </div>
+
+        @auth
+            @if(auth()->user()->isAdmin())
+                <div class="mb-6 flex justify-end">
+                    <a href="{{ route('ikan.create') }}" class="btn btn-primary btn-sm rounded-full shadow-md">
+                        + Add New Fish
+                    </a>
+                </div>
+            @endif
+        @endauth
 
         @if($ikan->isEmpty())
             <div class="bg-white rounded-2xl shadow-card p-12 text-center">
-                <p class="text-ocean-600 text-lg font-semibold">No fish species found yet.</p>
+                <p class="text-ocean-600 text-lg font-semibold">
+                    {{ request('search') ? 'No results found for "' . request('search') . '"' : 'No fish species found yet.' }}
+                </p>
             </div>
         @else
-            <!-- Fish Grid -->
+
+            <!-- GRID -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($ikan as $item)
-                    <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] animate-fade overflow-hidden">
-                        <!-- Image -->
+                    <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] overflow-hidden">
+
+                        <!-- IMAGE -->
                         @if($item->gambar)
                             <div class="overflow-hidden h-48">
-                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
+                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}" 
+                                    class="w-full h-48 object-cover group-hover:scale-105 transition">
                             </div>
                         @else
                             <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
@@ -45,139 +81,70 @@
                             </div>
                         @endif
 
-                        <!-- Content -->
+                        <!-- CONTENT -->
                         <div class="p-6 space-y-4">
-                            <!-- Title -->
+
                             <a href="{{ route('ikan.show', $item->id_ikan) }}" class="block group-hover:text-ocean-600 transition">
                                 <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->nama }}</h3>
                             </a>
 
-                            <!-- Habitat -->
                             @if($item->habitat)
                                 <p class="text-xs text-gray-500 font-semibold">🌊 {{ $item->habitat }}</p>
                             @endif
 
-                            <!-- Description -->
-                            <p class="text-gray-600 text-sm line-clamp-2">{{ $item->deskripsi ?? 'No description' }}</p>
+                            <p class="text-gray-600 text-sm line-clamp-2">
+                                {{ $item->deskripsi ?? 'No description' }}
+                            </p>
 
-                            <!-- Conservation Status -->
                             @if($item->status_konservasi)
                                 <div class="pt-2 border-t border-ocean-100">
-                                    <p class="text-xs"><span class="font-semibold text-ocean-900">Status:</span> <span class="text-gray-600">{{ $item->status_konservasi }}</span></p>
+                                    <p class="text-xs">
+                                        <span class="font-semibold text-ocean-900">Status:</span> 
+                                        <span class="text-gray-600">{{ $item->status_konservasi }}</span>
+                                    </p>
                                 </div>
                             @endif
 
-                            <!-- Bookmark Section -->
+                            <!-- BOOKMARK -->
                             @auth
-                                <div class="pt-2">
-                                    <button class="bookmark-btn-card w-full btn btn-outline btn-sm" data-type="ikan" data-item-id="{{ $item->id_ikan }}">
-                                        <span class="bookmark-text">Bookmark</span>
-                                    </button>
-                                </div>
+                                <button class="bookmark-btn-card w-full btn btn-outline btn-sm rounded-full" 
+                                        data-type="ikan" data-item-id="{{ $item->id_ikan }}">
+                                    <span class="bookmark-text">Bookmark</span>
+                                </button>
                             @else
-                                <div class="pt-2">
-                                    <a href="{{ route('login') }}" class="block text-center text-xs text-ocean-600 hover:underline font-semibold">Sign in to bookmark</a>
-                                </div>
+                                <a href="{{ route('login') }}" class="block text-center text-xs text-ocean-600 hover:underline font-semibold">
+                                    Sign in to bookmark
+                                </a>
                             @endauth
 
-                            <!-- Action Buttons -->
+                            <!-- ACTION -->
                             <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-primary btn-sm flex-1">View</a>
+                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-primary btn-sm flex-1 rounded-full">
+                                    View
+                                </a>
+
                                 @if(auth()->check() && auth()->user()->isAdmin())
-                                    <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
-                                    <button class="delete-btn-card btn btn-error btn-sm" data-ikan-id="{{ $item->id_ikan }}">Delete</button>
+                                    <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm rounded-full">
+                                        Edit
+                                    </a>
+                                    <button class="delete-btn-card btn btn-error btn-sm rounded-full" 
+                                            data-ikan-id="{{ $item->id_ikan }}">
+                                        Delete
+                                    </button>
                                 @endif
                             </div>
+
                         </div>
                     </div>
                 @endforeach
             </div>
 
-            <!-- Pagination -->
+            <!-- PAGINATION -->
             <div class="mt-8 flex justify-center">
                 {{ $ikan->appends(request()->query())->links() }}
             </div>
         @endif
+
     </div>
 </div>
-
-@push('scripts')
-<script type="module">
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeBookmarkButtonsCard();
-        loadBookmarkStatesCard();
-    });
-
-    function initializeBookmarkButtonsCard() {
-        document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-            btn.addEventListener('click', toggleBookmarkCard);
-        });
-    }
-
-    function toggleBookmarkCard(e) {
-        e.preventDefault();
-        const btn = e.currentTarget;
-        const type = btn.dataset.type;
-        const itemId = btn.dataset.itemId;
-        const isBookmarked = btn.classList.contains('bookmarked');
-
-        const method = isBookmarked ? 'DELETE' : 'POST';
-
-        fetch('/favorites', {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': getCsrfToken(),
-            },
-            body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                btn.classList.toggle('bookmarked');
-                btn.classList.toggle('bg-blue-600');
-                btn.classList.toggle('text-white');
-                btn.classList.toggle('border-blue-600');
-                btn.classList.toggle('text-blue-600');
-                btn.classList.toggle('hover:bg-blue-50');
-                const text = btn.querySelector('.bookmark-text');
-                text.textContent = btn.classList.contains('bookmarked') ? 'Bookmarked' : 'Bookmark';
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(err => console.error('Error:', err));
-    }
-
-    function loadBookmarkStatesCard() {
-        fetch('/favorites', {
-            method: 'GET',
-            headers: {
-                'X-CSRF-TOKEN': getCsrfToken(),
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success' && Array.isArray(data.data)) {
-                document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-                    const type = btn.dataset.type;
-                    const itemId = parseInt(btn.dataset.itemId);
-                    const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
-                    if (isBookmarked) {
-                        btn.classList.add('bookmarked', 'bg-blue-600', 'text-white', 'border-blue-600');
-                        btn.classList.remove('text-blue-600', 'hover:bg-blue-50');
-                        const text = btn.querySelector('.bookmark-text');
-                        if (text) text.textContent = 'Bookmarked';
-                    }
-                });
-            }
-        })
-        .catch(err => console.error('Error loading bookmark state:', err));
-    }
-
-    function getCsrfToken() {
-        return document.querySelector('meta[name="csrf-token"]')?.content || '';
-    }
-</script>
-@endpush
 @endsection
