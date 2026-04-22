@@ -24,31 +24,38 @@ class EkosistemController extends Controller
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest');
+        $search = $request->query('search');
+
         $query = Ekosistem::query();
 
+        // 🔍 SEARCH
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_ekosistem', 'like', "%{$search}%")
+                  ->orWhere('lokasi', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%")
+                  ->orWhere('peran', 'like', "%{$search}%");
+            });
+        }
+
+        // 🔽 SORT
         if ($sort === 'oldest') {
             $query->orderBy('created_at', 'asc');
         } else {
             $query->orderBy('created_at', 'desc');
         }
 
-        $ekosistem = $query->paginate(10);
-        return view('ekosistem.index', compact('ekosistem', 'sort'));
+        // 📄 PAGINATION
+        $ekosistem = $query->paginate(10)->appends($request->query());
+
+        return view('ekosistem.index', compact('ekosistem', 'sort', 'search'));
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-15: Form Validation UI
-     */
     public function create()
     {
         return view('ekosistem.create');
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-12: View Ecosystem Detail + Award Points
-     */
     public function show($id)
     {
         $ekosistem = Ekosistem::findOrFail($id);
@@ -60,20 +67,12 @@ class EkosistemController extends Controller
         return view('ekosistem.show', compact('ekosistem'));
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-15: Form Validation UI
-     */
     public function edit($id)
     {
         $ekosistem = Ekosistem::findOrFail($id);
         return view('ekosistem.edit', compact('ekosistem'));
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-11: Manage Ecosystem Content
-     */
     public function store(Request $request)
     {
         $this->authorize('admin');
@@ -101,10 +100,6 @@ class EkosistemController extends Controller
         ], 201);
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-11: Manage Ecosystem Content
-     */
     public function update(Request $request, $id)
     {
         $this->authorize('admin');
@@ -133,10 +128,6 @@ class EkosistemController extends Controller
         ]);
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-11: Manage Ecosystem Content
-     */
     public function destroy($id)
     {
         $this->authorize('admin');
