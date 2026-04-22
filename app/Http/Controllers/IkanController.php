@@ -22,19 +22,29 @@ class IkanController extends Controller
      * PBI-21: Sort Options
      */
     public function index(Request $request)
-    {
-        $sort = $request->query('sort', 'newest');
-        $query = Ikan::query();
+{
+    // Ambil parameter sorting, default ke 'newest'
+    $sort = $request->get('sort', 'newest');
 
-        if ($sort === 'oldest') {
-            $query->orderBy('created_at', 'asc');
-        } else {
-            $query->orderBy('created_at', 'desc');
-        }
+    // Inisialisasi query model Ikan
+    $dataIkan = Ikan::query();
 
-        $ikan = $query->paginate(10);
-        return view('ikan.index', compact('ikan', 'sort'));
+    // Tentukan urutan berdasarkan pilihan sort
+    if ($sort === 'oldest') {
+        $dataIkan->orderBy('created_at', 'asc');
+    } else {
+        $dataIkan->orderByDesc('created_at');
     }
+
+    // Ambil data dengan pagination
+    $ikan = $dataIkan->paginate(10);
+
+    // Kirim ke view
+    return view('ikan.index', [
+        'ikan' => $ikan,
+        'sort' => $sort
+    ]);
+}
 
     /**
      * Owner: Faiz
@@ -95,13 +105,16 @@ class IkanController extends Controller
         $validated['created_by'] = auth()->id();
         $ikan = Ikan::create($validated);
 
-        return redirect()->route('ikan.show', $ikan->id_ikan)
-            ->with('success', 'Ikan berhasil ditambahkan!');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Fish created successfully',
+            'data' => $ikan,
+        ], 201);
     }
 
     /**
      * Owner: Faiz
-     * PBI-09: Manage Fish Content
+     * PBI-03: Manage Fish Content
      */
     public function update(Request $request, $id)
     {
@@ -125,8 +138,11 @@ class IkanController extends Controller
 
         $ikan->update($validated);
 
-        return redirect()->route('ikan.show', $ikan->id_ikan)
-            ->with('success', 'Ikan berhasil diperbarui!');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Fish updated successfully',
+            'data' => $ikan,
+        ]);
     }
 
     /**
@@ -140,7 +156,10 @@ class IkanController extends Controller
         $ikan = Ikan::findOrFail($id);
         $ikan->delete();
 
-        return redirect()->route('ikan.index')
-            ->with('success', 'Ikan berhasil dihapus!');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Fish deleted successfully',
+            'data' => null,
+        ]);
     }
 }
