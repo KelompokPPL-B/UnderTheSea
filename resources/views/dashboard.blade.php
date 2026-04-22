@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- PBI-Dashboard -->
+<!-- PBI-Dashboard: Admin Upload Image -->
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-7xl mx-auto px-6">
         <h1 class="text-3xl md:text-4xl font-bold text-ocean-900 mb-8">Dashboard</h1>
@@ -13,41 +13,12 @@
             </div>
         @endif
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <!-- Points Card -->
-            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
-                <div class="text-eco-500 text-xs font-semibold mb-1">POINTS</div>
-                <div class="text-3xl font-bold text-ocean-600">{{ auth()->user()->points }}</div>
-                <p class="text-xs text-gray-500 mt-1">Earned from activities</p>
-            </div>
-
-            <!-- Badge Card -->
-            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
-                <div class="text-eco-500 text-xs font-semibold mb-1">BADGE</div>
-                <div class="text-xl font-bold text-ocean-700">{{ auth()->user()->badge }}</div>
-                <p class="text-xs text-gray-500 mt-1">Your achievement</p>
-            </div>
-
-            <!-- Bookmarks Card -->
-            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
-                <div class="text-eco-500 text-xs font-semibold mb-1">BOOKMARKS</div>
-                <div class="text-3xl font-bold text-ocean-600">{{ $bookmarkCount ?? 0 }}</div>
-                <p class="text-xs text-gray-500 mt-1">Saved items</p>
-            </div>
-
-            <!-- Likes Card -->
-            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
-                <div class="text-eco-500 text-xs font-semibold mb-1">LIKES</div>
-                <div class="text-3xl font-bold text-ocean-600">{{ $likeCount ?? 0 }}</div>
-                <p class="text-xs text-gray-500 mt-1">Contributions</p>
-            </div>
-        </div>
-
-        {{-- ADMIN SECTION: Upload Gambar --}}
+        {{-- ADMIN SECTION: Upload Konten (dipindah ke atas biar langsung keliatan) --}}
         @if(auth()->user()->isAdmin())
         <div class="bg-white rounded-2xl shadow-card p-6 md:p-8 mb-8">
-            <h2 class="text-xl font-bold text-ocean-900 mb-2">Upload Konten</h2>
-            <p class="text-sm text-gray-500 mb-6">Tambah konten baru dengan gambar ke dalam kategori yang tersedia.</p>
+            <h2 class="text-xl font-bold text-ocean-900 mb-1">Upload Konten</h2>
+            <p class="text-sm text-gray-500 mb-2">Tambah konten baru dengan gambar ke dalam kategori yang tersedia.</p>
+            <p class="text-xs text-gray-400 mb-6">Format gambar yang diterima: <span class="font-medium">JPG, JPEG, PNG</span> — Maks. <span class="font-medium">2MB</span></p>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <!-- Upload Ikan -->
@@ -165,6 +136,37 @@
         @endif
         @endif
         {{-- END ADMIN SECTION --}}
+
+        {{-- Stats Cards --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <!-- Points Card -->
+            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
+                <div class="text-eco-500 text-xs font-semibold mb-1">POINTS</div>
+                <div class="text-3xl font-bold text-ocean-600">{{ auth()->user()->points }}</div>
+                <p class="text-xs text-gray-500 mt-1">Earned from activities</p>
+            </div>
+
+            <!-- Badge Card -->
+            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
+                <div class="text-eco-500 text-xs font-semibold mb-1">BADGE</div>
+                <div class="text-xl font-bold text-ocean-700">{{ auth()->user()->badge }}</div>
+                <p class="text-xs text-gray-500 mt-1">Your achievement</p>
+            </div>
+
+            <!-- Bookmarks Card -->
+            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
+                <div class="text-eco-500 text-xs font-semibold mb-1">BOOKMARKS</div>
+                <div class="text-3xl font-bold text-ocean-600">{{ $bookmarkCount ?? 0 }}</div>
+                <p class="text-xs text-gray-500 mt-1">Saved items</p>
+            </div>
+
+            <!-- Likes Card -->
+            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
+                <div class="text-eco-500 text-xs font-semibold mb-1">LIKES</div>
+                <div class="text-3xl font-bold text-ocean-600">{{ $likeCount ?? 0 }}</div>
+                <p class="text-xs text-gray-500 mt-1">Contributions</p>
+            </div>
+        </div>
 
         <!-- Profile Card -->
         <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-6 md:p-8 max-w-3xl">
