@@ -48,10 +48,6 @@ Route::post('/likes', [LikeController::class, 'store'])->middleware('auth')->nam
 Route::delete('/likes', [LikeController::class, 'destroy'])->middleware('auth')->name('likes.destroy');
 Route::get('/likes/{actionId}/count', [LikeController::class, 'count'])->name('likes.count');
 
-Route::get('/search/ikan', [SearchController::class, 'searchIkan'])->name('search.ikan');
-Route::get('/search/ekosistem', [SearchController::class, 'searchEkosistem'])->name('search.ekosistem');
-Route::get('/search/aksi', [SearchController::class, 'searchAksi'])->name('search.aksi');
-
 Route::get('/dashboard', function () {
     $user = auth()->user();
     return view('dashboard', [
