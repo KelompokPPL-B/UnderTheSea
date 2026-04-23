@@ -163,10 +163,7 @@ class AksiController extends Controller
 
         $aksi->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Action deleted successfully',
-            'data' => null,
-        ]);
+        return redirect()->route('aksi.index')
+            ->with('success', 'Conservation action deleted successfully!');
     }
 }
