@@ -168,7 +168,7 @@
 </div>
 
 @push('scripts')
-<script>
+<script>    
 function showNotification(message, type = 'info') {
     const colors = {
         success: 'bg-green-100 text-green-800',
