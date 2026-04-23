@@ -105,6 +105,7 @@
                     <div class="mt-auto">
                         <a href="{{ route('aksi.show', $item->id_aksi) }}" class="block w-full bg-ocean-100 hover:bg-ocean-600 text-ocean-800 hover:text-white font-bold py-3 rounded-xl text-center transition-all duration-300">
                             Lihat Detail Aksi
+                            
                         </a>
                     </div>
                 </div>
