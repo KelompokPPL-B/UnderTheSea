@@ -76,7 +76,7 @@ class EkosistemController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('admin');
+        abort_unless(auth()->user()?->isAdmin(), 403);
 
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|max:255',
@@ -92,13 +92,10 @@ class EkosistemController extends Controller
         }
 
         $validated['created_by'] = auth()->id();
-        $ekosistem = Ekosistem::create($validated);
+        Ekosistem::create($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Ecosystem created successfully',
-            'data' => $ekosistem,
-        ], 201);
+        return redirect()->route('ekosistem.index')
+            ->with('success', 'Ecosystem created successfully!');
     }
 
     /**
@@ -107,7 +104,7 @@ class EkosistemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->authorize('admin');
+        abort_unless(auth()->user()?->isAdmin(), 403);
 
         $ekosistem = Ekosistem::findOrFail($id);
 
@@ -126,11 +123,8 @@ class EkosistemController extends Controller
 
         $ekosistem->update($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Ecosystem updated successfully',
-            'data' => $ekosistem,
-        ]);
+        return redirect()->route('ekosistem.show', $id)
+            ->with('success', 'Ecosystem updated successfully!');
     }
 
     /**
@@ -139,15 +133,12 @@ class EkosistemController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorize('admin');
+        abort_unless(auth()->user()?->isAdmin(), 403);
 
         $ekosistem = Ekosistem::findOrFail($id);
         $ekosistem->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Ecosystem deleted successfully',
-            'data' => null,
-        ]);
+        return redirect()->route('ekosistem.index')
+            ->with('success', 'Ecosystem deleted successfully!');
     }
 }
