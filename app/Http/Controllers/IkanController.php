@@ -76,7 +76,7 @@ class IkanController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('admin');
+        abort_unless(auth()->user()?->isAdmin(), 403);
 
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
@@ -93,13 +93,10 @@ class IkanController extends Controller
         }
 
         $validated['created_by'] = auth()->id();
-        $ikan = Ikan::create($validated);
+        Ikan::create($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Fish created successfully',
-            'data' => $ikan,
-        ], 201);
+        return redirect()->route('ikan.index')
+            ->with('success', 'Fish created successfully!');
     }
 
     /**
@@ -108,7 +105,7 @@ class IkanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->authorize('admin');
+        abort_unless(auth()->user()?->isAdmin(), 403);
 
         $ikan = Ikan::findOrFail($id);
 
@@ -128,11 +125,8 @@ class IkanController extends Controller
 
         $ikan->update($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Fish updated successfully',
-            'data' => $ikan,
-        ]);
+        return redirect()->route('ikan.show', $id)
+            ->with('success', 'Fish updated successfully!');
     }
 
     /**
@@ -141,15 +135,12 @@ class IkanController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorize('admin');
+        abort_unless(auth()->user()?->isAdmin(), 403);
 
         $ikan = Ikan::findOrFail($id);
         $ikan->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Fish deleted successfully',
-            'data' => null,
-        ]);
+        return redirect()->route('ikan.index')
+            ->with('success', 'Fish deleted successfully!');
     }
 }
