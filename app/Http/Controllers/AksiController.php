@@ -145,11 +145,8 @@ class AksiController extends Controller
 
         $aksi->update($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Action updated successfully',
-            'data' => $aksi,
-        ]);
+        return redirect()->route('aksi.show', $id)
+            ->with('success', 'Conservation action updated successfully!');
     }
 
     /**
