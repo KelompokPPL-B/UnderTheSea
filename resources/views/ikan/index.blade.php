@@ -12,7 +12,7 @@
             </div>
             @auth
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('ikan.create') }}" class="btn btn-primary btn-sm">+ Add New Fish</a>
+                    <a href="{{ route('ikan.create') }}" class="btn btn-success btn-sm">+ Add New Fish</a>
                 @endif
             @endauth
         </div>
@@ -82,7 +82,7 @@
 
                             <!-- Action Buttons -->
                             <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-primary btn-sm flex-1">View</a>
+                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-warning btn-sm flex-1">View</a>
                                 @if(auth()->check() && auth()->user()->isAdmin())
                                     <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
                                     <button class="delete-btn-card btn btn-error btn-sm" data-ikan-id="{{ $item->id_ikan }}">Delete</button>
