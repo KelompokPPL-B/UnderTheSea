@@ -109,11 +109,8 @@ class AksiController extends Controller
 
         $this->pointsService->awardPointsForAction(auth()->id(), $aksi->id_aksi);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Action created successfully',
-            'data' => $aksi,
-        ], 201);
+        return redirect()->route('aksi.index')
+        ->with('success', 'Action created successfully!');
     }
 
     /**

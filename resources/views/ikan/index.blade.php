@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- PBI-IkanIndex -->
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-7xl mx-auto px-6 py-6">
         <!-- Header -->
@@ -11,9 +10,7 @@
                 <p class="text-gray-600">Explore the diverse and fascinating fish species in our oceans.</p>
             </div>
             @auth
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ route('ikan.create') }}" class="btn btn-primary btn-sm">+ Add New Fish</a>
-                @endif
+                <a href="{{ route('ikan.create') }}" class="btn btn-primary btn-sm">+ Add New Fish</a>
             @endauth
         </div>
 
@@ -47,27 +44,22 @@
 
                         <!-- Content -->
                         <div class="p-6 space-y-4">
-                            <!-- Title -->
                             <a href="{{ route('ikan.show', $item->id_ikan) }}" class="block group-hover:text-ocean-600 transition">
                                 <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->nama }}</h3>
                             </a>
 
-                            <!-- Habitat -->
                             @if($item->habitat)
                                 <p class="text-xs text-gray-500 font-semibold">🌊 {{ $item->habitat }}</p>
                             @endif
 
-                            <!-- Description -->
                             <p class="text-gray-600 text-sm line-clamp-2">{{ $item->deskripsi ?? 'No description' }}</p>
 
-                            <!-- Conservation Status -->
                             @if($item->status_konservasi)
                                 <div class="pt-2 border-t border-ocean-100">
                                     <p class="text-xs"><span class="font-semibold text-ocean-900">Status:</span> <span class="text-gray-600">{{ $item->status_konservasi }}</span></p>
                                 </div>
                             @endif
 
-                            <!-- Bookmark Section -->
                             @auth
                                 <div class="pt-2">
                                     <button class="bookmark-btn-card w-full btn btn-outline btn-sm" data-type="ikan" data-item-id="{{ $item->id_ikan }}">
@@ -80,13 +72,14 @@
                                 </div>
                             @endauth
 
-                            <!-- Action Buttons -->
                             <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
                                 <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-primary btn-sm flex-1">View</a>
-                                @if(auth()->check() && auth()->user()->isAdmin())
-                                    <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
-                                    <button class="delete-btn-card btn btn-error btn-sm" data-ikan-id="{{ $item->id_ikan }}">Delete</button>
-                                @endif
+                                @auth
+                                    @if(auth()->user()->isAdmin())
+                                        <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
+                                        <button class="delete-btn-card btn btn-error btn-sm" data-ikan-id="{{ $item->id_ikan }}">Delete</button>
+                                    @endif
+                                @endauth
                             </div>
                         </div>
                     </div>
@@ -120,7 +113,6 @@
         const type = btn.dataset.type;
         const itemId = btn.dataset.itemId;
         const isBookmarked = btn.classList.contains('bookmarked');
-
         const method = isBookmarked ? 'DELETE' : 'POST';
 
         fetch('/favorites', {
@@ -152,9 +144,7 @@
     function loadBookmarkStatesCard() {
         fetch('/favorites', {
             method: 'GET',
-            headers: {
-                'X-CSRF-TOKEN': getCsrfToken(),
-            }
+            headers: { 'X-CSRF-TOKEN': getCsrfToken() }
         })
         .then(res => res.json())
         .then(data => {
