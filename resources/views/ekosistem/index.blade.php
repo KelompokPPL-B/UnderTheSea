@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- PBI-EkosistemIndex -->
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-7xl mx-auto px-6 py-6">
         <!-- Header -->
@@ -11,9 +10,7 @@
                 <p class="text-gray-600">Discover the diverse ecosystems that make up our oceans and learn about their importance.</p>
             </div>
             @auth
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ route('ekosistem.create') }}" class="btn btn-primary btn-sm">+ Add New Ecosystem</a>
-                @endif
+                <a href="{{ route('ekosistem.create') }}" class="btn btn-primary btn-sm">+ Add New Ecosystem</a>
             @endauth
         </div>
 
@@ -47,27 +44,22 @@
 
                         <!-- Content -->
                         <div class="p-6 space-y-4">
-                            <!-- Title -->
                             <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="block group-hover:text-ocean-600 transition">
                                 <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->nama_ekosistem }}</h3>
                             </a>
 
-                            <!-- Location -->
                             @if($item->lokasi)
                                 <p class="text-xs text-gray-500 font-semibold">📍 {{ $item->lokasi }}</p>
                             @endif
 
-                            <!-- Description -->
                             <p class="text-gray-600 text-sm line-clamp-2">{{ $item->deskripsi ?? 'No description' }}</p>
 
-                            <!-- Role -->
                             @if($item->peran)
                                 <div class="pt-2 border-t border-ocean-100">
                                     <p class="text-xs text-gray-600"><span class="font-semibold">Role:</span> <span class="line-clamp-1">{{ $item->peran }}</span></p>
                                 </div>
                             @endif
 
-                            <!-- Bookmark Section -->
                             @auth
                                 <div class="pt-2">
                                     <button class="bookmark-btn-card w-full btn btn-outline btn-sm" data-type="ekosistem" data-item-id="{{ $item->id_ekosistem }}">
@@ -80,13 +72,14 @@
                                 </div>
                             @endauth
 
-                            <!-- Action Buttons -->
                             <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
                                 <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="btn btn-primary btn-sm flex-1">View</a>
-                                @if(auth()->check() && auth()->user()->isAdmin())
-                                    <a href="{{ route('ekosistem.edit', $item->id_ekosistem) }}" class="btn btn-outline btn-sm">Edit</a>
-                                    <button class="delete-btn-card btn btn-error btn-sm" data-ekosistem-id="{{ $item->id_ekosistem }}">Delete</button>
-                                @endif
+                                @auth
+                                    @if(auth()->user()->isAdmin())
+                                        <a href="{{ route('ekosistem.edit', $item->id_ekosistem) }}" class="btn btn-outline btn-sm">Edit</a>
+                                        <button class="delete-btn-card btn btn-error btn-sm" data-ekosistem-id="{{ $item->id_ekosistem }}">Delete</button>
+                                    @endif
+                                @endauth
                             </div>
                         </div>
                     </div>
@@ -120,7 +113,6 @@
         const type = btn.dataset.type;
         const itemId = btn.dataset.itemId;
         const isBookmarked = btn.classList.contains('bookmarked');
-
         const method = isBookmarked ? 'DELETE' : 'POST';
 
         fetch('/favorites', {
@@ -152,9 +144,7 @@
     function loadBookmarkStatesCard() {
         fetch('/favorites', {
             method: 'GET',
-            headers: {
-                'X-CSRF-TOKEN': getCsrfToken(),
-            }
+            headers: { 'X-CSRF-TOKEN': getCsrfToken() }
         })
         .then(res => res.json())
         .then(data => {
