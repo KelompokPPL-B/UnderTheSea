@@ -16,12 +16,6 @@ class IkanController extends Controller
         $this->pointsService = $pointsService;
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-09: Manage Fish Content
-     * PBI-19: Pagination UI
-     * PBI-21: Sort Options
-     */
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest');
@@ -37,19 +31,11 @@ class IkanController extends Controller
         return view('ikan.index', compact('ikan', 'sort'));
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-15: Form Validation UI
-     */
     public function create()
     {
         return view('ikan.create');
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-10: View Fish Detail + Award Points
-     */
     public function show($id)
     {
         $ikan = Ikan::findOrFail($id);
@@ -61,24 +47,14 @@ class IkanController extends Controller
         return view('ikan.show', compact('ikan'));
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-15: Form Validation UI
-     */
     public function edit($id)
     {
         $ikan = Ikan::findOrFail($id);
         return view('ikan.edit', compact('ikan'));
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-09: Manage Fish Content
-     */
     public function store(Request $request)
     {
-        $this->authorize('admin');
-
         $validated = $request->validate([
             'nama'              => 'required|string|max:255',
             'deskripsi'         => 'nullable|string',
@@ -100,21 +76,12 @@ class IkanController extends Controller
         $validated['created_by'] = auth()->id();
         $ikan = Ikan::create($validated);
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Fish created successfully',
-            'data'    => $ikan,
-        ], 201);
+        return redirect()->route('ikan.show', $ikan->id_ikan)
+            ->with('success', 'Fish species created successfully!');
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-09: Manage Fish Content
-     */
     public function update(Request $request, $id)
     {
-        $this->authorize('admin');
-
         $ikan = Ikan::findOrFail($id);
 
         $validated = $request->validate([
@@ -140,21 +107,12 @@ class IkanController extends Controller
 
         $ikan->update($validated);
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Fish updated successfully',
-            'data'    => $ikan,
-        ]);
+        return redirect()->route('ikan.show', $ikan->id_ikan)
+            ->with('success', 'Fish species updated successfully!');
     }
 
-    /**
-     * Owner: Faiz
-     * PBI-09: Manage Fish Content
-     */
     public function destroy($id)
     {
-        $this->authorize('admin');
-
         $ikan = Ikan::findOrFail($id);
 
         if ($ikan->gambar) {
