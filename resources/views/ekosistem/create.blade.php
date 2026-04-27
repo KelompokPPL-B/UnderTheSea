@@ -67,7 +67,7 @@
                             Role in Marine Life
                         </label>
                         <textarea id="peran" name="peran" rows="3"
-                            class="textarea textarea-bordered w-full @error('peran') textarea-error @enderror"
+                            class="textarea textarea-bordered w-full rounded-xl @error('peran') textarea-error @enderror"
                             placeholder="Describe the ecosystem's role in marine life">{{ old('peran') }}</textarea>
                         @error('peran')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
