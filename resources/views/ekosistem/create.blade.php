@@ -93,7 +93,8 @@
                             Image (JPG, PNG - Max 2MB)
                         </label>
                         <input type="file" id="gambar" name="gambar" accept="image/jpeg,image/png,image/jpg"
-                            class="file-input file-input-bordered w-full @error('gambar') file-input-error @enderror">
+                            class="file-input file-input-bordered w-full @error('gambar') file-input-error @enderror"
+                            style="border-radius: 17px; border: 1px solid #e2e8f0;">
                         @error('gambar')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                         @enderror
