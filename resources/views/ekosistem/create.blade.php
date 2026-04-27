@@ -102,8 +102,10 @@
 
                     <!-- Buttons -->
                     <div class="flex gap-3 pt-6 border-t border-ocean-100">
-                        <button type="submit" class="btn btn-primary flex-1">Create Ecosystem</button>
-                        <a href="{{ route('ekosistem.index') }}" class="btn btn-outline flex-1">Cancel</a>
+                        <button type="submit"
+                            class="btn btn-primary flex-1"
+                            style="border-radius: 20px; border: 1px solid rgba(187, 187, 228, 0.5);">Create Ecosystem</button>
+                        <a href="{{ route('ekosistem.index') }}" class="btn btn-outline flex-1" style="border-radius: 20px; border: 1px solid rgba(166, 166, 237, 0.5);">Cancel</a>
                     </div>
                 </form>
             </div>
