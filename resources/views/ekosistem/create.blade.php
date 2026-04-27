@@ -28,7 +28,7 @@
                         id="nama_ekosistem"
                         name="nama_ekosistem"
                         value="{{ old('nama_ekosistem') }}"
-                        class="input input-bordered w-full rounded-xl @error('nama_ekosistem') input-error @enderror"
+                        class="input input-bordered w-full rounded-x1 @error('nama_ekosistem') input-error @enderror"
                         placeholder="Enter ecosystem name" required>
                         @error('nama_ekosistem')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
