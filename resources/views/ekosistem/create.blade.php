@@ -41,7 +41,7 @@
                             Description
                         </label>
                         <textarea id="deskripsi" name="deskripsi" rows="4"
-                            class="textarea textarea-bordered w-full @error('deskripsi') textarea-error @enderror"
+                            class="textarea textarea-bordered w-full rounded-x1 @error('deskripsi') textarea-error @enderror"
                             placeholder="Describe the ecosystem">{{ old('deskripsi') }}</textarea>
                         @error('deskripsi')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
