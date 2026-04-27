@@ -24,12 +24,12 @@
                             Ecosystem Name *
                         </label>
                         <input
-                        type="text"
-                        id="nama_ekosistem"
-                        name="nama_ekosistem"
-                        value="{{ old('nama_ekosistem') }}"
-                        class="input input-bordered w-full rounded-x1 @error('nama_ekosistem') input-error @enderror"
-                        placeholder="Enter ecosystem name" required>
+                            type="text"
+                            id="nama_ekosistem"
+                            name="nama_ekosistem"
+                            value="{{ old('nama_ekosistem') }}"
+                            class="input input-bordered w-full rounded-xl @error('nama_ekosistem') input-error @enderror"
+                            placeholder="Enter ecosystem name" required>
                         @error('nama_ekosistem')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -41,7 +41,7 @@
                             Description
                         </label>
                         <textarea id="deskripsi" name="deskripsi" rows="4"
-                            class="textarea textarea-bordered w-full rounded-x1 @error('deskripsi') textarea-error @enderror"
+                            class="textarea textarea-bordered w-full rounded-xl @error('deskripsi') textarea-error @enderror"
                             placeholder="Describe the ecosystem">{{ old('deskripsi') }}</textarea>
                         @error('deskripsi')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -54,7 +54,7 @@
                             Location
                         </label>
                         <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi') }}"
-                            class="input input-bordered w-full @error('lokasi') input-error @enderror"
+                            class="input input-bordered w-full rounded-2xl @error('lokasi') input-error @enderror"
                             placeholder="Enter geographic location">
                         @error('lokasi')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
