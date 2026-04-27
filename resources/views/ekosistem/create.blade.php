@@ -80,7 +80,7 @@
                             Threats
                         </label>
                         <textarea id="ancaman" name="ancaman" rows="3"
-                            class="textarea textarea-bordered w-full @error('ancaman') textarea-error @enderror"
+                            class="textarea textarea-bordered w-full rounded-xl @error('ancaman') textarea-error @enderror"
                             placeholder="Describe threats to this ecosystem">{{ old('ancaman') }}</textarea>
                         @error('ancaman')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
