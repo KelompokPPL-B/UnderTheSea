@@ -27,6 +27,7 @@
                             type="text"
                             id="nama_ekosistem"
                             name="nama_ekosistem"
+                            minlength="10"
                             value="{{ old('nama_ekosistem') }}"
                             class="input input-bordered w-full rounded-xl @error('nama_ekosistem') input-error @enderror"
                             placeholder="Enter ecosystem name" required>
