@@ -80,7 +80,7 @@ class EkosistemController extends Controller
 
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|min:3|max:100',
-            'deskripsi' => 'nullable|string',
+            'deskripsi' => 'nullable|string|max:1000',
             'lokasi' => 'nullable|string|max:255',
             'peran' => 'nullable|string',
             'ancaman' => 'nullable|string',
