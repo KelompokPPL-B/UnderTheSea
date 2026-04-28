@@ -83,7 +83,7 @@ class EkosistemController extends Controller
             'deskripsi' => 'nullable|string|max:1000',
             'lokasi' => 'nullable|string|max:255',
             'peran' => 'nullable|string|max:1000',
-            'ancaman' => 'nullable|string',
+            'ancaman' => 'nullable|string|max:1000',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
