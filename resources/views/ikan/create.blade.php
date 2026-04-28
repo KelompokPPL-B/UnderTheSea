@@ -12,7 +12,7 @@
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-ocean-900 mb-2">Add Fish Species</h1>
                 <p class="text-ocean-600">Create a new fish species entry in the database</p>
-                <p class="text-xs text-red-500 mt-2"><span class="font-bold">*</span> Semua field wajib diisi</p>
+                <p class="text-xs text-red-500 mt-2"><span class="font-bold">*</span> Please fill out this field.</p>
             </div>
 
             <!-- Form -->
