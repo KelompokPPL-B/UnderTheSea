@@ -8,8 +8,8 @@
         <!-- Header -->
         <div class="flex justify-between items-start mb-10">
             <div>
-                <h1 class="text-4xl font-bold text-ocean-900 mb-3">Fish Species</h1>
-                <p class="text-gray-600">Explore the diverse and fascinating fish species in our oceans.</p>
+                <h1 class="text-4xl font-bold text-ocean-900 mb-3">Marine Fish</h1>
+                <p class="text-gray-600">Discover various fish species and learn about their habitat, food, and characteristics.</p>
             </div>
             @auth
                 @if(auth()->user()->isAdmin())
@@ -23,18 +23,59 @@
             <select onchange="window.location.href='{{ route('ikan.index') }}?sort=' + this.value" class="select select-bordered select-sm">
                 <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Newest First</option>
                 <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
+                <option value="name_asc" {{ $sort === 'name_asc' ? 'selected' : '' }}>Name A-Z</option>
+                <option value="name_desc" {{ $sort === 'name_desc' ? 'selected' : '' }}>Name Z-A</option>
             </select>
         </div>
 
-        @if($ikan->count() > 0)
-            @foreach($ikan as $i)
-                <div class="bg-white rounded p-4 mb-4">
-                    <h3 class="h5">{{ $i->name }}</h3>
-                    <p>{{ $i->description }}</p>
-                </div>
-            @endforeach
+        @if($ikan->isEmpty())
+            <div class="bg-white rounded-2xl shadow-card p-12 text-center">
+                <p class="text-ocean-600 text-lg font-semibold">No fish found yet.</p>
+            </div>
         @else
-            <p>No fish species found yet.</p>
+            <!-- Fish Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($ikan as $item)
+                    <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] animate-fade overflow-hidden">
+                        @if($item->gambar || $item->image)
+                            <div class="overflow-hidden h-48">
+                                <img src="/storage/{{ $item->gambar ?? $item->image }}" alt="{{ $item->nama ?? $item->name }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
+                            </div>
+                        @else
+                            <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
+                                <span class="text-ocean-400">No image</span>
+                            </div>
+                        @endif
+
+                        <div class="p-6 space-y-3">
+                            <a href="{{ route('ikan.show', $item->id_ikan) }}" class="block group-hover:text-ocean-600 transition">
+                                <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->nama ?? $item->name }}</h3>
+                            </a>
+
+                            @if(!empty($item->nama_latin))
+                                <p class="text-sm text-gray-500 italic">{{ $item->nama_latin }}</p>
+                            @endif
+
+                            @if(!empty($item->habitat))
+                                <p class="text-xs text-gray-500 font-semibold">📍 {{ $item->habitat }}</p>
+                            @endif
+
+                            <p class="text-gray-600 text-sm line-clamp-2">{{ $item->deskripsi ?? $item->description ?? 'No description' }}</p>
+
+                            <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
+                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-primary btn-sm flex-1">Lihat Detail</a>
+                                @if(auth()->check() && auth()->user()->isAdmin())
+                                    <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="mt-8 flex justify-center">
+                {{-- If pagination is later enabled, keep hook for links --}}
+            </div>
         @endif
     </div>
 </div>

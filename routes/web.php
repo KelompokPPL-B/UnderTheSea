@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/leaderboard', [HomeController::class, 'leaderboard'])->name('leaderboard');
 
-Route::get('/ikan', [FishController::class, 'index'])->name('ikan.index');
+Route::get('/ikan', [IkanController::class, 'index'])->name('ikan.index');
 Route::get('/ikan/create', [IkanController::class, 'create'])->middleware('auth')->name('ikan.create');
-Route::get('/ikan/{id}', [FishController::class, 'show'])->name('ikan.show');
+Route::get('/ikan/{id}', [IkanController::class, 'show'])->name('ikan.show');
 Route::get('/ikan/{id}/edit', [IkanController::class, 'edit'])->middleware('auth')->name('ikan.edit');
 Route::post('/ikan', [IkanController::class, 'store'])->middleware('auth')->name('ikan.store');
 Route::put('/ikan/{id}', [IkanController::class, 'update'])->middleware('auth')->name('ikan.update');

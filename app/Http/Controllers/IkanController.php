@@ -27,9 +27,16 @@ class IkanController extends Controller
         $sort = $request->query('sort', 'newest');
 
         $query = Ikan::query();
+
+        // Sorting options: newest, oldest, name_asc, name_desc
         if ($sort === 'oldest') {
             $query->orderBy('created_at', 'asc');
+        } elseif ($sort === 'name_asc') {
+            $query->orderBy('nama', 'asc');
+        } elseif ($sort === 'name_desc') {
+            $query->orderBy('nama', 'desc');
         } else {
+            // default newest
             $sort = 'newest';
             $query->orderBy('created_at', 'desc');
         }

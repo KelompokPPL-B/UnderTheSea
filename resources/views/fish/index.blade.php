@@ -5,7 +5,13 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h1 class="mb-4">Fish</h1>
-
+            <div class="max-w-7xl mx-auto px-6 py-6">
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-10">
+            @auth
+                <a href="{{ route('ikan.create') }}" class="btn btn-primary btn-sm whitespace-nowrap">+ Create fish</a>
+            @endauth
+        </div>
             <!-- Bootstrap card for Ikan Nemo -->
             <div class="card mb-3" style="max-width: 740px;">
                 <div class="row g-0">
@@ -25,23 +31,5 @@
     </div>
 </div>
 
-<!-- Script: initialize Local Storage for Nemo if not present -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const key = 'fish_1';
-        if (!localStorage.getItem(key)) {
-            const nemo = {
-                id: 1,
-                name: 'Ikan Nemo',
-                scientific_name: 'Amphiprioninae',
-                habitat: 'Terumbu karang',
-                description: 'Ikan Nemo adalah ikan kecil berwarna oranye dengan garis putih yang hidup di laut tropis.',
-                food: 'Plankton dan alga',
-                image: '/images/nemo.jpg'
-            };
-            localStorage.setItem(key, JSON.stringify(nemo));
-        }
-    });
-</script>
 
 @endsection
