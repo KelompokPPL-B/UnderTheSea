@@ -89,13 +89,24 @@ class IkanController extends Controller
         $this->authorize('admin');
 
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'habitat' => 'nullable|string|max:255',
-            'karakteristik' => 'nullable|string',
-            'status_konservasi' => 'nullable|string|max:100',
-            'fakta_unik' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'nama'             => 'required|string|max:255',
+            'deskripsi'        => 'required|string',
+            'habitat'          => 'required|string|max:255',
+            'karakteristik'    => 'required|string',
+            'status_konservasi'=> 'required|string|max:100',
+            'fakta_unik'       => 'required|string',
+            'gambar'           => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+            'nama.required'             => 'Nama ikan wajib diisi.',
+            'deskripsi.required'        => 'Deskripsi wajib diisi.',
+            'habitat.required'          => 'Habitat wajib diisi.',
+            'karakteristik.required'    => 'Karakteristik wajib diisi.',
+            'status_konservasi.required'=> 'Status konservasi wajib diisi.',
+            'fakta_unik.required'       => 'Fakta unik wajib diisi.',
+            'gambar.required'           => 'Gambar wajib diupload.',
+            'gambar.image'              => 'File harus berupa gambar.',
+            'gambar.mimes'              => 'Format gambar harus JPG atau PNG.',
+            'gambar.max'                => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         if ($request->hasFile('gambar')) {
