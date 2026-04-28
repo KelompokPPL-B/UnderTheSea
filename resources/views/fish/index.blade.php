@@ -9,7 +9,7 @@
         <!-- Header -->
         <div class="flex justify-between items-start mb-10">
             @auth
-                <a href="{{ route('ikan.create') }}" class="btn btn-primary btn-sm whitespace-nowrap">+ Create fish</a>
+                <a href="{{ route('ikan.create') }}" class="bg-[#42A5F5] hover:bg-[#1E88E5] text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200 inline-block">+ Create fish</a>
             @endauth
         </div>
             <!-- Bootstrap card for Ikan Nemo -->
@@ -18,13 +18,7 @@
                     <div class="col-md-4">
                         <img src="/images/nemo.jpg" class="img-fluid rounded-start" alt="Ikan Nemo">
                     </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Ikan Nemo</h5>
-                            <p class="card-text">Ikan Nemo adalah ikan kecil berwarna oranye dengan garis putih yang hidup di laut tropis.</p>
-                            <a href="{{ route('ikan.show', 1) }}" class="btn btn-primary" id="lihat-detail">Lihat Detail</a>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>

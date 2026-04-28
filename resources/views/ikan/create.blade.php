@@ -63,7 +63,7 @@
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-gray-200">
-                        <button type="submit" class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed">Create Fish</button>
+                        <button type="submit" class="flex-1 px-6 py-3 bg-[#42A5F5] hover:bg-[#1E88E5] text-white rounded-lg text-sm font-medium transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">Create Fish</button>
                         <a href="{{ route('ikan.index') }}" class="flex-1 text-center px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Cancel</a>
                     </div>
                 </form>

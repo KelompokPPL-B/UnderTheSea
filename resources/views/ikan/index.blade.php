@@ -11,7 +11,7 @@
                 <p class="text-gray-600">Discover various fish species and learn about their habitat, food, and characteristics.</p>
             </div>
             @auth
-                <a href="{{ route('ikan.create') }}" class="btn btn-primary btn-sm whitespace-nowrap">+ Add Fish</a>
+                <a href="{{ route('ikan.create') }}" class="inline-flex items-center justify-center bg-[#1e3a8a] hover:bg-[#2746b0] text-white px-4 py-2 rounded-md text-sm font-medium shadow-md transition-colors duration-200">+ Add Fish</a>
             @endauth
         </div>
 
@@ -59,7 +59,7 @@
                             </div>
 
                             <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-primary btn-sm flex-1">View</a>
+                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="w-full inline-flex items-center justify-center bg-[#4da6ff] hover:bg-[#3b8fe0] text-gray-900 px-4 py-2 rounded-md text-sm font-medium shadow-md transition-colors duration-200">View</a>
                                 @if(auth()->check() && (auth()->user()->isAdmin() || auth()->id() === $item->created_by))
                                     <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
                                     <button class="delete-btn-card btn btn-error btn-sm" data-id="{{ $item->id_ikan }}">Delete</button>
