@@ -107,7 +107,7 @@
                         id="status_konservasi"
                         name="status_konservasi"
                         value="{{ old('status_konservasi') }}"
-                        class="input input-bordered w-full @error('status_konservasi') input-error @enderror"
+                        class="input input-bordered w-full rounded-xl @error('status_konservasi') input-error @enderror"
                         placeholder="e.g., Endangered, Vulnerable, Least Concern"
                         required
                     >
