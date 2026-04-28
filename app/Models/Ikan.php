@@ -24,6 +24,7 @@ class Ikan extends Model
         'size',
         'conservation_status',
         'image',
+        'created_by',
     ];
 
     // Accessors and mutators to map English attributes to DB columns

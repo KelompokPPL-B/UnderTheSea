@@ -1,60 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-8 sm:py-12 bg-gray-50 min-h-screen">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h1 class="text-2xl font-bold">Fish</h1>
-                <p class="text-sm text-gray-600">Browse fish species</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <a href="{{ route('ikan.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-sm focus:outline-none">
-                    + Add Fish
-                </a>
-            </div>
-        </div>
-
-        @if($ikan->isEmpty())
-            <div class="bg-white rounded-lg shadow p-8 text-center">
-                <p class="text-gray-600">No fish found yet.</p>
-            </div>
-        @else
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($ikan as $item)
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        @if($item->image)
-                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="w-full h-48 object-cover">
-                        @else
-                            <div class="w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400">No image</div>
-                        @endif
-                        <div class="p-4">
-                            <h2 class="font-semibold text-lg">{{ $item->name }}</h2>
-                            <p class="text-sm text-gray-500">{{ $item->habitat }}</p>
-                            <p class="text-sm text-gray-700 mt-2">{{ \Illuminate\Support\Str::limit($item->description, 120) }}</p>
-
-                            <div class="mt-4 flex gap-2">
-                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="px-3 py-2 bg-gray-100 text-gray-800 rounded">View</a>
-                                <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="px-3 py-2 bg-yellow-100 text-yellow-800 rounded">Edit</a>
-                                <form action="{{ route('ikan.destroy', $item->id_ikan) }}" method="POST" onsubmit="return confirm('Delete this fish?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="px-3 py-2 bg-red-100 text-red-800 rounded">Delete</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        @endif
-    </div>
-</div>
-
-@endsection
-@extends('layouts.app')
-
-@section('content')
-@php($sort = $sort ?? 'newest')
 <!-- PBI-IkanIndex -->
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-7xl mx-auto px-6 py-6">
@@ -65,34 +11,32 @@
                 <p class="text-gray-600">Discover various fish species and learn about their habitat, food, and characteristics.</p>
             </div>
             @auth
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ route('ikan.create') }}" class="btn btn-primary btn-sm">+ Add New Fish</a>
-                @endif
+                <a href="{{ route('ikan.create') }}" class="btn btn-primary btn-sm whitespace-nowrap">+ Add Fish</a>
             @endauth
         </div>
 
         <!-- Sort Controls -->
         <div class="mb-6 flex justify-end">
             <select onchange="window.location.href='{{ route('ikan.index') }}?sort=' + this.value" class="select select-bordered select-sm">
-                <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Newest First</option>
-                <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
-                <option value="name_asc" {{ $sort === 'name_asc' ? 'selected' : '' }}>Name A-Z</option>
-                <option value="name_desc" {{ $sort === 'name_desc' ? 'selected' : '' }}>Name Z-A</option>
+                <option value="newest" {{ ($sort ?? 'newest') === 'newest' ? 'selected' : '' }}>Newest First</option>
+                <option value="oldest" {{ ($sort ?? '') === 'oldest' ? 'selected' : '' }}>Oldest First</option>
+                <option value="name_asc" {{ ($sort ?? '') === 'name_asc' ? 'selected' : '' }}>Name A–Z</option>
+                <option value="name_desc" {{ ($sort ?? '') === 'name_desc' ? 'selected' : '' }}>Name Z–A</option>
             </select>
         </div>
 
-        @if($ikan->isEmpty())
+        @if(!isset($ikans) || $ikans->isEmpty())
             <div class="bg-white rounded-2xl shadow-card p-12 text-center">
-                <p class="text-ocean-600 text-lg font-semibold">No fish found yet.</p>
+                <p class="text-ocean-600 text-lg font-semibold">No fish found yet. Add a new fish using the button above.</p>
             </div>
         @else
             <!-- Fish Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($ikan as $item)
+                @foreach($ikans as $item)
                     <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] animate-fade overflow-hidden">
-                        @if($item->gambar || $item->image)
+                        @if($item->image)
                             <div class="overflow-hidden h-48">
-                                <img src="/storage/{{ $item->gambar ?? $item->image }}" alt="{{ $item->nama ?? $item->name }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
+                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
                             </div>
                         @else
                             <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
@@ -100,25 +44,25 @@
                             </div>
                         @endif
 
-                        <div class="p-6 space-y-3">
+                        <div class="p-6 space-y-4">
                             <a href="{{ route('ikan.show', $item->id_ikan) }}" class="block group-hover:text-ocean-600 transition">
-                                <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->nama ?? $item->name }}</h3>
+                                <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->name }}</h3>
                             </a>
 
-                            @if(!empty($item->nama_latin))
-                                <p class="text-sm text-gray-500 italic">{{ $item->nama_latin }}</p>
-                            @endif
+                            <p class="text-gray-600 text-sm line-clamp-2">{{ $item->habitat ?? 'Unknown habitat' }}</p>
 
-                            @if(!empty($item->habitat))
-                                <p class="text-xs text-gray-500 font-semibold">📍 {{ $item->habitat }}</p>
-                            @endif
-
-                            <p class="text-gray-600 text-sm line-clamp-2">{{ $item->deskripsi ?? $item->description ?? 'No description' }}</p>
+                            <div class="pt-2 border-t border-ocean-100">
+                                <p class="text-xs text-gray-600">
+                                    Created by <span class="font-semibold text-ocean-900">{{ optional($item->createdBy)->name }}</span>
+                                    <span class="badge badge-success text-xs ml-1">{{ optional($item->createdBy)->badge }}</span>
+                                </p>
+                            </div>
 
                             <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-primary btn-sm flex-1">Lihat Detail</a>
-                                @if(auth()->check() && auth()->user()->isAdmin())
+                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-primary btn-sm flex-1">View</a>
+                                @if(auth()->check() && (auth()->user()->isAdmin() || auth()->id() === $item->created_by))
                                     <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
+                                    <button class="delete-btn-card btn btn-error btn-sm" data-id="{{ $item->id_ikan }}">Delete</button>
                                 @endif
                             </div>
                         </div>
@@ -127,89 +71,114 @@
             </div>
 
             <div class="mt-8 flex justify-center">
-                {{-- If pagination is later enabled, keep hook for links --}}
+                {{ $ikans->appends(request()->query())->links() }}
             </div>
         @endif
     </div>
 </div>
 
+@endsection
+
 @push('scripts')
-<script type="module">
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeBookmarkButtonsCard();
-        loadBookmarkStatesCard();
-    });
+<script>
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.delete-btn-card')) {
+        const btn = e.target.closest('.delete-btn-card');
+        const id = btn.dataset.id;
+        if (!confirm('Delete this fish?')) return;
 
-    function initializeBookmarkButtonsCard() {
-        document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-            btn.addEventListener('click', toggleBookmarkCard);
-        });
-    }
-
-    function toggleBookmarkCard(e) {
-        e.preventDefault();
-        const btn = e.currentTarget;
-        const type = btn.dataset.type;
-        const itemId = btn.dataset.itemId;
-        const isBookmarked = btn.classList.contains('bookmarked');
-
-        const method = isBookmarked ? 'DELETE' : 'POST';
-
-        fetch('/favorites', {
-            method: method,
+        fetch(`/ikan/${id}`, {
+            method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': getCsrfToken(),
-            },
-            body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
-        })
-        .then(res => res.json())
-        .then(data => {
+                'Accept': 'application/json'
+            }
+        }).then(r => r.json()).then(data => {
             if (data.status === 'success') {
-                btn.classList.toggle('bookmarked');
-                btn.classList.toggle('bg-blue-600');
-                btn.classList.toggle('text-white');
-                btn.classList.toggle('border-blue-600');
-                btn.classList.toggle('text-blue-600');
-                btn.classList.toggle('hover:bg-blue-50');
-                const text = btn.querySelector('.bookmark-text');
-                text.textContent = btn.classList.contains('bookmarked') ? 'Bookmarked' : 'Bookmark';
+                window.location.reload();
             } else {
-                alert(data.message);
+                alert(data.message || 'Delete failed');
             }
-        })
-        .catch(err => console.error('Error:', err));
+        }).catch(() => alert('Delete failed'));
     }
+});
 
-    function loadBookmarkStatesCard() {
-        fetch('/favorites', {
-            method: 'GET',
-            headers: {
-                'X-CSRF-TOKEN': getCsrfToken(),
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success' && Array.isArray(data.data)) {
-                document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-                    const type = btn.dataset.type;
-                    const itemId = parseInt(btn.dataset.itemId);
-                    const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
-                    if (isBookmarked) {
-                        btn.classList.add('bookmarked', 'bg-blue-600', 'text-white', 'border-blue-600');
-                        btn.classList.remove('text-blue-600', 'hover:bg-blue-50');
-                        const text = btn.querySelector('.bookmark-text');
-                        if (text) text.textContent = 'Bookmarked';
-                    }
-                });
-            }
-        })
-        .catch(err => console.error('Error loading bookmark state:', err));
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    initializeBookmarkButtonsCard();
+    loadBookmarkStatesCard();
+});
 
-    function getCsrfToken() {
-        return document.querySelector('meta[name="csrf-token"]')?.content || '';
-    }
+function initializeBookmarkButtonsCard() {
+    document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
+        btn.addEventListener('click', toggleBookmarkCard);
+    });
+}
+
+function toggleBookmarkCard(e) {
+    e.preventDefault();
+    const btn = e.currentTarget;
+    const type = btn.dataset.type;
+    const itemId = btn.dataset.itemId;
+    const isBookmarked = btn.classList.contains('bookmarked');
+
+    const method = isBookmarked ? 'DELETE' : 'POST';
+
+    fetch('/favorites', {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken(),
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            btn.classList.toggle('bookmarked');
+            btn.classList.toggle('bg-blue-600');
+            btn.classList.toggle('text-white');
+            btn.classList.toggle('border-blue-600');
+            btn.classList.toggle('text-blue-600');
+            btn.classList.toggle('hover:bg-blue-50');
+            const text = btn.querySelector('.bookmark-text');
+            if (text) text.textContent = btn.classList.contains('bookmarked') ? 'Bookmarked' : 'Bookmark';
+        } else {
+            alert(data.message || 'Failed to update bookmark');
+        }
+    })
+    .catch(err => console.error('Error:', err));
+}
+
+function loadBookmarkStatesCard() {
+    fetch('/favorites', {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': getCsrfToken(),
+            'Accept': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success' && Array.isArray(data.data)) {
+            document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
+                const type = btn.dataset.type;
+                const itemId = parseInt(btn.dataset.itemId);
+                const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
+                if (isBookmarked) {
+                    btn.classList.add('bookmarked', 'bg-blue-600', 'text-white', 'border-blue-600');
+                    btn.classList.remove('text-blue-600', 'hover:bg-blue-50');
+                    const text = btn.querySelector('.bookmark-text');
+                    if (text) text.textContent = 'Bookmarked';
+                }
+            });
+        }
+    })
+    .catch(err => console.error('Error loading bookmark state:', err));
+}
+
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]')?.content || '';
+}
 </script>
 @endpush
-@endsection
