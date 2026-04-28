@@ -84,6 +84,9 @@ class EkosistemController extends Controller
             'lokasi' => 'nullable|string|max:255',
             'peran' => 'nullable|string',
             'ancaman' => 'nullable|string',
+            'karakteristik' => 'nullable|string',
+            'manfaat' => 'nullable|string',
+            'cara_pelestarian' => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -94,11 +97,7 @@ class EkosistemController extends Controller
         $validated['created_by'] = auth()->id();
         $ekosistem = Ekosistem::create($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Ecosystem created successfully',
-            'data' => $ekosistem,
-        ], 201);
+        return redirect()->route('ekosistem.index')->with('success', 'Ecosystem created successfully');
     }
 
     /**
@@ -111,12 +110,16 @@ class EkosistemController extends Controller
 
         $ekosistem = Ekosistem::findOrFail($id);
 
+
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'lokasi' => 'nullable|string|max:255',
             'peran' => 'nullable|string',
             'ancaman' => 'nullable|string',
+            'karakteristik' => 'nullable|string',
+            'manfaat' => 'nullable|string',
+            'cara_pelestarian' => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -126,11 +129,7 @@ class EkosistemController extends Controller
 
         $ekosistem->update($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Ecosystem updated successfully',
-            'data' => $ekosistem,
-        ]);
+        return redirect()->route('ekosistem.index')->with('success', 'Ecosystem updated successfully');
     }
 
     /**
@@ -144,10 +143,6 @@ class EkosistemController extends Controller
         $ekosistem = Ekosistem::findOrFail($id);
         $ekosistem->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Ecosystem deleted successfully',
-            'data' => null,
-        ]);
+        return redirect()->route('ekosistem.index')->with('success', 'Ecosystem deleted successfully');
     }
 }

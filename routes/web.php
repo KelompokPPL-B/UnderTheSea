@@ -23,13 +23,7 @@ Route::post('/ikan', [IkanController::class, 'store'])->middleware('auth')->name
 Route::put('/ikan/{id}', [IkanController::class, 'update'])->middleware('auth')->name('ikan.update');
 Route::delete('/ikan/{id}', [IkanController::class, 'destroy'])->middleware('auth')->name('ikan.destroy');
 
-Route::get('/ekosistem', [EkosistemController::class, 'index'])->name('ekosistem.index');
-Route::get('/ekosistem/create', [EkosistemController::class, 'create'])->middleware('auth')->name('ekosistem.create');
-Route::get('/ekosistem/{id}', [EkosistemController::class, 'show'])->name('ekosistem.show');
-Route::get('/ekosistem/{id}/edit', [EkosistemController::class, 'edit'])->middleware('auth')->name('ekosistem.edit');
-Route::post('/ekosistem', [EkosistemController::class, 'store'])->middleware('auth')->name('ekosistem.store');
-Route::put('/ekosistem/{id}', [EkosistemController::class, 'update'])->middleware('auth')->name('ekosistem.update');
-Route::delete('/ekosistem/{id}', [EkosistemController::class, 'destroy'])->middleware('auth')->name('ekosistem.destroy');
+Route::resource('ekosistem', EkosistemController::class);
 
 Route::get('/aksi', [AksiController::class, 'index'])->name('aksi.index');
 Route::get('/aksi/create', [AksiController::class, 'create'])->middleware('auth')->name('aksi.create');

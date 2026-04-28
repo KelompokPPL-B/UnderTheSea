@@ -89,6 +89,20 @@
                     @enderror
                 </div>
 
+                <!-- Characteristics -->
+                <div>
+                    <label for="karakteristik" class="block text-sm font-semibold text-ocean-900 mb-2">Karakteristik</label>
+                    <textarea id="karakteristik" name="karakteristik" rows="3" class="textarea textarea-bordered w-full @error('karakteristik') textarea-error @enderror" placeholder="Key characteristics">{{ old('karakteristik') }}</textarea>
+                    @error('karakteristik')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+                </div>
+
+                <!-- Benefits -->
+                <div>
+                    <label for="manfaat" class="block text-sm font-semibold text-ocean-900 mb-2">Manfaat Ekosistem</label>
+                    <textarea id="manfaat" name="manfaat" rows="3" class="textarea textarea-bordered w-full @error('manfaat') textarea-error @enderror" placeholder="Benefits">{{ old('manfaat') }}</textarea>
+                    @error('manfaat')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+                </div>
+
                 <!-- Threats -->
                 <div>
                     <label for="ancaman" class="block text-sm font-semibold text-ocean-900 mb-2">
@@ -122,14 +136,29 @@
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-
                 <!-- Buttons -->
                 <div class="flex gap-3 pt-6 border-t border-ocean-100">
-                    <button type="submit" class="btn btn-primary flex-1">Create Ecosystem</button>
-                    <a href="{{ route('ekosistem.index') }}" class="btn btn-outline flex-1">Cancel</a>
+                    <button type="submit" id="submitBtn" class="flex-1 px-6 py-3 bg-[#1e3a8a] text-white rounded-md hover:bg-[#2746b0] shadow-md transition-colors duration-200 font-medium">Create Ecosystem</button>
+                    <a href="{{ route('ekosistem.index') }}" class="flex-1 text-center px-6 py-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition font-medium">Cancel</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+// Optional: keep submit button UX simple for standard form submit
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form[action="{{ route('ekosistem.store') }}"]');
+    const submitBtn = document.getElementById('submitBtn');
+    if (form && submitBtn) {
+        form.addEventListener('submit', function() {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating...';
+        });
+    }
+});
+</script>
+@endpush
 @endsection

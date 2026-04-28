@@ -8,11 +8,16 @@
         <div class="flex justify-between items-start mb-10">
             <div>
                 <h1 class="text-4xl font-bold text-ocean-900 mb-3">Marine Ecosystems</h1>
-                <p class="text-gray-600">Discover the diverse ecosystems that make up our oceans and learn about their importance.</p>
+                     <p class="text-gray-600">Discover the diverse ecosystems that make up our oceans and learn about their importance.</p>
+                     <!-- Visible Create button for quick access -->
+                     <a href="{{ url('/ekosistem/create') }}"
+                         style="background:#2563EB; color:white; padding:8px 14px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,.15); text-decoration:none; font-weight:600; display:inline-block; margin-top:8px;">
+                         + Create Ecosystem
+                     </a>
             </div>
             @auth
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('ekosistem.create') }}" class="btn btn-primary btn-sm">+ Add New Ecosystem</a>
+                    <a href="{{ url('/ekosistem/create') }}" class="inline-flex items-center justify-center bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-4 py-2 rounded-md text-sm font-medium shadow-md transition duration-200">+ Create Ecosystem</a>
                 @endif
             @endauth
         </div>
