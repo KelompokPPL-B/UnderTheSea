@@ -1,6 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="py-8 sm:py-12 bg-gray-50 min-h-screen">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            @if($ikan->image)
+                <img src="{{ asset('storage/' . $ikan->image) }}" alt="{{ $ikan->name }}" class="w-full h-64 object-cover">
+            @endif
+            <div class="p-6">
+                <h1 class="text-2xl font-bold">{{ $ikan->name }}</h1>
+                @if($ikan->scientific_name)
+                    <p class="text-sm text-gray-500 italic">{{ $ikan->scientific_name }}</p>
+                @endif
+
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="font-semibold">Habitat</h3>
+                        <p class="text-gray-700">{{ $ikan->habitat }}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">Size</h3>
+                        <p class="text-gray-700">{{ $ikan->size }}</p>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h3 class="font-semibold">Description</h3>
+                    <p class="text-gray-700">{{ $ikan->description }}</p>
+                </div>
+
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="font-semibold">Diet</h3>
+                        <p class="text-gray-700">{{ $ikan->diet }}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">Conservation Status</h3>
+                        <p class="text-gray-700">{{ $ikan->conservation_status }}</p>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <a href="{{ route('ikan.index') }}" class="px-4 py-2 bg-gray-200 text-gray-800 rounded">Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection
+@extends('layouts.app')
+
+@section('content')
 <!-- PBI-IkanShow -->
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand">
     <div class="max-w-4xl mx-auto px-6 py-6 mb-6">

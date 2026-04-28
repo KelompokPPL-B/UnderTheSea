@@ -87,34 +87,32 @@ class IkanController extends Controller
     public function store(Request $request)
     {
         $this->authorize('admin');
-
-        // Accept both English and Indonesian field names from forms
+        // Validate according to spec
         $validated = $request->validate([
-            'name' => 'required_without:nama|string|max:255',
-            'nama' => 'required_without:name|string|max:255',
-            'description' => 'nullable|string',
-            'deskripsi' => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'scientific_name' => 'nullable|string|max:255',
+            'habitat' => 'required|string|max:255',
+            'description' => 'required|string',
+            'diet' => 'nullable|string',
+            'size' => 'nullable|string|max:255',
+            'conservation_status' => 'nullable|string|max:100',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-
-        $name = $request->input('name') ?? $request->input('nama');
-        $description = $request->input('description') ?? $request->input('deskripsi');
 
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('fish', 'public');
-        } elseif ($request->hasFile('gambar')) {
-            $imagePath = $request->file('gambar')->store('fish', 'public');
         }
 
-        // Use English attributes (Ikan model maps them to DB columns)
-        $ikan = new Ikan([
-            'name' => $name,
-            'description' => $description,
-            'image' => $imagePath,
-        ]);
-
+        $ikan = new Ikan();
+        $ikan->name = $validated['name'];
+        $ikan->scientific_name = $validated['scientific_name'] ?? null;
+        $ikan->habitat = $validated['habitat'];
+        $ikan->description = $validated['description'];
+        $ikan->diet = $validated['diet'] ?? null;
+        $ikan->size = $validated['size'] ?? null;
+        $ikan->conservation_status = $validated['conservation_status'] ?? null;
+        $ikan->image = $imagePath;
         $ikan->created_by = auth()->id();
         $ikan->save();
 
@@ -130,22 +128,33 @@ class IkanController extends Controller
         $this->authorize('admin');
 
         $ikan = Ikan::findOrFail($id);
-
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'scientific_name' => 'nullable|string|max:255',
             'habitat' => 'nullable|string|max:255',
-            'karakteristik' => 'nullable|string',
-            'status_konservasi' => 'nullable|string|max:100',
-            'fakta_unik' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'description' => 'nullable|string',
+            'diet' => 'nullable|string',
+            'size' => 'nullable|string|max:255',
+            'conservation_status' => 'nullable|string|max:100',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        if ($request->hasFile('gambar')) {
-            $validated['gambar'] = $request->file('gambar')->store('fish', 'public');
+        if ($request->hasFile('image')) {
+            // delete old image if exists
+            if ($ikan->image && \Storage::disk('public')->exists($ikan->image)) {
+                \Storage::disk('public')->delete($ikan->image);
+            }
+            $ikan->image = $request->file('image')->store('fish', 'public');
         }
 
-        $ikan->update($validated);
+        $ikan->name = $validated['name'];
+        $ikan->scientific_name = $validated['scientific_name'] ?? null;
+        $ikan->habitat = $validated['habitat'] ?? null;
+        $ikan->description = $validated['description'] ?? null;
+        $ikan->diet = $validated['diet'] ?? null;
+        $ikan->size = $validated['size'] ?? null;
+        $ikan->conservation_status = $validated['conservation_status'] ?? null;
+        $ikan->save();
 
         return response()->json([
             'status' => 'success',
@@ -163,6 +172,10 @@ class IkanController extends Controller
         $this->authorize('admin');
 
         $ikan = Ikan::findOrFail($id);
+        if ($ikan->image && \Storage::disk('public')->exists($ikan->image)) {
+            \Storage::disk('public')->delete($ikan->image);
+        }
+
         $ikan->delete();
 
         return response()->json([

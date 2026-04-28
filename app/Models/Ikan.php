@@ -17,7 +17,12 @@ class Ikan extends Model
      */
     protected $fillable = [
         'name',
+        'scientific_name',
+        'habitat',
         'description',
+        'diet',
+        'size',
+        'conservation_status',
         'image',
     ];
 
@@ -32,6 +37,26 @@ class Ikan extends Model
         $this->attributes['nama'] = $value;
     }
 
+    public function getScientificNameAttribute()
+    {
+        return $this->attributes['scientific_name'] ?? null;
+    }
+
+    public function setScientificNameAttribute($value)
+    {
+        $this->attributes['scientific_name'] = $value;
+    }
+
+    public function getHabitatAttribute()
+    {
+        return $this->attributes['habitat'] ?? null;
+    }
+
+    public function setHabitatAttribute($value)
+    {
+        $this->attributes['habitat'] = $value;
+    }
+
     public function getDescriptionAttribute()
     {
         return $this->attributes['deskripsi'] ?? null;
@@ -42,6 +67,26 @@ class Ikan extends Model
         $this->attributes['deskripsi'] = $value;
     }
 
+    public function getDietAttribute()
+    {
+        return $this->attributes['diet'] ?? null;
+    }
+
+    public function setDietAttribute($value)
+    {
+        $this->attributes['diet'] = $value;
+    }
+
+    public function getSizeAttribute()
+    {
+        return $this->attributes['size'] ?? null;
+    }
+
+    public function setSizeAttribute($value)
+    {
+        $this->attributes['size'] = $value;
+    }
+
     public function getImageAttribute()
     {
         return $this->attributes['gambar'] ?? null;
@@ -50,6 +95,16 @@ class Ikan extends Model
     public function setImageAttribute($value)
     {
         $this->attributes['gambar'] = $value;
+    }
+
+    public function getConservationStatusAttribute()
+    {
+        return $this->attributes['status_konservasi'] ?? null;
+    }
+
+    public function setConservationStatusAttribute($value)
+    {
+        $this->attributes['status_konservasi'] = $value;
     }
 
     public function createdBy(): BelongsTo

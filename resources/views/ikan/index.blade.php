@@ -1,6 +1,59 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="py-8 sm:py-12 bg-gray-50 min-h-screen">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">Fish</h1>
+                <p class="text-sm text-gray-600">Browse fish species</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('ikan.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-sm focus:outline-none">
+                    + Add Fish
+                </a>
+            </div>
+        </div>
+
+        @if($ikan->isEmpty())
+            <div class="bg-white rounded-lg shadow p-8 text-center">
+                <p class="text-gray-600">No fish found yet.</p>
+            </div>
+        @else
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($ikan as $item)
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        @if($item->image)
+                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="w-full h-48 object-cover">
+                        @else
+                            <div class="w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400">No image</div>
+                        @endif
+                        <div class="p-4">
+                            <h2 class="font-semibold text-lg">{{ $item->name }}</h2>
+                            <p class="text-sm text-gray-500">{{ $item->habitat }}</p>
+                            <p class="text-sm text-gray-700 mt-2">{{ \Illuminate\Support\Str::limit($item->description, 120) }}</p>
+
+                            <div class="mt-4 flex gap-2">
+                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="px-3 py-2 bg-gray-100 text-gray-800 rounded">View</a>
+                                <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="px-3 py-2 bg-yellow-100 text-yellow-800 rounded">Edit</a>
+                                <form action="{{ route('ikan.destroy', $item->id_ikan) }}" method="POST" onsubmit="return confirm('Delete this fish?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="px-3 py-2 bg-red-100 text-red-800 rounded">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
+</div>
+
+@endsection
+@extends('layouts.app')
+
+@section('content')
 @php($sort = $sort ?? 'newest')
 <!-- PBI-IkanIndex -->
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
