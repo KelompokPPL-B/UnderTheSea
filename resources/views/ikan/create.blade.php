@@ -87,7 +87,7 @@
                         id="karakteristik"
                         name="karakteristik"
                         rows="3"
-                        class="textarea textarea-bordered w-full @error('karakteristik') textarea-error @enderror"
+                        class="textarea textarea-bordered w-full rounded-xl @error('karakteristik') textarea-error @enderror"
                         placeholder="Describe physical characteristics"
                         required
                     >{{ old('karakteristik') }}</textarea>
