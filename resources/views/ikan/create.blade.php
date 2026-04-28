@@ -126,7 +126,7 @@
                         id="fakta_unik"
                         name="fakta_unik"
                         rows="3"
-                        class="textarea textarea-bordered w-full @error('fakta_unik') textarea-error @enderror"
+                        class="textarea textarea-bordered w-full rounded-xl @error('fakta_unik') textarea-error @enderror"
                         placeholder="Share interesting facts about this species"
                         required
                     >{{ old('fakta_unik') }}</textarea>
