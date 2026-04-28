@@ -164,8 +164,18 @@
 
                 <!-- Buttons -->
                 <div class="flex gap-3 pt-6 border-t border-ocean-100">
-                    <button type="submit" class="btn btn-primary flex-1">Create Fish</button>
-                    <a href="{{ route('ikan.index') }}" class="btn btn-outline flex-1">Cancel</a>
+                    <button type="submit"
+                        class="btn flex-1"
+                        style="background-color: #22c55e; color: white; border: none; font-size: 15px; font-weight: 600; border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(34,197,94,0.3);"
+                        onmouseover="this.style.backgroundColor='#16a34a'"
+                        onmouseout="this.style.backgroundColor='#22c55e'"
+                    >Create Fish</button>
+                    <a href="{{ route('ikan.index') }}"
+                        class="btn flex-1"
+                        style="background-color: #ef4444; color: white; border: none; font-size: 15px; font-weight: 600; border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(239,68,68,0.3);"
+                        onmouseover="this.style.backgroundColor='#dc2626'"
+                        onmouseout="this.style.backgroundColor='#ef4444'"
+                    >Cancel</a>
                 </div>
             </form>
         </div>
