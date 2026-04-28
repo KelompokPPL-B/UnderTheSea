@@ -68,7 +68,7 @@
                         id="habitat"
                         name="habitat"
                         value="{{ old('habitat') }}"
-                        class="input input-bordered w-full @error('habitat') input-error @enderror"
+                        class="input input-bordered w-full rounded-xl @error('habitat') input-error @enderror"
                         placeholder="Enter habitat information"
                         required
                     >
