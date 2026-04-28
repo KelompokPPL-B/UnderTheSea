@@ -135,10 +135,32 @@
                         name="gambar"
                         accept="image/jpeg,image/png,image/jpg"
                         class="file-input file-input-bordered w-full @error('gambar') file-input-error @enderror"
+                        onchange="previewImage(event)"
                     >
                     @error('gambar')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
+
+                    <!-- Preview container -->
+                    <div id="preview-container" class="hidden mt-3">
+                        <p class="text-xs text-ocean-600 mb-1 font-semibold">Preview:</p>
+                        <img id="image-preview" src="" alt="Preview" class="h-40 rounded-lg object-cover border border-ocean-200">
+                    </div>
+
+                    <script>
+                        function previewImage(event) {
+                            const file = event.target.files[0];
+                            if (!file) return;
+                            const container = document.getElementById('preview-container');
+                            const preview = document.getElementById('image-preview');
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                preview.src = e.target.result;
+                                container.classList.remove('hidden');
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    </script>
                 </div>
 
                 <!-- Buttons -->

@@ -13,7 +13,7 @@
         <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition overflow-hidden">
             <!-- Hero Image -->
             @if($ikan->gambar)
-                <img src="/storage/{{ $ikan->gambar }}" alt="{{ $ikan->nama }}" class="w-full h-96 object-cover" loading="lazy">
+                <img src="{{ asset('storage/' . $ikan->gambar) }}" alt="{{ $ikan->nama }}" class="w-full h-96 object-cover" loading="lazy">
             @else
                 <div class="w-full h-96 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
                     <span class="text-ocean-400">No image</span>

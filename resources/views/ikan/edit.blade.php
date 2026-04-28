@@ -126,12 +126,15 @@
                 </div>
 
                 <!-- Current Image -->
-                @if($ikan->gambar)
-                    <div>
-                        <p class="text-sm font-semibold text-ocean-900 mb-2">Current Image</p>
-                        <img src="/storage/{{ $ikan->gambar }}" alt="{{ $ikan->nama }}" class="h-40 rounded-lg object-cover">
-                    </div>
-                @endif
+                <div>
+                    <p class="text-sm font-semibold text-ocean-900 mb-2">Current Image</p>
+                    @if($ikan->gambar)
+                        <img id="image-preview" src="{{ asset('storage/' . $ikan->gambar) }}" alt="{{ $ikan->nama }}" class="h-40 rounded-lg object-cover">
+                    @else
+                        <img id="image-preview" src="" alt="" class="h-40 rounded-lg object-cover hidden">
+                        <p id="no-image-text" class="text-sm text-gray-400 italic">Belum ada gambar</p>
+                    @endif
+                </div>
 
                 <!-- Image -->
                 <div>
@@ -144,11 +147,28 @@
                         name="gambar"
                         accept="image/jpeg,image/png,image/jpg"
                         class="file-input file-input-bordered w-full @error('gambar') file-input-error @enderror"
+                        onchange="previewImage(event)"
                     >
                     @error('gambar')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
+
+                <script>
+                    function previewImage(event) {
+                        const file = event.target.files[0];
+                        if (!file) return;
+                        const preview = document.getElementById('image-preview');
+                        const noText = document.getElementById('no-image-text');
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                            preview.classList.remove('hidden');
+                            if (noText) noText.classList.add('hidden');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                </script>
 
                 <!-- Buttons -->
                 <div class="flex gap-3 pt-6 border-t border-ocean-100">

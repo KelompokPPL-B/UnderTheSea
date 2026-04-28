@@ -37,7 +37,7 @@
                         <!-- Image -->
                         @if($item->gambar)
                             <div class="overflow-hidden h-48">
-                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
+                                <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->nama }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
                             </div>
                         @else
                             <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
