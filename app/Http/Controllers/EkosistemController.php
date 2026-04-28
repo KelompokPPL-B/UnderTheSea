@@ -114,7 +114,7 @@ class EkosistemController extends Controller
             'lokasi' => 'nullable|string|max:255',
             'peran' => 'nullable|string|max:1000',
             'ancaman' => 'nullable|string|max:1000',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png',
         ]);
 
         if ($request->hasFile('gambar')) {
