@@ -109,11 +109,11 @@ class EkosistemController extends Controller
         $ekosistem = Ekosistem::findOrFail($id);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'nama_ekosistem' => 'required|string|min:3|max:100',
+            'deskripsi' => 'nullable|string|max:1000',
             'lokasi' => 'nullable|string|max:255',
-            'peran' => 'nullable|string',
-            'ancaman' => 'nullable|string',
+            'peran' => 'nullable|string|max:1000',
+            'ancaman' => 'nullable|string|max:1000',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
