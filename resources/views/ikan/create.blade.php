@@ -48,7 +48,7 @@
                         id="deskripsi"
                         name="deskripsi"
                         rows="4"
-                        class="textarea textarea-bordered w-full @error('deskripsi') textarea-error @enderror"
+                        class="textarea textarea-bordered w-full rounded-xl @error('deskripsi') textarea-error @enderror"
                         placeholder="Describe the fish species"
                         required
                     >{{ old('deskripsi') }}</textarea>
