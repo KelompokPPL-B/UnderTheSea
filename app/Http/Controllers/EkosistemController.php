@@ -79,7 +79,7 @@ class EkosistemController extends Controller
         abort_unless(auth()->user()?->isAdmin(), 403);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|max:255',
+            'nama_ekosistem' => 'required|string|min:3|max:100',
             'deskripsi' => 'nullable|string',
             'lokasi' => 'nullable|string|max:255',
             'peran' => 'nullable|string',
