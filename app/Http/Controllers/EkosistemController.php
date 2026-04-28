@@ -76,8 +76,6 @@ class EkosistemController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('admin');
-
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',

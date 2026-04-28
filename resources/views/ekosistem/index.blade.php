@@ -87,7 +87,7 @@
 
                             <!-- Action Buttons -->
                             <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="btn btn-primary btn-sm flex-1">View</a>
+                                <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="w-full mt-3 bg-blue-600 text-white py-2 rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition duration-200 text-sm font-semibold text-center block">View</a>
                                 @if(auth()->check() && auth()->user()->isAdmin())
                                     <a href="{{ route('ekosistem.edit', $item->id_ekosistem) }}" class="btn btn-outline btn-sm">Edit</a>
                                     <button class="delete-btn-card btn btn-error btn-sm" data-ekosistem-id="{{ $item->id_ekosistem }}">Delete</button>
