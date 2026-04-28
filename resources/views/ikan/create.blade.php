@@ -29,7 +29,7 @@
                         id="nama"
                         name="nama"
                         value="{{ old('nama') }}"
-                        class="input input-bordered w-full @error('nama') input-error @enderror"
+                        class="input input-bordered w-full rounded-xl @error('nama') input-error @enderror"
                         placeholder="Enter fish species name"
                         required
                     >
