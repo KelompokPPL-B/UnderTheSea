@@ -80,11 +80,11 @@ class EkosistemController extends Controller
 
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|min:10|max:100',
-            'deskripsi' => 'nullable|string|max:1000',
-            'lokasi' => 'nullable|string|max:255',
-            'peran' => 'nullable|string|max:1000',
-            'ancaman' => 'nullable|string|max:1000',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
+            'deskripsi' =>'required|string|min:20',
+            'lokasi' => 'required|string|min:10',
+            'peran' => 'required|string|min:5',
+            'ancaman' => 'required|string|min:5',
+            'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
 
         if ($request->hasFile('gambar')) {
@@ -110,11 +110,11 @@ class EkosistemController extends Controller
 
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|min:10|max:100',
-            'deskripsi' => 'nullable|string|max:1000',
-            'lokasi' => 'nullable|string|max:255',
-            'peran' => 'nullable|string|max:1000',
-            'ancaman' => 'nullable|string|max:1000',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
+            'deskripsi' =>'required|string|min:20',
+            'lokasi' => 'required|string|min:10',
+            'peran' => 'required|string|min:5',
+            'ancaman' => 'required|string|min:5',
+            'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
 
         if ($request->hasFile('gambar')) {
