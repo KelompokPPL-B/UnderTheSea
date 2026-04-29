@@ -87,12 +87,6 @@ class EkosistemController extends Controller
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
 
-        foreach ($validated as $key => $value) {
-            if (is_string($value)) {
-                $validated[$key] = trim($value);
-            }
-        }
-
         if ($request->hasFile('gambar')) {
             $validated['gambar'] = $request->file('gambar')->store('ecosystem', 'public');
         }
@@ -122,12 +116,6 @@ class EkosistemController extends Controller
             'ancaman' => 'nullable|string|max:1000',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
-
-        foreach ($validated as $key => $value) {
-            if (is_string($value)) {
-                $validated[$key] = trim($value);
-            }
-        }
 
         if ($request->hasFile('gambar')) {
             $validated['gambar'] = $request->file('gambar')->store('ecosystem', 'public');
