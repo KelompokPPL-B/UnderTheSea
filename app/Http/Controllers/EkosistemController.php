@@ -79,7 +79,7 @@ class EkosistemController extends Controller
         abort_unless(auth()->user()?->isAdmin(), 403);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|min:10|max:100',
+            'nama_ekosistem' => 'required|string|min:10|max:100|unique:ekosistem,nama_ekosistem',
             'deskripsi' =>'required|string|min:20',
             'lokasi' => 'required|string|min:10',
             'peran' => 'required|string|min:5',
@@ -109,7 +109,7 @@ class EkosistemController extends Controller
         $ekosistem = Ekosistem::findOrFail($id);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|min:10|max:100',
+            'nama_ekosistem' => 'required|string|min:10|max:100|unique:ekosistem,nama_ekosistem,'.$id.',id_ekosistem',
             'deskripsi' =>'required|string|min:20',
             'lokasi' => 'required|string|min:10',
             'peran' => 'required|string|min:5',
