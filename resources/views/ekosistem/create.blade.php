@@ -112,4 +112,22 @@
             </div>
         </div>
     </div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector("form").addEventListener("submit", function(e) {
+        const nama = document.getElementById("nama_ekosistem").value.trim();
+
+        if (nama.length < 10) { 
+            e.preventDefault();
+            alert("Nama ekosistem minimal 10 karakter"); 
+        }
+
+        const file = document.getElementById("gambar").files[0];
+        if (file && file.size > 2 * 1024 * 1024) {
+            e.preventDefault();
+            alert("Ukuran gambar maksimal 2MB");
+        }
+    });
+});
+</script>
 @endsection
