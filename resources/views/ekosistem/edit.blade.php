@@ -18,7 +18,16 @@
             <form action="{{ route('ekosistem.update', $ekosistem->id_ekosistem) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
-
+                @if ($errors->any())
+                <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg">
+                    <p class="font-semibold mb-2">Terjadi kesalahan:</p>
+                    <ul class="text-sm list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
                 <!-- Name -->
                 <div>
                     <label for="nama_ekosistem" class="block text-sm font-semibold text-ocean-900 mb-2">
