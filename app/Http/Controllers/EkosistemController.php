@@ -79,13 +79,19 @@ class EkosistemController extends Controller
         abort_unless(auth()->user()?->isAdmin(), 403);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|min:3|max:100',
+            'nama_ekosistem' => 'required|string|min:10|max:100',
             'deskripsi' => 'nullable|string|max:1000',
             'lokasi' => 'nullable|string|max:255',
             'peran' => 'nullable|string|max:1000',
             'ancaman' => 'nullable|string|max:1000',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
+
+        foreach ($validated as $key => $value) {
+            if (is_string($value)) {
+                $validated[$key] = trim($value);
+            }
+        }
 
         if ($request->hasFile('gambar')) {
             $validated['gambar'] = $request->file('gambar')->store('ecosystem', 'public');
@@ -109,13 +115,19 @@ class EkosistemController extends Controller
         $ekosistem = Ekosistem::findOrFail($id);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|min:3|max:100',
+            'nama_ekosistem' => 'required|string|min:10|max:100',
             'deskripsi' => 'nullable|string|max:1000',
             'lokasi' => 'nullable|string|max:255',
             'peran' => 'nullable|string|max:1000',
             'ancaman' => 'nullable|string|max:1000',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
+
+        foreach ($validated as $key => $value) {
+            if (is_string($value)) {
+                $validated[$key] = trim($value);
+            }
+        }
 
         if ($request->hasFile('gambar')) {
             $validated['gambar'] = $request->file('gambar')->store('ecosystem', 'public');
