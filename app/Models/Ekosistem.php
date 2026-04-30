@@ -16,6 +16,9 @@ class Ekosistem extends Model
         'lokasi',
         'peran',
         'ancaman',
+        'cara_menjaga',
+        'larangan',
+        'dampak_kerusakan',
         'gambar',
         'created_by',
     ];
