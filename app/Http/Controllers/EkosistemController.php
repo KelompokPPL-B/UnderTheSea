@@ -56,12 +56,15 @@ class EkosistemController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|max:255',
-            'deskripsi'      => 'nullable|string',
-            'lokasi'         => 'nullable|string|max:255',
-            'peran'          => 'nullable|string',
-            'ancaman'        => 'nullable|string',
-            'gambar'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'nama_ekosistem'  => 'required|string|max:255',
+            'deskripsi'       => 'nullable|string',
+            'lokasi'          => 'nullable|string|max:255',
+            'peran'           => 'nullable|string',
+            'ancaman'         => 'nullable|string',
+            'cara_menjaga'    => 'nullable|string',
+            'larangan'        => 'nullable|string',
+            'dampak_kerusakan'=> 'nullable|string',
+            'gambar'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ], [
             'gambar.image' => 'File yang diunggah harus berupa gambar.',
             'gambar.mimes' => 'Format gambar harus JPG, JPEG, atau PNG.',
@@ -84,12 +87,15 @@ class EkosistemController extends Controller
         $ekosistem = Ekosistem::findOrFail($id);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|max:255',
-            'deskripsi'      => 'nullable|string',
-            'lokasi'         => 'nullable|string|max:255',
-            'peran'          => 'nullable|string',
-            'ancaman'        => 'nullable|string',
-            'gambar'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'nama_ekosistem'  => 'required|string|max:255',
+            'deskripsi'       => 'nullable|string',
+            'lokasi'          => 'nullable|string|max:255',
+            'peran'           => 'nullable|string',
+            'ancaman'         => 'nullable|string',
+            'cara_menjaga'    => 'nullable|string',
+            'larangan'        => 'nullable|string',
+            'dampak_kerusakan'=> 'nullable|string',
+            'gambar'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ], [
             'gambar.image' => 'File yang diunggah harus berupa gambar.',
             'gambar.mimes' => 'Format gambar harus JPG, JPEG, atau PNG.',
