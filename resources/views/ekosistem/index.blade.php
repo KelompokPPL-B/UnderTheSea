@@ -102,82 +102,109 @@
 </div>
 
 @push('scripts')
-<script type="module">
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeBookmarkButtonsCard();
-        loadBookmarkStatesCard();
-    });
+<script>
+// Global helper - harus di luar module
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]')?.content || '';
+}
 
-    function initializeBookmarkButtonsCard() {
-        document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-            btn.addEventListener('click', toggleBookmarkCard);
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-btn-card').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id = this.dataset.ekosistemId;
+            if (!confirm("Yakin mau hapus data ini?")) return;
+
+            fetch(`/ekosistem/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': getCsrfToken(),
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => {
+                if (res.ok) {
+                    location.reload();
+                } else {
+                    alert("Gagal menghapus data");
+                }
+            })
+            .catch(err => console.error(err));
         });
-    }
+    });
+});
+</script>
 
-    function toggleBookmarkCard(e) {
-        e.preventDefault();
-        const btn = e.currentTarget;
-        const type = btn.dataset.type;
-        const itemId = btn.dataset.itemId;
-        const isBookmarked = btn.classList.contains('bookmarked');
+<script type="module">
+document.addEventListener('DOMContentLoaded', function() {
+    initializeBookmarkButtonsCard();
+    loadBookmarkStatesCard();
+});
 
-        const method = isBookmarked ? 'DELETE' : 'POST';
+function initializeBookmarkButtonsCard() {
+    document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
+        btn.addEventListener('click', toggleBookmarkCard);
+    });
+}
 
-        fetch('/favorites', {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': getCsrfToken(),
-            },
-            body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                btn.classList.toggle('bookmarked');
-                btn.classList.toggle('bg-blue-600');
-                btn.classList.toggle('text-white');
-                btn.classList.toggle('border-blue-600');
-                btn.classList.toggle('text-blue-600');
-                btn.classList.toggle('hover:bg-blue-50');
-                const text = btn.querySelector('.bookmark-text');
-                text.textContent = btn.classList.contains('bookmarked') ? 'Bookmarked' : 'Bookmark';
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(err => console.error('Error:', err));
-    }
+function toggleBookmarkCard(e) {
+    e.preventDefault();
+    const btn = e.currentTarget;
+    const type = btn.dataset.type;
+    const itemId = btn.dataset.itemId;
+    const isBookmarked = btn.classList.contains('bookmarked');
+    const method = isBookmarked ? 'DELETE' : 'POST';
 
-    function loadBookmarkStatesCard() {
-        fetch('/favorites', {
-            method: 'GET',
-            headers: {
-                'X-CSRF-TOKEN': getCsrfToken(),
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success' && Array.isArray(data.data)) {
-                document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-                    const type = btn.dataset.type;
-                    const itemId = parseInt(btn.dataset.itemId);
-                    const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
-                    if (isBookmarked) {
-                        btn.classList.add('bookmarked', 'bg-blue-600', 'text-white', 'border-blue-600');
-                        btn.classList.remove('text-blue-600', 'hover:bg-blue-50');
-                        const text = btn.querySelector('.bookmark-text');
-                        if (text) text.textContent = 'Bookmarked';
-                    }
-                });
-            }
-        })
-        .catch(err => console.error('Error loading bookmark state:', err));
-    }
+    fetch('/favorites', {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+        },
+        body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            btn.classList.toggle('bookmarked');
+            btn.classList.toggle('bg-blue-600');
+            btn.classList.toggle('text-white');
+            btn.classList.toggle('border-blue-600');
+            btn.classList.toggle('text-blue-600');
+            btn.classList.toggle('hover:bg-blue-50');
+            const text = btn.querySelector('.bookmark-text');
+            text.textContent = btn.classList.contains('bookmarked') ? 'Bookmarked' : 'Bookmark';
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(err => console.error('Error:', err));
+}
 
-    function getCsrfToken() {
-        return document.querySelector('meta[name="csrf-token"]')?.content || '';
-    }
+function loadBookmarkStatesCard() {
+    fetch('/favorites', {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success' && Array.isArray(data.data)) {
+            document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
+                const type = btn.dataset.type;
+                const itemId = parseInt(btn.dataset.itemId);
+                const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
+                if (isBookmarked) {
+                    btn.classList.add('bookmarked', 'bg-blue-600', 'text-white', 'border-blue-600');
+                    btn.classList.remove('text-blue-600', 'hover:bg-blue-50');
+                    const text = btn.querySelector('.bookmark-text');
+                    if (text) text.textContent = 'Bookmarked';
+                }
+            });
+        }
+    })
+    .catch(err => console.error('Error loading bookmark state:', err));
+}
 </script>
 @endpush
 @endsection

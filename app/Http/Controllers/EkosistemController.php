@@ -138,6 +138,10 @@ class EkosistemController extends Controller
         $ekosistem = Ekosistem::findOrFail($id);
         $ekosistem->delete();
 
+        if (request()->wantsJson()) {
+            return response()->json(['status' => 'success']);
+        }
+
         return redirect()->route('ekosistem.index')
             ->with('success', 'Ecosystem deleted successfully!');
     }
