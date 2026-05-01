@@ -23,12 +23,11 @@
                 <div class="relative bg-white/80 backdrop-blur-md rounded-full p-1.5 flex items-center shadow-xl border border-white/50">
                     <span class="pl-5 pr-2 text-2xl">🙌</span>
                     
-                    <!-- DITAMBAHKAN: maxlength="50" di sini -->
+                    <!-- maxlength="50" DIHAPUS agar validasi backend berjalan -->
                     <input 
                         type="text" 
                         name="search" 
                         value="{{ request('search') }}"
-                        maxlength="50"
                         placeholder="Cari aksi, gerakan, atau kampanye..." 
                         class="w-full bg-transparent border-none focus:ring-0 px-2 py-3 text-ocean-900 placeholder-ocean-400 font-medium outline-none"
                     >
@@ -44,7 +43,7 @@
                     </button>
                 </div>
 
-                <!-- DITAMBAHKAN: Pesan Error Validasi dari Backend -->
+                <!-- Pesan Error Validasi dari Backend -->
                 @error('search')
                     <p class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-red-500 text-sm font-semibold bg-white/90 px-4 py-1 rounded-full shadow-md whitespace-nowrap">
                         {{ $message }}
