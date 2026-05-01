@@ -19,13 +19,20 @@ class AksiController extends Controller
     // 🔥 INDEX (SEARCH + SORT + OPTIMIZED)
     public function index(Request $request)
     {
+        // Validasi input search maksimal 50 karakter agar aman dari input berlebih
+        $request->validate([
+            'search' => 'nullable|string|max:50',
+        ], [
+            'search.max' => 'Teks pencarian kepanjangan, maksimal 50 karakter ya!', 
+        ]);
+
         $sort = $request->query('sort', 'newest');
         $search = $request->query('search');
 
         $query = AksiPelestarian::query()
             ->select('id_aksi', 'judul_aksi', 'deskripsi', 'gambar', 'created_at');
 
-        // 🔍 SEARCH (lebih cepat karena pakai prefix + index)
+        // 🔍 SEARCH (Tetap menggunakan prefix search yang optimal)
         if (!empty($search)) {
             $query->where('judul_aksi', 'like', "{$search}%");
         }
