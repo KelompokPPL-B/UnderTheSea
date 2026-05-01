@@ -9,17 +9,13 @@
             <div>
                 <h1 class="text-4xl font-bold text-ocean-900 mb-3">Marine Ecosystems</h1>
                      <p class="text-gray-600">Discover the diverse ecosystems that make up our oceans and learn about their importance.</p>
-                     <!-- Visible Create button for quick access -->
-                     <a href="{{ url('/ekosistem/create') }}"
-                         style="background:#2563EB; color:white; padding:8px 14px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,.15); text-decoration:none; font-weight:600; display:inline-block; margin-top:8px;">
-                         + Create Ecosystem
-                     </a>
+                     @auth
+                         <a href="{{ route('ekosistem.create') }}"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition">
+                             + Create Ecosystem
+                         </a>
+                     @endauth
             </div>
-            @auth
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ url('/ekosistem/create') }}" class="inline-flex items-center justify-center bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-4 py-2 rounded-md text-sm font-medium shadow-md transition duration-200">+ Create Ecosystem</a>
-                @endif
-            @endauth
         </div>
 
         <!-- Sort Controls -->
@@ -85,12 +81,21 @@
                                 </div>
                             @endauth
 
-                            <!-- Action Buttons -->
-                            <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="w-full mt-3 bg-blue-600 text-white py-2 rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition duration-200 text-sm font-semibold text-center block">View</a>
-                                @if(auth()->check() && auth()->user()->isAdmin())
-                                    <a href="{{ route('ekosistem.edit', $item->id_ekosistem) }}" class="btn btn-outline btn-sm">Edit</a>
-                                    <button class="delete-btn-card btn btn-error btn-sm" data-ekosistem-id="{{ $item->id_ekosistem }}">Delete</button>
+                            <!-- Action Buttons (View | Edit | Delete) -->
+                            <div class="flex items-center gap-3 mt-3 border-t border-ocean-100 pt-3">
+                                <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}"
+                                   class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded-lg shadow-md text-sm font-semibold transition">
+                                    View
+                                </a>
+
+                                @if(auth()->check() && (auth()->user()->isAdmin() || auth()->id() === $item->created_by))
+                                    <a href="{{ route('ekosistem.edit', $item->id_ekosistem) }}" class="text-sm font-semibold text-gray-700 hover:text-blue-600">Edit</a>
+
+                                    <form action="{{ route('ekosistem.destroy', $item->id_ekosistem) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus ekosistem ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-sm font-semibold text-red-600 hover:text-red-700">Delete</button>
+                                    </form>
                                 @endif
                             </div>
                         </div>

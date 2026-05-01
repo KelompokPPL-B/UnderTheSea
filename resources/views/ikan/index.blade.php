@@ -10,9 +10,6 @@
                 <h1 class="text-4xl font-bold text-ocean-900 mb-3">Marine Fish</h1>
                 <p class="text-gray-600">Discover various fish species and learn about their habitat, food, and characteristics.</p>
             </div>
-            @auth
-                <a href="{{ route('ikan.create') }}" class="inline-flex items-center justify-center bg-[#1e3a8a] hover:bg-[#2746b0] text-white px-4 py-2 rounded-md text-sm font-medium shadow-md transition-colors duration-200">+ Add Fish</a>
-            @endauth
         </div>
 
         <!-- Sort Controls -->
@@ -25,55 +22,9 @@
             </select>
         </div>
 
-        @if(!isset($ikans) || $ikans->isEmpty())
-            <div class="bg-white rounded-2xl shadow-card p-12 text-center">
-                <p class="text-ocean-600 text-lg font-semibold">No fish found yet. Add a new fish using the button above.</p>
-            </div>
-        @else
-            <!-- Fish Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($ikans as $item)
-                    <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] animate-fade overflow-hidden">
-                        @if($item->image)
-                            <div class="overflow-hidden h-48">
-                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
-                            </div>
-                        @else
-                            <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
-                                <span class="text-ocean-400">No image</span>
-                            </div>
-                        @endif
-
-                        <div class="p-6 space-y-4">
-                            <a href="{{ route('ikan.show', $item->id_ikan) }}" class="block group-hover:text-ocean-600 transition">
-                                <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->name }}</h3>
-                            </a>
-
-                            <p class="text-gray-600 text-sm line-clamp-2">{{ $item->habitat ?? 'Unknown habitat' }}</p>
-
-                            <div class="pt-2 border-t border-ocean-100">
-                                <p class="text-xs text-gray-600">
-                                    Created by <span class="font-semibold text-ocean-900">{{ optional($item->createdBy)->name }}</span>
-                                    <span class="badge badge-success text-xs ml-1">{{ optional($item->createdBy)->badge }}</span>
-                                </p>
-                            </div>
-
-                            <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="w-full inline-flex items-center justify-center bg-[#4da6ff] hover:bg-[#3b8fe0] text-gray-900 px-4 py-2 rounded-md text-sm font-medium shadow-md transition-colors duration-200">View</a>
-                                @if(auth()->check() && (auth()->user()->isAdmin() || auth()->id() === $item->created_by))
-                                    <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
-                                    <button class="delete-btn-card btn btn-error btn-sm" data-id="{{ $item->id_ikan }}">Delete</button>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <div class="mt-8 flex justify-center">
-                {{ $ikans->appends(request()->query())->links() }}
-            </div>
-        @endif
+        <div class="bg-white rounded-2xl shadow-card p-12 text-center">
+            <p class="text-ocean-600 text-lg font-semibold">No fish found yet.</p>
+        </div>
     </div>
 </div>
 
