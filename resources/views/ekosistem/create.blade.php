@@ -26,7 +26,7 @@
                             type="text"
                             id="nama_ekosistem"
                             name="nama_ekosistem"
-                            minlength="10"
+                            minlength="5"
                             value="{{ old('nama_ekosistem') }}"
                             class="input input-bordered w-full rounded-xl @error('nama_ekosistem') input-error @enderror"
                             placeholder="Enter ecosystem name" required>
@@ -116,15 +116,31 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelector("form").addEventListener("submit", function(e) {
         const nama = document.getElementById("nama_ekosistem").value.trim();
 
-        if (nama.length < 10) { 
+        if (nama.length < 5) { 
             e.preventDefault();
-            alert("Nama ekosistem minimal 10 karakter"); 
+            alert("Ecosystem Name must be more than 5 characters"); 
         }
 
         const file = document.getElementById("gambar").files[0];
         if (file && file.size > 2 * 1024 * 1024) {
             e.preventDefault();
-            alert("Ukuran gambar maksimal 2MB");
+            alert("Image size must be less than 2MB");
+        }
+        if (deskripsi.length < 10) {
+            e.preventDefault();
+            alert("Description must be more than 10 characters");
+        }
+        if (lokasi.length < 5) {
+            e.preventDefault();
+            alert("Location must be more than 5 characters");
+        }
+        if (peran.length < 5) {
+            e.preventDefault();
+            alert("Role must be more than 5 characters");
+        }
+        if (ancaman.length < 10) {
+            e.preventDefault();
+            alert("Threats must be more than 10 characters");
         }
     });
 });

@@ -79,11 +79,11 @@ class EkosistemController extends Controller
         abort_unless(auth()->user()?->isAdmin(), 403);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|min:10|max:100|unique:ekosistem,nama_ekosistem',
-            'deskripsi' =>'required|string|min:20',
-            'lokasi' => 'required|string|min:10',
+            'nama_ekosistem' => 'required|string|min:5|max:100|unique:ekosistem,nama_ekosistem',
+            'deskripsi' =>'required|string|min:10',
+            'lokasi' => 'required|string|min:5',
             'peran' => 'required|string|min:5',
-            'ancaman' => 'required|string|min:5',
+            'ancaman' => 'required|string|min:10',
             'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
 
@@ -109,11 +109,11 @@ class EkosistemController extends Controller
         $ekosistem = Ekosistem::findOrFail($id);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|min:10|max:100|unique:ekosistem,nama_ekosistem,'.$id.',id_ekosistem',
-            'deskripsi' =>'required|string|min:20',
-            'lokasi' => 'required|string|min:10',
+            'nama_ekosistem' => 'required|string|min:5|max:100|unique:ekosistem,nama_ekosistem,'.$id.',id_ekosistem',
+            'deskripsi' =>'required|string|min:10',
+            'lokasi' => 'required|string|min:5',
             'peran' => 'required|string|min:5',
-            'ancaman' => 'required|string|min:5',
+            'ancaman' => 'required|string|min:10',
             'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
 
