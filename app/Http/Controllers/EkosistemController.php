@@ -108,20 +108,13 @@ class EkosistemController extends Controller
     public function update(Request $request, $id)
     {
         $ekosistem = Ekosistem::findOrFail($id);
-
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'lokasi' => 'required|string|max:255',
-            'peran' => 'nullable|string',
-            'karakteristik' => 'nullable|string',
-            'manfaat' => 'nullable|string',
-            'ancaman' => 'nullable|string',
-            'cara_pelestarian' => 'nullable|string',
+            'peran' => 'required|string',
+            'ancaman' => 'required|string',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png,jfif|max:2048',
-        ], [
-            'gambar.mimes' => 'Format gambar harus JPG, JPEG, PNG, atau JFIF.',
-            'gambar.max' => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
         if ($request->hasFile('gambar')) {
@@ -130,7 +123,8 @@ class EkosistemController extends Controller
 
         $ekosistem->update($validated);
 
-        return redirect()->route('ekosistem.index')->with('success', 'Ecosystem berhasil diperbarui.');
+        return redirect()->route('ekosistem.index')
+            ->with('success', 'Admin berhasil melakukan update data ekosistem.');
     }
 
     /**

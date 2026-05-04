@@ -1,6 +1,6 @@
 {{--
 #PBI-18
-#OWNER-Arvia
+#OWNER-Mutiara
 --}}
 @extends('layouts.app')
 
@@ -78,12 +78,13 @@
                 <!-- Role in Marine Life -->
                 <div>
                     <label for="peran" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Role in Marine Life
+                        Role in Marine Life *
                     </label>
                     <textarea
                         id="peran"
                         name="peran"
                         rows="3"
+                        required
                         class="textarea textarea-bordered w-full @error('peran') textarea-error @enderror"
                         placeholder="Describe the ecosystem's role in marine life"
                     >{{ old('peran', $ekosistem->peran) }}</textarea>
@@ -95,12 +96,13 @@
                 <!-- Threats -->
                 <div>
                     <label for="ancaman" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Threats
+                        Threats *
                     </label>
                     <textarea
                         id="ancaman"
                         name="ancaman"
                         rows="3"
+                        required
                         class="textarea textarea-bordered w-full @error('ancaman') textarea-error @enderror"
                         placeholder="Describe threats to this ecosystem"
                     >{{ old('ancaman', $ekosistem->ancaman) }}</textarea>
