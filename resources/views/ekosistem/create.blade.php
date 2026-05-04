@@ -40,35 +40,37 @@
                 <!-- Description -->
                 <div>
                     <label for="deskripsi" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Description
+                        Description *
                     </label>
                     <textarea
                         id="deskripsi"
                         name="deskripsi"
                         rows="4"
+                        required
                         class="textarea textarea-bordered w-full @error('deskripsi') textarea-error @enderror"
                         placeholder="Describe the ecosystem"
                     >{{ old('deskripsi') }}</textarea>
                     @error('deskripsi')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Location -->
                 <div>
                     <label for="lokasi" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Location
+                        Location *
                     </label>
                     <input
                         type="text"
                         id="lokasi"
                         name="lokasi"
                         value="{{ old('lokasi') }}"
+                        required
                         class="input input-bordered w-full @error('lokasi') input-error @enderror"
                         placeholder="Enter geographic location"
                     >
                     @error('lokasi')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -123,17 +125,18 @@
                 <!-- Image -->
                 <div>
                     <label for="gambar" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Image (JPG, PNG - Max 2MB)
+                        Image (JPG, JPEG, PNG, JFIF - Max 2MB)
                     </label>
                     <input
                         type="file"
                         id="gambar"
                         name="gambar"
-                        accept="image/jpeg,image/png,image/jpg"
+                        accept=".jpg,.jpeg,.png,.jfif,image/jpeg,image/png"
                         class="file-input file-input-bordered w-full @error('gambar') file-input-error @enderror"
                     >
+                    <p class="text-sm text-ocean-600 mt-1">Format: JPG, JPEG, PNG, JFIF | Maksimal: 2MB</p>
                     @error('gambar')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        <small style="color:red">{{ $message }}</small>
                     @enderror
                 </div>
                 <!-- Buttons -->

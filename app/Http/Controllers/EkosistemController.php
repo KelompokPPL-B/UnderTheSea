@@ -78,14 +78,17 @@ class EkosistemController extends Controller
     {
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'lokasi' => 'nullable|string|max:255',
+            'deskripsi' => 'required|string',
+            'lokasi' => 'required|string|max:255',
             'peran' => 'nullable|string',
-            'ancaman' => 'nullable|string',
             'karakteristik' => 'nullable|string',
             'manfaat' => 'nullable|string',
+            'ancaman' => 'nullable|string',
             'cara_pelestarian' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,jfif|max:2048',
+        ], [
+            'gambar.mimes' => 'Format gambar harus JPG, JPEG, PNG, atau JFIF.',
+            'gambar.max' => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
         if ($request->hasFile('gambar')) {
@@ -104,30 +107,30 @@ class EkosistemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->authorize('admin');
-
         $ekosistem = Ekosistem::findOrFail($id);
-
 
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'lokasi' => 'nullable|string|max:255',
+            'deskripsi' => 'required|string',
+            'lokasi' => 'required|string|max:255',
             'peran' => 'nullable|string',
-            'ancaman' => 'nullable|string',
             'karakteristik' => 'nullable|string',
             'manfaat' => 'nullable|string',
+            'ancaman' => 'nullable|string',
             'cara_pelestarian' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,jfif|max:2048',
+        ], [
+            'gambar.mimes' => 'Format gambar harus JPG, JPEG, PNG, atau JFIF.',
+            'gambar.max' => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
         if ($request->hasFile('gambar')) {
-            $validated['gambar'] = $request->file('gambar')->store('ecosystem', 'public');
+            $validated['gambar'] = $request->file('gambar')->store('ekosistem', 'public');
         }
 
         $ekosistem->update($validated);
 
-        return redirect()->route('ekosistem.index')->with('success', 'Ecosystem updated successfully');
+        return redirect()->route('ekosistem.index')->with('success', 'Ecosystem berhasil diperbarui.');
     }
 
     /**
@@ -136,8 +139,6 @@ class EkosistemController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorize('admin');
-
         $ekosistem = Ekosistem::findOrFail($id);
         $ekosistem->delete();
 
