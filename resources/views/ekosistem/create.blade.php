@@ -40,35 +40,37 @@
                 <!-- Description -->
                 <div>
                     <label for="deskripsi" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Description
+                        Description *
                     </label>
                     <textarea
                         id="deskripsi"
                         name="deskripsi"
                         rows="4"
+                        required
                         class="textarea textarea-bordered w-full @error('deskripsi') textarea-error @enderror"
                         placeholder="Describe the ecosystem"
                     >{{ old('deskripsi') }}</textarea>
                     @error('deskripsi')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Location -->
                 <div>
                     <label for="lokasi" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Location
+                        Location *
                     </label>
                     <input
                         type="text"
                         id="lokasi"
                         name="lokasi"
                         value="{{ old('lokasi') }}"
+                        required
                         class="input input-bordered w-full @error('lokasi') input-error @enderror"
                         placeholder="Enter geographic location"
                     >
                     @error('lokasi')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -87,6 +89,20 @@
                     @error('peran')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
+                </div>
+
+                <!-- Characteristics -->
+                <div>
+                    <label for="karakteristik" class="block text-sm font-semibold text-ocean-900 mb-2">Karakteristik</label>
+                    <textarea id="karakteristik" name="karakteristik" rows="3" class="textarea textarea-bordered w-full @error('karakteristik') textarea-error @enderror" placeholder="Key characteristics">{{ old('karakteristik') }}</textarea>
+                    @error('karakteristik')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+                </div>
+
+                <!-- Benefits -->
+                <div>
+                    <label for="manfaat" class="block text-sm font-semibold text-ocean-900 mb-2">Manfaat Ekosistem</label>
+                    <textarea id="manfaat" name="manfaat" rows="3" class="textarea textarea-bordered w-full @error('manfaat') textarea-error @enderror" placeholder="Benefits">{{ old('manfaat') }}</textarea>
+                    @error('manfaat')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
                 </div>
 
                 <!-- Threats -->
@@ -109,27 +125,43 @@
                 <!-- Image -->
                 <div>
                     <label for="gambar" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Image (JPG, PNG - Max 2MB)
+                        Image (JPG, JPEG, PNG, JFIF - Max 2MB)
                     </label>
                     <input
                         type="file"
                         id="gambar"
                         name="gambar"
-                        accept="image/jpeg,image/png,image/jpg"
+                        accept=".jpg,.jpeg,.png,.jfif,image/jpeg,image/png"
                         class="file-input file-input-bordered w-full @error('gambar') file-input-error @enderror"
                     >
+                    <p class="text-sm text-ocean-600 mt-1">Format: JPG, JPEG, PNG, JFIF | Maksimal: 2MB</p>
                     @error('gambar')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        <small style="color:red">{{ $message }}</small>
                     @enderror
                 </div>
-
                 <!-- Buttons -->
                 <div class="flex gap-3 pt-6 border-t border-ocean-100">
-                    <button type="submit" class="btn btn-primary flex-1">Create Ecosystem</button>
-                    <a href="{{ route('ekosistem.index') }}" class="btn btn-outline flex-1">Cancel</a>
+                    <button type="submit" id="submitBtn" class="flex-1 px-6 py-3 bg-[#1e3a8a] text-white rounded-md hover:bg-[#2746b0] shadow-md transition-colors duration-200 font-medium">Create Ecosystem</button>
+                    <a href="{{ route('ekosistem.index') }}" class="flex-1 text-center px-6 py-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition font-medium">Cancel</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+// Optional: keep submit button UX simple for standard form submit
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form[action="{{ route('ekosistem.store') }}"]');
+    const submitBtn = document.getElementById('submitBtn');
+    if (form && submitBtn) {
+        form.addEventListener('submit', function() {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating...';
+        });
+    }
+});
+</script>
+@endpush
 @endsection

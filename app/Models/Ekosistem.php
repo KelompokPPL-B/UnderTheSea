@@ -17,6 +17,9 @@ class Ekosistem extends Model
         'peran',
         'ancaman',
         'gambar',
+        'karakteristik',
+        'manfaat',
+        'cara_pelestarian',
         'created_by',
     ];
 

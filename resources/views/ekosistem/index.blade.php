@@ -8,13 +8,15 @@
         <div class="flex justify-between items-start mb-10">
             <div>
                 <h1 class="text-4xl font-bold text-ocean-900 mb-3">Marine Ecosystems</h1>
-                <p class="text-gray-600">Discover the diverse ecosystems that make up our oceans and learn about their importance.</p>
+                     <p class="text-gray-600">Discover the diverse ecosystems that make up our oceans and learn about their importance.</p>
+                     @auth
+                         {{-- 
+                         <a href="{{ route('ekosistem.create') }}">
+                             + Create Ecosystem
+                         </a>
+                         --}}
+                     @endauth
             </div>
-            @auth
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ route('ekosistem.create') }}" class="btn btn-primary btn-sm">+ Add New Ecosystem</a>
-                @endif
-            @endauth
         </div>
 
         <!-- Sort Controls -->
@@ -24,6 +26,12 @@
                 <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
             </select>
         </div>
+
+        @if(session('success'))
+            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
 
         @if($ekosistem->isEmpty())
             <div class="bg-white rounded-2xl shadow-card p-12 text-center">
@@ -80,12 +88,21 @@
                                 </div>
                             @endauth
 
-                            <!-- Action Buttons -->
-                            <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="btn btn-primary btn-sm flex-1">View</a>
-                                @if(auth()->check() && auth()->user()->isAdmin())
-                                    <a href="{{ route('ekosistem.edit', $item->id_ekosistem) }}" class="btn btn-outline btn-sm">Edit</a>
-                                    <button class="delete-btn-card btn btn-error btn-sm" data-ekosistem-id="{{ $item->id_ekosistem }}">Delete</button>
+                            <!-- Action Buttons (View | Edit | Delete) -->
+                            <div class="flex items-center gap-3 mt-3 border-t border-ocean-100 pt-3">
+                                <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}"
+                                   class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded-lg shadow-md text-sm font-semibold transition">
+                                    View
+                                </a>
+
+                                @if(auth()->check() && (auth()->user()->isAdmin() || auth()->id() === $item->created_by))
+                                    <a href="{{ route('ekosistem.edit', $item->id_ekosistem) }}" class="text-sm font-semibold text-gray-700 hover:text-blue-600">Edit</a>
+
+                                    <form action="{{ route('ekosistem.destroy', $item->id_ekosistem) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus ekosistem ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-sm font-semibold text-red-600 hover:text-red-700">Delete</button>
+                                    </form>
                                 @endif
                             </div>
                         </div>
