@@ -86,16 +86,25 @@ class AksiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul_aksi' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'manfaat' => 'nullable|string',
-            'cara_melakukan' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'judul_aksi'    => 'required|string|max:255',
+            'deskripsi'     => 'required|string',
+            'manfaat'       => 'required|string',
+            'cara_melakukan'=> 'required|string',
+            'gambar'        => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+            'judul_aksi.required'    => 'Action title is required.',
+            'deskripsi.required'     => 'Description is required.',
+            'manfaat.required'       => 'Benefits are required.',
+            'cara_melakukan.required'=> 'Instructions are required.',
+            'gambar.required'        => 'Image must be uploaded.',
+            'gambar.image'           => 'The file must be an image.',
+            'gambar.mimes'           => 'Image format must be JPG or PNG.',
+            'gambar.max'             => 'Image size must not exceed 2MB.',
         ]);
 
-        $validated['judul_aksi'] = SanitizationService::sanitize($validated['judul_aksi']);
-        $validated['deskripsi'] = SanitizationService::sanitize($validated['deskripsi']);
-        $validated['manfaat'] = SanitizationService::sanitize($validated['manfaat']);
+        $validated['judul_aksi']     = SanitizationService::sanitize($validated['judul_aksi']);
+        $validated['deskripsi']      = SanitizationService::sanitize($validated['deskripsi']);
+        $validated['manfaat']        = SanitizationService::sanitize($validated['manfaat']);
         $validated['cara_melakukan'] = SanitizationService::sanitize($validated['cara_melakukan']);
 
         if ($request->hasFile('gambar')) {
@@ -109,11 +118,7 @@ class AksiController extends Controller
 
         $this->pointsService->awardPointsForAction(auth()->id(), $aksi->id_aksi);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Action created successfully',
-            'data' => $aksi,
-        ], 201);
+        return redirect()->route('aksi.show', $aksi->id_aksi)->with('success', 'Action created successfully!');
     }
 
     /**
@@ -130,11 +135,19 @@ class AksiController extends Controller
         }
 
         $validated = $request->validate([
-            'judul_aksi' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'manfaat' => 'nullable|string',
-            'cara_melakukan' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'judul_aksi'    => 'required|string|max:255',
+            'deskripsi'     => 'required|string',
+            'manfaat'       => 'required|string',
+            'cara_melakukan'=> 'required|string',
+            'gambar'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+            'judul_aksi.required'    => 'Action title is required.',
+            'deskripsi.required'     => 'Description is required.',
+            'manfaat.required'       => 'Benefits are required.',
+            'cara_melakukan.required'=> 'Instructions are required.',
+            'gambar.image'           => 'The file must be an image.',
+            'gambar.mimes'           => 'Image format must be JPG or PNG.',
+            'gambar.max'             => 'Image size must not exceed 2MB.',
         ]);
 
         $validated['judul_aksi'] = SanitizationService::sanitize($validated['judul_aksi']);
