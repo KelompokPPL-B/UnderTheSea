@@ -15,7 +15,7 @@
                     <input
                         type="text"
                         name="q"
-                        value="{{ $query }}"
+                        value="{{ $rawQuery }}"
                         placeholder="Cari ikan, ekosistem, atau aksi pelestarian..."
                         class="w-full rounded-xl border border-ocean-200 bg-white px-5 py-3 text-sm text-gray-700 shadow-soft focus:outline-none focus:ring-2 focus:ring-ocean-400 transition"
                     />
@@ -24,27 +24,49 @@
                         🔍 Cari
                     </button>
                 </div>
+
+                {{-- PBI-15: pesan jika input kosong --}}
+                @if($rawQuery !== '' && $query === '')
+                    <p class="text-xs text-yellow-600 mt-2 text-center">
+                        ⚠️ Masukkan kata kunci untuk melakukan pencarian.
+                    </p>
+                @endif
             </form>
         </div>
 
         {{-- ===== HASIL SEARCH ===== --}}
-        @if($query)
+        @if($isSearching)
             <div class="mb-12">
+
+                {{-- Info jumlah hasil --}}
                 <p class="text-sm text-gray-500 text-center mb-6">
-                    Menampilkan <span class="font-semibold text-ocean-600">{{ $totalResults }}</span> hasil untuk
-                    "<span class="font-semibold text-gray-700">{{ $query }}</span>"
+                    @if($totalResults > 0)
+                        Menampilkan <span class="font-semibold text-ocean-600">{{ $totalResults }}</span> hasil untuk
+                        "<span class="font-semibold text-gray-700">{{ $query }}</span>"
+                    @else
+                        Pencarian untuk "<span class="font-semibold text-gray-700">{{ $query }}</span>"
+                    @endif
                     &mdash; <a href="{{ route('home') }}" class="text-ocean-500 hover:underline">Hapus pencarian</a>
                 </p>
 
+                {{-- PBI-15: Not found state --}}
                 @if($totalResults === 0)
                     <div class="text-center py-16 bg-white rounded-2xl shadow-soft border border-ocean-100">
-                        <div class="text-5xl mb-4">🌊</div>
-                        <p class="text-gray-500 text-lg font-medium">Tidak ada hasil ditemukan.</p>
-                        <p class="text-gray-400 text-sm mt-1">Coba kata kunci yang berbeda.</p>
+                        <div class="text-5xl mb-4">🔍</div>
+                        <p class="text-gray-700 text-lg font-semibold">Hasil tidak ditemukan</p>
+                        <p class="text-gray-400 text-sm mt-2">
+                            Tidak ada data untuk "<span class="font-medium">{{ $query }}</span>".
+                        </p>
+                        <p class="text-gray-400 text-sm mt-1">Coba periksa ejaan atau gunakan kata kunci lain.</p>
+                        <div class="flex justify-center gap-3 mt-6 flex-wrap">
+                            <a href="{{ route('ikan.index') }}" class="px-4 py-2 bg-ocean-50 hover:bg-ocean-100 text-ocean-600 text-sm rounded-xl font-medium transition">🐟 Lihat semua ikan</a>
+                            <a href="{{ route('ekosistem.index') }}" class="px-4 py-2 bg-eco-100 hover:bg-eco-300 text-eco-700 text-sm rounded-xl font-medium transition">🌿 Lihat semua ekosistem</a>
+                            <a href="{{ route('aksi.index') }}" class="px-4 py-2 bg-ocean-50 hover:bg-ocean-100 text-ocean-600 text-sm rounded-xl font-medium transition">🤝 Lihat semua aksi</a>
+                        </div>
                     </div>
                 @endif
 
-                {{-- Ikan --}}
+                {{-- Hasil Ikan --}}
                 @if($searchIkan->count() > 0)
                 <div class="mb-8">
                     <div class="flex items-center gap-2 mb-4">
@@ -80,7 +102,7 @@
                 </div>
                 @endif
 
-                {{-- Ekosistem --}}
+                {{-- Hasil Ekosistem --}}
                 @if($searchEkosistem->count() > 0)
                 <div class="mb-8">
                     <div class="flex items-center gap-2 mb-4">
@@ -113,7 +135,7 @@
                 </div>
                 @endif
 
-                {{-- Aksi Pelestarian --}}
+                {{-- Hasil Aksi Pelestarian --}}
                 @if($searchAksi->count() > 0)
                 <div class="mb-8">
                     <div class="flex items-center gap-2 mb-4">
@@ -145,10 +167,11 @@
                     </div>
                 </div>
                 @endif
+
             </div>
 
         @else
-        {{-- ===== KONTEN NORMAL (belum search) ===== --}}
+        {{-- ===== KONTEN NORMAL (belum search / input kosong) ===== --}}
 
         <div class="mb-12">
             <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Recommended Content</h2>
