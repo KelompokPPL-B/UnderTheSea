@@ -129,7 +129,7 @@ class AksiController extends Controller
             'deskripsi' => 'required|string|min:10',
             'manfaat' => 'required|string|min:10',
             'cara_melakukan' => 'required|string|min:10',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $validated['judul_aksi'] = SanitizationService::sanitize($validated['judul_aksi']);
