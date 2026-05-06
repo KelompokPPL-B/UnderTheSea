@@ -125,7 +125,7 @@ class AksiController extends Controller
         }
 
         $validated = $request->validate([
-            'judul_aksi' => 'required|string|max:255',
+            'judul_aksi' => 'required|string|min:5|unique:aksi_pelestarian,judul_aksi',
             'deskripsi' => 'nullable|string',
             'manfaat' => 'nullable|string',
             'cara_melakukan' => 'nullable|string',
