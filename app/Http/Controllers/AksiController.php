@@ -17,10 +17,8 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Mutiara
-     * PBI-13: Manage Action Content
-     * PBI-19: Pagination UI
-     * PBI-21: Sort Options
+     * Owner: Arvia
+     * PBI-19: Manage Action Content
      */
     public function index(Request $request)
     {
@@ -49,8 +47,8 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Mutiara
-     * PBI-13: Manage Action Content
+     * Owner: Arvia
+     * PBI-19 : Manage Action Content
      */
     public function show($id)
     {
@@ -86,7 +84,7 @@ class AksiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul_aksi' => 'required|string|max:255',
+            'judul_aksi' => 'required|string|min:5|unique:aksi_pelestarian,judul_aksi',
             'deskripsi' => 'nullable|string',
             'manfaat' => 'nullable|string',
             'cara_melakukan' => 'nullable|string',
