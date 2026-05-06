@@ -87,7 +87,7 @@ class AksiController extends Controller
             'judul_aksi' => 'required|string|min:5|unique:aksi_pelestarian,judul_aksi',
             'deskripsi' => 'required|string|min:10',
             'manfaat' => 'rquired|string|min:10',
-            'cara_melakukan' => 'nullable|string',
+            'cara_melakukan' => 'required|string|min:10',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
