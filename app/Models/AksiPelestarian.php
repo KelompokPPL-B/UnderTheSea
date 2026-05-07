@@ -16,13 +16,21 @@ class AksiPelestarian extends Model
         'deskripsi',
         'manfaat',
         'cara_melakukan',
+        'lokasi',
+        'tanggal_kegiatan',
+        'tujuan_konservasi',
+        'isu_lingkungan',
+        'volunteer_dibutuhkan',
+        'dampak_aksi',
         'gambar',
         'created_by',
         'is_user_generated',
     ];
 
     protected $casts = [
-        'is_user_generated' => 'boolean',
+        'is_user_generated'   => 'boolean',
+        'tanggal_kegiatan'    => 'date',
+        'volunteer_dibutuhkan' => 'integer',
     ];
 
     public function createdBy(): BelongsTo
