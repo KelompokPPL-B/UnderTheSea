@@ -86,31 +86,58 @@ class AksiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul_aksi' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'manfaat' => 'nullable|string',
-            'cara_melakukan' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'judul_aksi'           => 'required|string|max:200',
+            'deskripsi'            => 'nullable|string|max:5000',
+            'manfaat'              => 'nullable|string|max:3000',
+            'cara_melakukan'       => 'nullable|string|max:3000',
+            'lokasi'               => 'nullable|string|max:255',
+            'tanggal_kegiatan'     => 'nullable|date|after_or_equal:today',
+            'tujuan_konservasi'    => 'nullable|string|max:500',
+            'isu_lingkungan'       => 'nullable|string|max:500',
+            'volunteer_dibutuhkan' => 'nullable|integer|min:1|max:10000',
+            'dampak_aksi'          => 'nullable|string|max:3000',
+            'gambar'               => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+            'judul_aksi.required'           => 'Title is required.',
+            'judul_aksi.max'                => 'Title must not exceed 200 characters.',
+            'deskripsi.max'                 => 'Description must not exceed 5000 characters.',
+            'manfaat.max'                   => 'Benefits must not exceed 3000 characters.',
+            'cara_melakukan.max'            => 'How to Participate must not exceed 3000 characters.',
+            'lokasi.max'                    => 'Location must not exceed 255 characters.',
+            'tanggal_kegiatan.date'         => 'Event Date must be a valid date.',
+            'tanggal_kegiatan.after_or_equal' => 'Event Date must be today or in the future.',
+            'tujuan_konservasi.max'         => 'Conservation Goals must not exceed 500 characters.',
+            'isu_lingkungan.max'            => 'Environmental Issue must not exceed 500 characters.',
+            'volunteer_dibutuhkan.integer'  => 'Volunteer Needed must be a number.',
+            'volunteer_dibutuhkan.min'      => 'Volunteer Needed must be at least 1.',
+            'volunteer_dibutuhkan.max'      => 'Volunteer Needed must not exceed 10,000.',
+            'dampak_aksi.max'               => 'Action Impact must not exceed 3000 characters.',
+            'gambar.image'                  => 'The file must be an image.',
+            'gambar.mimes'                  => 'Image must be in JPG or PNG format.',
+            'gambar.max'                    => 'Image size must not exceed 2MB.',
         ]);
 
-        $validated['judul_aksi'] = SanitizationService::sanitize($validated['judul_aksi']);
-        $validated['deskripsi'] = SanitizationService::sanitize($validated['deskripsi']);
-        $validated['manfaat'] = SanitizationService::sanitize($validated['manfaat']);
-        $validated['cara_melakukan'] = SanitizationService::sanitize($validated['cara_melakukan']);
+        // Sanitize text fields
+        $textFields = ['judul_aksi', 'deskripsi', 'manfaat', 'cara_melakukan', 'lokasi', 'tujuan_konservasi', 'isu_lingkungan', 'dampak_aksi'];
+        foreach ($textFields as $field) {
+            if (!empty($validated[$field])) {
+                $validated[$field] = SanitizationService::sanitize($validated[$field]);
+            }
+        }
 
         if ($request->hasFile('gambar')) {
             $validated['gambar'] = $request->file('gambar')->store('action', 'public');
         }
 
-        $validated['created_by'] = auth()->id();
+        $validated['created_by']        = auth()->id();
         $validated['is_user_generated'] = !auth()->user()->isAdmin();
 
         $aksi = AksiPelestarian::create($validated);
 
         $this->pointsService->awardPointsForAction(auth()->id(), $aksi->id_aksi);
 
-        return redirect()->route('aksi.index')
-        ->with('success', 'Action created successfully!');
+        return redirect()->route('aksi.show', $aksi->id_aksi)
+            ->with('success', 'Conservation action created successfully!');
     }
 
     /**
@@ -127,17 +154,32 @@ class AksiController extends Controller
         }
 
         $validated = $request->validate([
-            'judul_aksi' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'manfaat' => 'nullable|string',
-            'cara_melakukan' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'judul_aksi'           => 'required|string|max:200',
+            'deskripsi'            => 'nullable|string|max:5000',
+            'manfaat'              => 'nullable|string|max:3000',
+            'cara_melakukan'       => 'nullable|string|max:3000',
+            'lokasi'               => 'nullable|string|max:255',
+            'tanggal_kegiatan'     => 'nullable|date',
+            'tujuan_konservasi'    => 'nullable|string|max:500',
+            'isu_lingkungan'       => 'nullable|string|max:500',
+            'volunteer_dibutuhkan' => 'nullable|integer|min:1|max:10000',
+            'dampak_aksi'          => 'nullable|string|max:3000',
+            'gambar'               => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+            'judul_aksi.required'           => 'Title is required.',
+            'judul_aksi.max'                => 'Title must not exceed 200 characters.',
+            'gambar.mimes'                  => 'Image must be in JPG or PNG format.',
+            'gambar.max'                    => 'Image size must not exceed 2MB.',
+            'volunteer_dibutuhkan.integer'  => 'Volunteer Needed must be a number.',
+            'volunteer_dibutuhkan.min'      => 'Volunteer Needed must be at least 1.',
         ]);
 
-        $validated['judul_aksi'] = SanitizationService::sanitize($validated['judul_aksi']);
-        $validated['deskripsi'] = SanitizationService::sanitize($validated['deskripsi']);
-        $validated['manfaat'] = SanitizationService::sanitize($validated['manfaat']);
-        $validated['cara_melakukan'] = SanitizationService::sanitize($validated['cara_melakukan']);
+        $textFields = ['judul_aksi', 'deskripsi', 'manfaat', 'cara_melakukan', 'lokasi', 'tujuan_konservasi', 'isu_lingkungan', 'dampak_aksi'];
+        foreach ($textFields as $field) {
+            if (!empty($validated[$field])) {
+                $validated[$field] = SanitizationService::sanitize($validated[$field]);
+            }
+        }
 
         if ($request->hasFile('gambar')) {
             $validated['gambar'] = $request->file('gambar')->store('action', 'public');
@@ -146,9 +188,9 @@ class AksiController extends Controller
         $aksi->update($validated);
 
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Action updated successfully',
-            'data' => $aksi,
+            'data'    => $aksi,
         ]);
     }
 
@@ -167,9 +209,9 @@ class AksiController extends Controller
         $aksi->delete();
 
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Action deleted successfully',
-            'data' => null,
+            'data'    => null,
         ]);
     }
 }
