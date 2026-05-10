@@ -50,6 +50,7 @@ class AksiController extends Controller
      * Owner: Arvia
      * PBI-19 : Manage Action Content
      */
+    
     public function show($id)
     {
         $aksi = AksiPelestarian::findOrFail($id);
