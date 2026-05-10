@@ -146,3 +146,4 @@ class EkosistemController extends Controller
             ->with('success', 'Ecosystem deleted successfully!');
     }
 }
+
