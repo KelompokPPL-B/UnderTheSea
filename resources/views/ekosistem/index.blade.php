@@ -16,10 +16,10 @@
                 <span class="text-4xl text-white">🌊</span>
             </div>
             <h1 class="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-ocean-900 via-blue-700 to-emerald-600 mb-4 tracking-tight drop-shadow-sm">
-                Katalog Ekosistem
+                Marine Ecosystems
             </h1>
             <p class="text-lg md:text-xl text-ocean-700 font-medium max-w-2xl mx-auto bg-white/50 inline-block px-8 py-2.5 rounded-full backdrop-blur-sm border border-white shadow-sm">
-                Jelajahi dan pelajari beragam ekosistem menakjubkan di lautan kita.
+                Discover the diverse ecosystems that make up our oceans and learn about their importance.
             </p>
         </div>
 
