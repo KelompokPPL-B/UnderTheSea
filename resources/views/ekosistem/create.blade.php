@@ -5,22 +5,36 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
-        <div class="max-w-2xl mx-auto px-6">
-            <div class="bg-white rounded-2xl shadow-card p-8">
-                <!-- Header -->
-                <div class="mb-8">
-                    <h1 class="text-3xl font-bold text-ocean-900 mb-2">Add Marine Ecosystem</h1>
-                    <p class="text-ocean-600">Create a new marine ecosystem entry in the database</p>
-                </div>
+<div class="py-12 bg-gradient-to-b from-ocean-50 via-white to-sand min-h-screen relative overflow-hidden">
+    
+    <!-- Blobs -->
+    <div class="absolute top-10 left-10 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+    <div class="absolute top-0 right-20 w-72 h-72 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+    <div class="absolute -bottom-8 left-20 w-72 h-72 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
 
-                <!-- Form -->
-                <form action="{{ route('ekosistem.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-                    @csrf
+    <div class="max-w-3xl mx-auto px-6 relative z-10">
+        
+        <div class="mb-10 text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/80 backdrop-blur-md shadow-lg mb-4">
+                <span class="text-3xl">🪸</span>
+            </div>
+            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-ocean-800 to-emerald-600 mb-2 tracking-tight">
+                Tambah Ekosistem
+            </h1>
+            <p class="text-ocean-600/80 font-medium text-lg">Perkaya basis data kelautan kita dengan ekosistem baru.</p>
+        </div>
+
+        <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8 md:p-12 transition-all duration-300 hover:shadow-ocean-500/10">
+
+            <!-- Form -->
+            <form action="{{ route('ekosistem.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                @csrf
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Name -->
-                    <div>
-                        <label for="nama_ekosistem" class="block text-sm font-semibold text-ocean-900 mb-2">
-                            Ecosystem Name *
+                    <div class="md:col-span-2">
+                        <label for="nama_ekosistem" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                            Nama Ekosistem <span class="text-emerald-500">*</span>
                         </label>
                         <input
                             type="text"
@@ -28,119 +42,133 @@
                             name="nama_ekosistem"
                             minlength="5"
                             value="{{ old('nama_ekosistem') }}"
-                            class="input input-bordered w-full rounded-xl @error('nama_ekosistem') input-error @enderror"
-                            placeholder="Enter ecosystem name" required>
+                            class="w-full bg-white/50 border border-ocean-200 text-ocean-900 text-sm rounded-2xl focus:ring-4 focus:ring-ocean-500/20 focus:border-ocean-500 block px-4 py-3 transition-all duration-300 @error('nama_ekosistem') border-red-500 focus:ring-red-500/20 focus:border-red-500 @enderror"
+                            placeholder="Contoh: Terumbu Karang Segitiga Emas" required>
                         @error('nama_ekosistem')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Description -->
-                    <div>
-                        <label for="deskripsi" class="block text-sm font-semibold text-ocean-900 mb-2">
-                            Description
-                        </label>
-                        <textarea id="deskripsi" name="deskripsi" rows="4"
-                            class="textarea textarea-bordered w-full rounded-xl @error('deskripsi') textarea-error @enderror"
-                            placeholder="Describe the ecosystem">{{ old('deskripsi') }}</textarea>
-                        @error('deskripsi')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Location -->
                     <div>
-                        <label for="lokasi" class="block text-sm font-semibold text-ocean-900 mb-2">
-                            Location
+                        <label for="lokasi" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                            Lokasi Geografis <span class="text-emerald-500">*</span>
                         </label>
                         <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi') }}"
-                            class="input input-bordered w-full rounded-2xl @error('lokasi') input-error @enderror"
-                            placeholder="Enter geographic location">
+                            class="w-full bg-white/50 border border-ocean-200 text-ocean-900 text-sm rounded-2xl focus:ring-4 focus:ring-ocean-500/20 focus:border-ocean-500 block px-4 py-3 transition-all duration-300 @error('lokasi') border-red-500 focus:ring-red-500/20 focus:border-red-500 @enderror"
+                            placeholder="Contoh: Laut Banda" required>
                         @error('lokasi')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Role in Marine Life -->
-                    <div>
-                        <label for="peran" class="block text-sm font-semibold text-ocean-900 mb-2">
-                            Role in Marine Life
-                        </label>
-                        <textarea id="peran" name="peran" rows="3"
-                            class="textarea textarea-bordered w-full rounded-xl @error('peran') textarea-error @enderror"
-                            placeholder="Describe the ecosystem's role in marine life">{{ old('peran') }}</textarea>
-                        @error('peran')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Threats -->
-                    <div>
-                        <label for="ancaman" class="block text-sm font-semibold text-ocean-900 mb-2">
-                            Threats
-                        </label>
-                        <textarea id="ancaman" name="ancaman" rows="3"
-                            class="textarea textarea-bordered w-full rounded-xl @error('ancaman') textarea-error @enderror"
-                            placeholder="Describe threats to this ecosystem">{{ old('ancaman') }}</textarea>
-                        @error('ancaman')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Image -->
                     <div>
-                        <label for="gambar" class="block text-sm font-semibold text-ocean-900 mb-2">
-                            Image (JPG, PNG - Max 2MB)
+                        <label for="gambar" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                            Gambar (Max 2MB) <span class="text-emerald-500">*</span>
                         </label>
                         <input type="file" id="gambar" name="gambar" accept="image/jpeg,image/png,image/jpg"
-                            class="file-input file-input-bordered w-full @error('gambar') file-input-error @enderror"
-                            style="border-radius: 17px; border: 1px solid #b8e3ffff;">
+                            class="w-full text-sm text-ocean-500 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-ocean-50 file:text-ocean-700 hover:file:bg-ocean-100 bg-white/50 border border-ocean-200 rounded-2xl transition-all duration-300 cursor-pointer @error('gambar') border-red-500 @enderror" required>
                         @error('gambar')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Buttons -->
-                    <div class="flex gap-3 pt-6 border-t border-ocean-100">
-                        <button type="submit"
-                            class="btn btn-primary flex-1"
-                            style="border-radius: 20px; border: 1px solid rgba(187, 187, 228, 0.5);">Create Ecosystem</button>
-                        <a href="{{ route('ekosistem.index') }}" class="btn btn-outline flex-1" style="border-radius: 20px; border: 1px solid rgba(166, 166, 237, 0.5);">Cancel</a>
+                    <!-- Description -->
+                    <div class="md:col-span-2">
+                        <label for="deskripsi" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                            Deskripsi Ekosistem <span class="text-emerald-500">*</span>
+                        </label>
+                        <textarea id="deskripsi" name="deskripsi" rows="3"
+                            class="w-full bg-white/50 border border-ocean-200 text-ocean-900 text-sm rounded-2xl focus:ring-4 focus:ring-ocean-500/20 focus:border-ocean-500 block px-4 py-3 transition-all duration-300 resize-none @error('deskripsi') border-red-500 focus:ring-red-500/20 focus:border-red-500 @enderror"
+                            placeholder="Ceritakan tentang ekosistem ini secara detail..." required>{{ old('deskripsi') }}</textarea>
+                        @error('deskripsi')
+                            <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
+                        @enderror
                     </div>
-                </form>
-            </div>
+
+                    <!-- Role in Marine Life -->
+                    <div class="md:col-span-2">
+                        <label for="peran" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                            Peran dalam Kehidupan Laut <span class="text-emerald-500">*</span>
+                        </label>
+                        <textarea id="peran" name="peran" rows="2"
+                            class="w-full bg-white/50 border border-ocean-200 text-ocean-900 text-sm rounded-2xl focus:ring-4 focus:ring-ocean-500/20 focus:border-ocean-500 block px-4 py-3 transition-all duration-300 resize-none @error('peran') border-red-500 focus:ring-red-500/20 focus:border-red-500 @enderror"
+                            placeholder="Apa fungsi penting ekosistem ini bagi spesies laut?" required>{{ old('peran') }}</textarea>
+                        @error('peran')
+                            <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Threats -->
+                    <div class="md:col-span-2">
+                        <label for="ancaman" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                            Ancaman <span class="text-emerald-500">*</span>
+                        </label>
+                        <textarea id="ancaman" name="ancaman" rows="2"
+                            class="w-full bg-white/50 border border-ocean-200 text-ocean-900 text-sm rounded-2xl focus:ring-4 focus:ring-ocean-500/20 focus:border-ocean-500 block px-4 py-3 transition-all duration-300 resize-none @error('ancaman') border-red-500 focus:ring-red-500/20 focus:border-red-500 @enderror"
+                            placeholder="Ancaman apa saja yang dihadapi ekosistem ini?" required>{{ old('ancaman') }}</textarea>
+                        @error('ancaman')
+                            <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-8 mt-4 border-t border-ocean-100">
+                    <a href="{{ route('ekosistem.index') }}" class="sm:w-1/3 bg-white hover:bg-ocean-50 text-ocean-700 font-bold py-3 px-6 rounded-2xl border-2 border-ocean-200 hover:border-ocean-300 text-center transition-all duration-300">
+                        Batal
+                    </a>
+                    <button type="submit" class="sm:w-2/3 bg-gradient-to-r from-ocean-600 to-emerald-500 hover:from-ocean-700 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-emerald-500/40 transform hover:-translate-y-1 transition-all duration-300 flex justify-center items-center gap-2">
+                        <span>Tambah Ekosistem</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelector("form").addEventListener("submit", function(e) {
         const nama = document.getElementById("nama_ekosistem").value.trim();
+        const deskripsi = document.getElementById("deskripsi").value.trim();
+        const lokasi = document.getElementById("lokasi").value.trim();
+        const peran = document.getElementById("peran").value.trim();
+        const ancaman = document.getElementById("ancaman").value.trim();
 
         if (nama.length < 5) { 
             e.preventDefault();
-            alert("Ecosystem Name must be more than 5 characters"); 
+            alert("Nama Ekosistem minimal 5 karakter"); 
         }
 
-        const file = document.getElementById("gambar").files[0];
-        if (file && file.size > 2 * 1024 * 1024) {
-            e.preventDefault();
-            alert("Image size must be less than 2MB");
+        const fileInput = document.getElementById("gambar");
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            if (file.size > 2 * 1024 * 1024) {
+                e.preventDefault();
+                alert("Ukuran gambar maksimal 2MB");
+            }
         }
+        
         if (deskripsi.length < 10) {
             e.preventDefault();
-            alert("Description must be more than 10 characters");
+            alert("Deskripsi minimal 10 karakter");
         }
         if (lokasi.length < 5) {
             e.preventDefault();
-            alert("Location must be more than 5 characters");
+            alert("Lokasi minimal 5 karakter");
         }
         if (peran.length < 5) {
             e.preventDefault();
-            alert("Role must be more than 5 characters");
+            alert("Peran minimal 5 karakter");
         }
         if (ancaman.length < 10) {
             e.preventDefault();
-            alert("Threats must be more than 10 characters");
+            alert("Ancaman minimal 10 karakter");
         }
     });
 });
