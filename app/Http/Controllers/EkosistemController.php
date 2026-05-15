@@ -15,49 +15,40 @@ class EkosistemController extends Controller
         $this->pointsService = $pointsService;
     }
 
-    // 🔥 INDEX (SEARCH + SORT + OPTIMAL)
+    /**
+     * Owner: Arvia
+     * PBI-11: Manage Ecosystem Content
+     * PBI-19: Pagination UI
+     * PBI-21: Sort Options
+     */
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest');
-        $search = $request->query('search');
+        $query = Ekosistem::query();
 
-        $query = Ekosistem::query()
-            ->select(
-                'id_ekosistem',
-                'nama_ekosistem',
-                'lokasi',
-                'deskripsi',
-                'peran',
-                'gambar',
-                'created_at'
-            );
-
-        // 🔍 SEARCH CEPAT (PREFIX SEARCH + INDEX)
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('nama_ekosistem', 'like', "{$search}%")
-                  ->orWhere('lokasi', 'like', "{$search}%");
-            });
-        }
-
-        // 🔽 SORT
         if ($sort === 'oldest') {
             $query->orderBy('created_at', 'asc');
         } else {
             $query->orderBy('created_at', 'desc');
         }
 
-        // 📄 PAGINATION
-        $ekosistem = $query->paginate(10)->appends($request->query());
-
-        return view('ekosistem.index', compact('ekosistem', 'sort', 'search'));
+        $ekosistem = $query->paginate(10);
+        return view('ekosistem.index', compact('ekosistem', 'sort'));
     }
 
+    /**
+     * Owner: Arvia
+     * PBI-15: Form Validation UI
+     */
     public function create()
     {
         return view('ekosistem.create');
     }
 
+    /**
+     * Owner: Arvia
+     * PBI-12: View Ecosystem Detail + Award Points
+     */
     public function show($id)
     {
         $ekosistem = Ekosistem::findOrFail($id);
@@ -69,23 +60,31 @@ class EkosistemController extends Controller
         return view('ekosistem.show', compact('ekosistem'));
     }
 
+    /**
+     * Owner: Arvia
+     * PBI-15: Form Validation UI
+     */
     public function edit($id)
     {
         $ekosistem = Ekosistem::findOrFail($id);
         return view('ekosistem.edit', compact('ekosistem'));
     }
 
+    /**
+     * Owner: Arvia
+     * PBI-11: Manage Ecosystem Content
+     */
     public function store(Request $request)
     {
-        $this->authorize('admin');
+        abort_unless(auth()->user()?->isAdmin(), 403);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'lokasi' => 'nullable|string|max:255',
-            'peran' => 'nullable|string',
-            'ancaman' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'nama_ekosistem' => 'required|string|min:5|unique:ekosistem,nama_ekosistem',
+            'deskripsi' =>'required|string|min:10',
+            'lokasi' => 'required|string|min:5',
+            'peran' => 'required|string|min:5',
+            'ancaman' => 'required|string|min:10',
+            'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
 
         if ($request->hasFile('gambar')) {
@@ -93,28 +92,29 @@ class EkosistemController extends Controller
         }
 
         $validated['created_by'] = auth()->id();
-        $ekosistem = Ekosistem::create($validated);
+        Ekosistem::create($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Ecosystem created successfully',
-            'data' => $ekosistem,
-        ], 201);
+        return redirect()->route('ekosistem.index')
+            ->with('success', 'Ecosystem created successfully!');
     }
 
+    /**
+     * Owner: Arvia
+     * PBI-11: Manage Ecosystem Content
+     */
     public function update(Request $request, $id)
     {
-        $this->authorize('admin');
+        abort_unless(auth()->user()?->isAdmin(), 403);
 
         $ekosistem = Ekosistem::findOrFail($id);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'lokasi' => 'nullable|string|max:255',
-            'peran' => 'nullable|string',
-            'ancaman' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'nama_ekosistem' => 'required|string|min:5|unique:ekosistem,nama_ekosistem,'.$id.',id_ekosistem',
+            'deskripsi' =>'required|string|min:10',
+            'lokasi' => 'required|string|min:5',
+            'peran' => 'required|string|min:5',
+            'ancaman' => 'required|string|min:10',
+            'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
 
         if ($request->hasFile('gambar')) {
@@ -123,24 +123,26 @@ class EkosistemController extends Controller
 
         $ekosistem->update($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Ecosystem updated successfully',
-            'data' => $ekosistem,
-        ]);
+        return redirect()->route('ekosistem.show', $id)
+            ->with('success', 'Ecosystem updated successfully!');
     }
 
+    /**
+     * Owner: Arvia
+     * PBI-11: Manage Ecosystem Content
+     */
     public function destroy($id)
     {
-        $this->authorize('admin');
+        abort_unless(auth()->user()?->isAdmin(), 403);
 
         $ekosistem = Ekosistem::findOrFail($id);
         $ekosistem->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Ecosystem deleted successfully',
-            'data' => null,
-        ]);
+        if (request()->wantsJson()) {
+            return response()->json(['status' => 'success']);
+        }
+
+        return redirect()->route('ekosistem.index')
+            ->with('success', 'Ecosystem deleted successfully!');
     }
 }
