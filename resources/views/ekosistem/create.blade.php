@@ -15,25 +15,29 @@
     <div class="max-w-3xl mx-auto px-6 relative z-10">
         
         <div class="mb-10 text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/80 backdrop-blur-md shadow-lg mb-4">
-                <span class="text-3xl">🪸</span>
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-ocean-500 to-emerald-400 shadow-xl shadow-ocean-500/30 mb-5 border-4 border-white transform hover:scale-110 transition-transform duration-300">
+                <span class="text-4xl text-white">🪸</span>
             </div>
-            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-ocean-800 to-emerald-600 mb-2 tracking-tight">
+            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-ocean-800 to-emerald-600 mb-3 tracking-tight drop-shadow-sm">
                 Tambah Ekosistem
             </h1>
-            <p class="text-ocean-600/80 font-medium text-lg">Perkaya basis data kelautan kita dengan ekosistem baru.</p>
+            <p class="text-ocean-700 font-medium text-lg bg-white/60 inline-block px-6 py-2 rounded-full backdrop-blur-sm shadow-sm border border-white">
+                Perkaya basis data kelautan kita dengan ekosistem baru.
+            </p>
         </div>
 
-        <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8 md:p-12 transition-all duration-300 hover:shadow-ocean-500/10">
+        <div class="bg-white rounded-3xl shadow-[0_20px_50px_rgba(8,_112,_184,_0.15)] border border-ocean-100 p-8 md:p-12 relative overflow-hidden transition-all duration-300">
+            <!-- Decorative Accent Line -->
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-ocean-500 via-blue-500 to-emerald-500"></div>
 
             <!-- Form -->
-            <form action="{{ route('ekosistem.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form action="{{ route('ekosistem.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 relative z-10">
                 @csrf
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
                     <!-- Name -->
-                    <div class="md:col-span-2">
-                        <label for="nama_ekosistem" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                    <div class="md:col-span-2 group">
+                        <label for="nama_ekosistem" class="block text-sm font-extrabold text-ocean-900 mb-2 ml-1 group-hover:text-ocean-600 transition-colors">
                             Nama Ekosistem <span class="text-emerald-500">*</span>
                         </label>
                         <input
@@ -42,7 +46,7 @@
                             name="nama_ekosistem"
                             minlength="5"
                             value="{{ old('nama_ekosistem') }}"
-                            class="w-full bg-white/50 border border-ocean-200 text-ocean-900 text-sm rounded-2xl focus:ring-4 focus:ring-ocean-500/20 focus:border-ocean-500 block px-4 py-3 transition-all duration-300 @error('nama_ekosistem') border-red-500 focus:ring-red-500/20 focus:border-red-500 @enderror"
+                            class="w-full bg-ocean-50/50 border-2 border-ocean-100 text-ocean-900 font-medium text-sm rounded-2xl focus:bg-white focus:ring-4 focus:ring-ocean-500/10 focus:border-ocean-500 block px-5 py-4 transition-all duration-300 hover:border-ocean-300 @error('nama_ekosistem') border-red-500 focus:ring-red-500/20 focus:border-red-500 bg-red-50 @enderror"
                             placeholder="Contoh: Terumbu Karang Segitiga Emas" required>
                         @error('nama_ekosistem')
                             <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
@@ -50,12 +54,12 @@
                     </div>
 
                     <!-- Location -->
-                    <div>
-                        <label for="lokasi" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                    <div class="group">
+                        <label for="lokasi" class="block text-sm font-extrabold text-ocean-900 mb-2 ml-1 group-hover:text-ocean-600 transition-colors">
                             Lokasi Geografis <span class="text-emerald-500">*</span>
                         </label>
                         <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi') }}"
-                            class="w-full bg-white/50 border border-ocean-200 text-ocean-900 text-sm rounded-2xl focus:ring-4 focus:ring-ocean-500/20 focus:border-ocean-500 block px-4 py-3 transition-all duration-300 @error('lokasi') border-red-500 focus:ring-red-500/20 focus:border-red-500 @enderror"
+                            class="w-full bg-ocean-50/50 border-2 border-ocean-100 text-ocean-900 font-medium text-sm rounded-2xl focus:bg-white focus:ring-4 focus:ring-ocean-500/10 focus:border-ocean-500 block px-5 py-4 transition-all duration-300 hover:border-ocean-300 @error('lokasi') border-red-500 focus:ring-red-500/20 focus:border-red-500 bg-red-50 @enderror"
                             placeholder="Contoh: Laut Banda" required>
                         @error('lokasi')
                             <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
@@ -63,24 +67,24 @@
                     </div>
 
                     <!-- Image -->
-                    <div>
-                        <label for="gambar" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                    <div class="group">
+                        <label for="gambar" class="block text-sm font-extrabold text-ocean-900 mb-2 ml-1 group-hover:text-ocean-600 transition-colors">
                             Gambar (Max 2MB) <span class="text-emerald-500">*</span>
                         </label>
                         <input type="file" id="gambar" name="gambar" accept="image/jpeg,image/png,image/jpg"
-                            class="w-full text-sm text-ocean-500 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-ocean-50 file:text-ocean-700 hover:file:bg-ocean-100 bg-white/50 border border-ocean-200 rounded-2xl transition-all duration-300 cursor-pointer @error('gambar') border-red-500 @enderror" required>
+                            class="w-full text-sm text-ocean-600 font-medium file:mr-4 file:py-4 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-ocean-600 file:text-white hover:file:bg-ocean-700 bg-ocean-50/50 border-2 border-ocean-100 rounded-2xl transition-all duration-300 cursor-pointer hover:border-ocean-300 focus:outline-none focus:ring-4 focus:ring-ocean-500/10 @error('gambar') border-red-500 @enderror" required>
                         @error('gambar')
                             <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Description -->
-                    <div class="md:col-span-2">
-                        <label for="deskripsi" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                    <div class="md:col-span-2 group">
+                        <label for="deskripsi" class="block text-sm font-extrabold text-ocean-900 mb-2 ml-1 group-hover:text-ocean-600 transition-colors">
                             Deskripsi Ekosistem <span class="text-emerald-500">*</span>
                         </label>
                         <textarea id="deskripsi" name="deskripsi" rows="3"
-                            class="w-full bg-white/50 border border-ocean-200 text-ocean-900 text-sm rounded-2xl focus:ring-4 focus:ring-ocean-500/20 focus:border-ocean-500 block px-4 py-3 transition-all duration-300 resize-none @error('deskripsi') border-red-500 focus:ring-red-500/20 focus:border-red-500 @enderror"
+                            class="w-full bg-ocean-50/50 border-2 border-ocean-100 text-ocean-900 font-medium text-sm rounded-2xl focus:bg-white focus:ring-4 focus:ring-ocean-500/10 focus:border-ocean-500 block px-5 py-4 transition-all duration-300 resize-none hover:border-ocean-300 @error('deskripsi') border-red-500 focus:ring-red-500/20 focus:border-red-500 bg-red-50 @enderror"
                             placeholder="Ceritakan tentang ekosistem ini secara detail..." required>{{ old('deskripsi') }}</textarea>
                         @error('deskripsi')
                             <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
@@ -88,12 +92,12 @@
                     </div>
 
                     <!-- Role in Marine Life -->
-                    <div class="md:col-span-2">
-                        <label for="peran" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                    <div class="md:col-span-2 group">
+                        <label for="peran" class="block text-sm font-extrabold text-ocean-900 mb-2 ml-1 group-hover:text-ocean-600 transition-colors">
                             Peran dalam Kehidupan Laut <span class="text-emerald-500">*</span>
                         </label>
                         <textarea id="peran" name="peran" rows="2"
-                            class="w-full bg-white/50 border border-ocean-200 text-ocean-900 text-sm rounded-2xl focus:ring-4 focus:ring-ocean-500/20 focus:border-ocean-500 block px-4 py-3 transition-all duration-300 resize-none @error('peran') border-red-500 focus:ring-red-500/20 focus:border-red-500 @enderror"
+                            class="w-full bg-ocean-50/50 border-2 border-ocean-100 text-ocean-900 font-medium text-sm rounded-2xl focus:bg-white focus:ring-4 focus:ring-ocean-500/10 focus:border-ocean-500 block px-5 py-4 transition-all duration-300 resize-none hover:border-ocean-300 @error('peran') border-red-500 focus:ring-red-500/20 focus:border-red-500 bg-red-50 @enderror"
                             placeholder="Apa fungsi penting ekosistem ini bagi spesies laut?" required>{{ old('peran') }}</textarea>
                         @error('peran')
                             <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
@@ -101,12 +105,12 @@
                     </div>
 
                     <!-- Threats -->
-                    <div class="md:col-span-2">
-                        <label for="ancaman" class="block text-sm font-bold text-ocean-900 mb-2 ml-1">
+                    <div class="md:col-span-2 group">
+                        <label for="ancaman" class="block text-sm font-extrabold text-ocean-900 mb-2 ml-1 group-hover:text-ocean-600 transition-colors">
                             Ancaman <span class="text-emerald-500">*</span>
                         </label>
                         <textarea id="ancaman" name="ancaman" rows="2"
-                            class="w-full bg-white/50 border border-ocean-200 text-ocean-900 text-sm rounded-2xl focus:ring-4 focus:ring-ocean-500/20 focus:border-ocean-500 block px-4 py-3 transition-all duration-300 resize-none @error('ancaman') border-red-500 focus:ring-red-500/20 focus:border-red-500 @enderror"
+                            class="w-full bg-ocean-50/50 border-2 border-ocean-100 text-ocean-900 font-medium text-sm rounded-2xl focus:bg-white focus:ring-4 focus:ring-ocean-500/10 focus:border-ocean-500 block px-5 py-4 transition-all duration-300 resize-none hover:border-ocean-300 @error('ancaman') border-red-500 focus:ring-red-500/20 focus:border-red-500 bg-red-50 @enderror"
                             placeholder="Ancaman apa saja yang dihadapi ekosistem ini?" required>{{ old('ancaman') }}</textarea>
                         @error('ancaman')
                             <p class="text-red-500 text-xs font-semibold mt-2 ml-1">{{ $message }}</p>
@@ -115,14 +119,14 @@
                 </div>
 
                 <!-- Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 pt-8 mt-4 border-t border-ocean-100">
-                    <a href="{{ route('ekosistem.index') }}" class="sm:w-1/3 bg-white hover:bg-ocean-50 text-ocean-700 font-bold py-3 px-6 rounded-2xl border-2 border-ocean-200 hover:border-ocean-300 text-center transition-all duration-300">
-                        Batal
+                <div class="flex flex-col sm:flex-row gap-5 pt-8 mt-6 border-t border-ocean-100">
+                    <a href="{{ route('ekosistem.index') }}" class="sm:w-1/3 bg-ocean-50 hover:bg-ocean-100 text-ocean-800 font-bold py-4 px-6 rounded-2xl text-center transition-all duration-300 transform hover:-translate-y-1">
+                        Kembali
                     </a>
-                    <button type="submit" class="sm:w-2/3 bg-gradient-to-r from-ocean-600 to-emerald-500 hover:from-ocean-700 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-emerald-500/40 transform hover:-translate-y-1 transition-all duration-300 flex justify-center items-center gap-2">
+                    <button type="submit" class="sm:w-2/3 bg-gradient-to-r from-ocean-600 to-emerald-500 hover:from-ocean-700 hover:to-emerald-600 text-white font-extrabold text-lg py-4 px-6 rounded-2xl shadow-xl shadow-ocean-500/30 transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-500/30 transition-all duration-300 flex justify-center items-center gap-3">
                         <span>Tambah Ekosistem</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </button>
                 </div>
