@@ -1,210 +1,166 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- PBI-EkosistemIndex -->
-<div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
-    <div class="max-w-7xl mx-auto px-6 py-6">
-        <!-- Header -->
-        <div class="flex justify-between items-start mb-10">
-            <div>
-                <h1 class="text-4xl font-bold text-ocean-900 mb-3">Marine Ecosystems</h1>
-                <p class="text-gray-600">Discover the diverse ecosystems that make up our oceans and learn about their importance.</p>
-            </div>
-            @auth
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ route('ekosistem.create') }}" class="btn btn-primary btn-sm">+ Add New Ecosystem</a>
-                @endif
-            @endauth
-        </div>
+<div class="py-12 bg-gradient-to-br from-ocean-50 to-sand">
+    <div class="max-w-4xl mx-auto px-6 py-6 mb-6">
+        @include('layouts.breadcrumb', ['breadcrumbs' => [
+            ['label' => 'Marine Ecosystems', 'url' => route('ekosistem.index')],
+            ['label' => $ekosistem->nama_ekosistem]
+        ]])
+    </div>
+    <div class="max-w-4xl mx-auto px-6 py-6">
+        <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition overflow-hidden">
+            <!-- Hero Image -->
+            @if($ekosistem->gambar)
+                <img src="/storage/{{ $ekosistem->gambar }}" alt="{{ $ekosistem->nama_ekosistem }}" class="w-full h-96 object-cover" loading="lazy">
+            @else
+                <div class="w-full h-96 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
+                    <span class="text-ocean-400">No image</span>
+                </div>
+            @endif
 
-        <!-- Sort Controls -->
-        <div class="mb-6 flex justify-end">
-            <select onchange="window.location.href='{{ route('ekosistem.index') }}?sort=' + this.value" class="select select-bordered select-sm">
-                <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Newest First</option>
-                <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
-            </select>
-        </div>
-
-        @if($ekosistem->isEmpty())
-            <div class="bg-white rounded-2xl shadow-card p-12 text-center">
-                <p class="text-ocean-600 text-lg font-semibold">No ecosystems found yet.</p>
-            </div>
-        @else
-            <!-- Ecosystems Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($ekosistem as $item)
-                    <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] animate-fade overflow-hidden">
-                        <!-- Image -->
-                        @if($item->gambar)
-                            <div class="overflow-hidden h-48">
-                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama_ekosistem }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
-                            </div>
-                        @else
-                            <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
-                                <span class="text-ocean-400">No image</span>
-                            </div>
-                        @endif
-
-                        <!-- Content -->
-                        <div class="p-6 space-y-4">
-                            <!-- Title -->
-                            <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="block group-hover:text-ocean-600 transition">
-                                <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->nama_ekosistem }}</h3>
-                            </a>
-
-                            <!-- Location -->
-                            @if($item->lokasi)
-                                <p class="text-xs text-gray-500 font-semibold">📍 {{ $item->lokasi }}</p>
-                            @endif
-
-                            <!-- Description -->
-                            <p class="text-gray-600 text-sm line-clamp-2">{{ $item->deskripsi ?? 'No description' }}</p>
-
-                            <!-- Role -->
-                            @if($item->peran)
-                                <div class="pt-2 border-t border-ocean-100">
-                                    <p class="text-xs text-gray-600"><span class="font-semibold">Role:</span> <span class="line-clamp-1">{{ $item->peran }}</span></p>
-                                </div>
-                            @endif
-
-                            <!-- Bookmark Section -->
-                            @auth
-                                <div class="pt-2">
-                                    <button class="bookmark-btn-card w-full btn btn-outline btn-sm" data-type="ekosistem" data-item-id="{{ $item->id_ekosistem }}">
-                                        <span class="bookmark-text">Bookmark</span>
-                                    </button>
-                                </div>
-                            @else
-                                <div class="pt-2">
-                                    <a href="{{ route('login') }}" class="block text-center text-xs text-ocean-600 hover:underline font-semibold">Sign in to bookmark</a>
-                                </div>
-                            @endauth
-
-                            <!-- Action Buttons -->
-                            <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="btn btn-primary btn-sm flex-1">View</a>
-                                @if(auth()->check() && auth()->user()->isAdmin())
-                                    <a href="{{ route('ekosistem.edit', $item->id_ekosistem) }}" class="btn btn-outline btn-sm">Edit</a>
-                                    <button class="delete-btn-card btn btn-error btn-sm" data-ekosistem-id="{{ $item->id_ekosistem }}">Delete</button>
-                                @endif
-                            </div>
-                        </div>
+            <div class="p-8 space-y-8">
+                <!-- Header -->
+                <div class="flex justify-between items-start pb-6 border-b border-ocean-100 animate-fade">
+                    <div>
+                        <h1 class="text-4xl font-bold text-ocean-900">{{ $ekosistem->nama_ekosistem }}</h1>
+                        <p class="text-ocean-600 text-lg mt-2 font-semibold">Marine Ecosystem</p>
                     </div>
-                @endforeach
-            </div>
+                    @auth
+                        <button class="bookmark-btn btn btn-outline" data-type="ekosistem" data-item-id="{{ $ekosistem->id_ekosistem }}">
+                            <span class="bookmark-text">Bookmark</span>
+                        </button>
+                    @endauth
+                </div>
 
-            <!-- Pagination -->
-            <div class="mt-8 flex justify-center">
-                {{ $ekosistem->appends(request()->query())->links() }}
+                <!-- Info Grid -->
+                <div class="grid grid-cols-2 gap-8 animate-fade">
+                    <div class="p-4 bg-ocean-50 rounded-xl border border-ocean-200">
+                        <h3 class="text-sm font-bold text-ocean-700 mb-2 uppercase">Location</h3>
+                        <p class="text-gray-700">{{ $ekosistem->lokasi ?? 'Not specified' }}</p>
+                    </div>
+                    <div class="p-4 bg-eco-100 rounded-xl border border-eco-300">
+                        <h3 class="text-sm font-bold text-eco-700 mb-2 uppercase">Role</h3>
+                        <p class="text-gray-700">{{ $ekosistem->peran ?? 'Not specified' }}</p>
+                    </div>
+                </div>
+
+                <!-- Prose Content -->
+                <div class="prose prose-sm max-w-none space-y-6">
+                    <div class="animate-fade">
+                        <h3 class="text-2xl font-bold text-ocean-900 mb-3">Description</h3>
+                        <p class="text-gray-700 leading-relaxed">{{ $ekosistem->deskripsi ?? 'No description available' }}</p>
+                    </div>
+
+                    <div class="animate-fade">
+                        <h3 class="text-2xl font-bold text-ocean-900 mb-3">Threats</h3>
+                        <p class="text-gray-700 leading-relaxed">{{ $ekosistem->ancaman ?? 'No threats specified' }}</p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex flex-wrap gap-3 pt-4 border-t border-ocean-100">
+                    <a href="{{ route('ekosistem.index') }}" class="btn btn-outline btn-sm">Back to Ecosystems</a>
+                    <button class="share-btn btn btn-success btn-sm" data-url="{{ request()->url() }}">
+                        Share
+                    </button>
+                    @if(auth()->check() && auth()->user()->isAdmin())
+                        <a href="{{ route('ekosistem.edit', $ekosistem->id_ekosistem) }}" class="btn btn-outline btn-sm">Edit</a>
+                        <button class="delete-btn btn btn-error btn-sm" data-ekosistem-id="{{ $ekosistem->id_ekosistem }}">
+                            Delete
+                        </button>
+                    @endif
+                </div>
             </div>
-        @endif
+        </div>
     </div>
 </div>
 
 @push('scripts')
-<script>
-// Global helper - harus di luar module
-function getCsrfToken() {
-    return document.querySelector('meta[name="csrf-token"]')?.content || '';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.delete-btn-card').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const id = this.dataset.ekosistemId;
-            if (!confirm("Yakin mau hapus data ini?")) return;
-
-            fetch(`/ekosistem/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': getCsrfToken(),
-                    'Accept': 'application/json'
-                }
-            })
-            .then(res => {
-                if (res.ok) {
-                    location.reload();
-                } else {
-                    alert("Gagal menghapus data");
-                }
-            })
-            .catch(err => console.error(err));
-        });
-    });
-});
-</script>
-
+<script type="module" src="{{ asset('js/interactions.js') }}"></script>
 <script type="module">
-document.addEventListener('DOMContentLoaded', function() {
-    initializeBookmarkButtonsCard();
-    loadBookmarkStatesCard();
-});
+    function showNotification(message, type = 'info') {
+        const colors = {
+            success: 'bg-green-100 text-green-800',
+            error: 'bg-red-100 text-red-800',
+            info: 'bg-blue-100 text-blue-800'
+        };
 
-function initializeBookmarkButtonsCard() {
-    document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-        btn.addEventListener('click', toggleBookmarkCard);
-    });
-}
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg ${colors[type]} shadow-lg z-50 animate-fade-in`;
+        notification.textContent = message;
 
-function toggleBookmarkCard(e) {
-    e.preventDefault();
-    const btn = e.currentTarget;
-    const type = btn.dataset.type;
-    const itemId = btn.dataset.itemId;
-    const isBookmarked = btn.classList.contains('bookmarked');
-    const method = isBookmarked ? 'DELETE' : 'POST';
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 4000);
+    }
 
-    fetch('/favorites', {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
-        },
-        body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'success') {
-            btn.classList.toggle('bookmarked');
-            btn.classList.toggle('bg-blue-600');
-            btn.classList.toggle('text-white');
-            btn.classList.toggle('border-blue-600');
-            btn.classList.toggle('text-blue-600');
-            btn.classList.toggle('hover:bg-blue-50');
-            const text = btn.querySelector('.bookmark-text');
-            text.textContent = btn.classList.contains('bookmarked') ? 'Bookmarked' : 'Bookmark';
-        } else {
-            alert(data.message);
+    document.addEventListener('DOMContentLoaded', function() {
+        const shareBtn = document.querySelector('.share-btn');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                shareContent(this);
+            });
         }
-    })
-    .catch(err => console.error('Error:', err));
-}
 
-function loadBookmarkStatesCard() {
-    fetch('/favorites', {
-        method: 'GET',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'success' && Array.isArray(data.data)) {
-            document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-                const type = btn.dataset.type;
-                const itemId = parseInt(btn.dataset.itemId);
-                const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
-                if (isBookmarked) {
-                    btn.classList.add('bookmarked', 'bg-blue-600', 'text-white', 'border-blue-600');
-                    btn.classList.remove('text-blue-600', 'hover:bg-blue-50');
-                    const text = btn.querySelector('.bookmark-text');
-                    if (text) text.textContent = 'Bookmarked';
+        const deleteBtn = document.querySelector('.delete-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to delete this ecosystem? This cannot be undone.')) {
+                    deleteEkosistem(this);
                 }
             });
         }
-    })
-    .catch(err => console.error('Error loading bookmark state:', err));
-}
+    });
+
+    function shareContent(btn) {
+        const url = btn.dataset.url;
+        navigator.clipboard.writeText(url).then(() => {
+            showNotification('Link copied to clipboard!', 'success');
+        }).catch(() => {
+            showNotification('Failed to copy link', 'error');
+        });
+    }
+
+    function deleteEkosistem(btn) {
+        const id = btn.dataset.ekosistemId;
+        btn.disabled = true;
+        btn.classList.add('opacity-60');
+        const originalText = btn.textContent;
+        btn.textContent = 'Deleting...';
+
+        fetch(`/ekosistem/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': getCsrfToken(),
+                'Accept': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showNotification('Ecosystem deleted successfully', 'success');
+                setTimeout(() => window.location.href = '{{ route('ekosistem.index') }}', 1500);
+            } else {
+                showNotification(data.message || 'Failed to delete ecosystem', 'error');
+                btn.disabled = false;
+                btn.classList.remove('opacity-60');
+                btn.textContent = originalText;
+            }
+        })
+        .catch(err => {
+            showNotification('An error occurred. Please try again.', 'error');
+            console.error('Error:', err);
+            btn.disabled = false;
+            btn.classList.remove('opacity-60');
+            btn.textContent = originalText;
+        });
+    }
+
+    function getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.content || '';
+    }
 </script>
 @endpush
 @endsection

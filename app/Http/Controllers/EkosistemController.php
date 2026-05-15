@@ -24,7 +24,14 @@ class EkosistemController extends Controller
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest');
+        $search = $request->query('search');
         $query = Ekosistem::query();
+
+        if ($search) {
+            $query->where('nama_ekosistem', 'like', "%{$search}%")
+                  ->orWhere('lokasi', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%");
+        }
 
         if ($sort === 'oldest') {
             $query->orderBy('created_at', 'asc');
