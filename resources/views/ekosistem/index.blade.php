@@ -61,7 +61,7 @@
         @auth
             @if(auth()->user()->isAdmin())
                 <div class="mb-8 flex justify-end">
-                    <a href="{{ route('ekosistem.create') }}" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:shadow-emerald-500/30 transform hover:-translate-y-1 transition-all duration-300">
+                    <a href="{{ route('ekosistem.create') }}" class="bg-gradient-to-r from-ocean-600 to-emerald-500 hover:from-ocean-700 hover:to-emerald-600 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:shadow-emerald-500/40 transform hover:-translate-y-1 transition-all duration-300">
                         + Tambah Ekosistem
                     </a>
                 </div>
