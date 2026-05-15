@@ -154,7 +154,7 @@
                         @endguest
 
                         <div class="flex gap-2.5">
-                            <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="flex-1 bg-gradient-to-r from-ocean-600 to-blue-500 hover:from-ocean-700 hover:to-blue-600 text-white font-bold py-2.5 rounded-xl text-center transition-all duration-300 text-sm shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                            <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="flex-1 bg-ocean-100 hover:bg-ocean-600 text-ocean-800 hover:text-white font-bold py-2.5 rounded-xl text-center transition-all duration-300 text-sm border border-ocean-200 hover:border-transparent">
                                 Lihat Detail
                             </a>
                             
