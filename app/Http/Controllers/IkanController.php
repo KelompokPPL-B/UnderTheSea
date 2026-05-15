@@ -22,29 +22,61 @@ class IkanController extends Controller
      * PBI-21: Sort Options
      */
     public function index(Request $request)
-{
-    // Ambil parameter sorting, default ke 'newest'
-    $sort = $request->get('sort', 'newest');
+    {
+        // Ambil parameter sorting, default ke 'newest'
+        $sort          = $request->get('sort', 'newest');
+        $filterHabitat = $request->get('habitat', '');
+        $filterStatus  = $request->get('status', '');
 
-    // Inisialisasi query model Ikan
-    $dataIkan = Ikan::query();
+        // Inisialisasi query model Ikan
+        $dataIkan = Ikan::query();
 
-    // Tentukan urutan berdasarkan pilihan sort
-    if ($sort === 'oldest') {
-        $dataIkan->orderBy('created_at', 'asc');
-    } else {
-        $dataIkan->orderByDesc('created_at');
+        // Filter berdasarkan habitat
+        if ($filterHabitat) {
+            $dataIkan->where('habitat', $filterHabitat);
+        }
+
+        // Filter berdasarkan status konservasi
+        if ($filterStatus) {
+            $dataIkan->where('status_konservasi', $filterStatus);
+        }
+
+        // Tentukan urutan berdasarkan pilihan sort
+        match ($sort) {
+            'oldest'    => $dataIkan->orderBy('created_at', 'asc'),
+            'name_asc'  => $dataIkan->orderBy('nama', 'asc'),
+            'name_desc' => $dataIkan->orderBy('nama', 'desc'),
+            default     => $dataIkan->orderByDesc('created_at'),
+        };
+
+        // Ambil data dengan pagination (sertakan query string agar pagination preserve filter)
+        $ikan = $dataIkan->paginate(10)->withQueryString();
+
+        // Ambil daftar unik untuk dropdown filter
+        $habitatList = Ikan::select('habitat')
+            ->whereNotNull('habitat')
+            ->where('habitat', '!=', '')
+            ->distinct()
+            ->orderBy('habitat')
+            ->pluck('habitat');
+
+        $statusList = Ikan::select('status_konservasi')
+            ->whereNotNull('status_konservasi')
+            ->where('status_konservasi', '!=', '')
+            ->distinct()
+            ->orderBy('status_konservasi')
+            ->pluck('status_konservasi');
+
+        // Kirim ke view
+        return view('ikan.index', [
+            'ikan'          => $ikan,
+            'sort'          => $sort,
+            'filterHabitat' => $filterHabitat,
+            'filterStatus'  => $filterStatus,
+            'habitatList'   => $habitatList,
+            'statusList'    => $statusList,
+        ]);
     }
-
-    // Ambil data dengan pagination
-    $ikan = $dataIkan->paginate(10);
-
-    // Kirim ke view
-    return view('ikan.index', [
-        'ikan' => $ikan,
-        'sort' => $sort
-    ]);
-}
 
     /**
      * Owner: Faiz
@@ -151,18 +183,14 @@ class IkanController extends Controller
     /**
      * Owner: Faiz
      * PBI-09: Manage Fish Content
+     * NOTE: Deletion is intentionally disabled. Fish data can only be edited.
      */
     public function destroy($id)
     {
-        $this->authorize('admin');
-
-        $ikan = Ikan::findOrFail($id);
-        $ikan->delete();
-
         return response()->json([
-            'status' => 'success',
-            'message' => 'Fish deleted successfully',
-            'data' => null,
-        ]);
+            'status'  => 'error',
+            'message' => 'Penghapusan data ikan tidak diizinkan. Data hanya dapat diedit.',
+            'data'    => null,
+        ], 403);
     }
 }
