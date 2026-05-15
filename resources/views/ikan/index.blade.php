@@ -25,12 +25,12 @@
 
                     <!-- Sort By -->
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Urutkan</label>
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Sort By</label>
                         <select name="sort" class="select select-bordered select-sm text-sm min-w-[160px]">
-                            <option value="newest" {{ ($sort ?? 'newest') === 'newest' ? 'selected' : '' }}>Terbaru (Newest)</option>
-                            <option value="oldest" {{ ($sort ?? '') === 'oldest' ? 'selected' : '' }}>Terlama (Oldest)</option>
-                            <option value="name_asc" {{ ($sort ?? '') === 'name_asc' ? 'selected' : '' }}>Nama A–Z</option>
-                            <option value="name_desc" {{ ($sort ?? '') === 'name_desc' ? 'selected' : '' }}>Nama Z–A</option>
+                            <option value="newest" {{ ($sort ?? 'newest') === 'newest' ? 'selected' : '' }}>Newest First</option>
+                            <option value="oldest" {{ ($sort ?? '') === 'oldest' ? 'selected' : '' }}>Oldest First</option>
+                            <option value="name_asc" {{ ($sort ?? '') === 'name_asc' ? 'selected' : '' }}>Name A–Z</option>
+                            <option value="name_desc" {{ ($sort ?? '') === 'name_desc' ? 'selected' : '' }}>Name Z–A</option>
                         </select>
                     </div>
 
@@ -38,34 +38,34 @@
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Habitat</label>
                         <select name="habitat" class="select select-bordered select-sm text-sm min-w-[150px]">
-                            <option value="">Semua Habitat</option>
+                            <option value="">All Habitats</option>
                             @foreach($habitatList as $h)
                                 <option value="{{ $h }}" {{ ($filterHabitat ?? '') === $h ? 'selected' : '' }}>{{ $h }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <!-- Filter Status Konservasi -->
+                    <!-- Filter Conservation Status -->
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Status Konservasi</label>
-                        <select name="status" class="select select-bordered select-sm text-sm min-w-[180px]">
-                            <option value="">Semua Status</option>
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Conservation Status</label>
+                        <select name="status" class="select select-bordered select-sm text-sm min-w-[190px]">
+                            <option value="">All Statuses</option>
                             @foreach($statusList as $s)
                                 <option value="{{ $s }}" {{ ($filterStatus ?? '') === $s ? 'selected' : '' }}>{{ $s }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <!-- Buttons -->
-                    <div class="flex gap-2">
-                        <button type="submit" class="btn btn-sm text-sm font-semibold px-5" style="background:#0e7490;color:#fff;border:none;">Terapkan</button>
+                    <!-- Buttons aligned with dropdowns -->
+                    <div class="flex gap-2 items-end" style="padding-bottom:1px;">
+                        <button type="submit" class="btn btn-sm text-sm font-semibold px-5" style="background:#0e7490;color:#fff;border:none;">Apply</button>
                         <a href="{{ route('ikan.index') }}" class="btn btn-sm btn-ghost text-sm font-semibold px-4 text-gray-500">Reset</a>
                     </div>
                 </div>
 
                 @if(($filterHabitat ?? '') || ($filterStatus ?? ''))
-                    <div class="mt-3 flex flex-wrap gap-2">
-                        <span class="text-xs text-gray-500">Filter aktif:</span>
+                    <div class="mt-3 flex flex-wrap gap-2 items-center">
+                        <span class="text-xs text-gray-400 font-medium">Active filters:</span>
                         @if($filterHabitat ?? '')
                             <span class="badge badge-sm" style="background:#e0f2fe;color:#0369a1;border:none;">Habitat: {{ $filterHabitat }}</span>
                         @endif
@@ -123,7 +123,7 @@
 
                             <!-- Action Buttons -->
                             <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-sm flex-1 text-sm font-semibold" style="background:#0e7490;color:#fff;border:none;">Lihat Detail</a>
+                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-sm flex-1 text-sm font-semibold" style="background:#0e7490;color:#fff;border:none;">View Detail</a>
                                 @if(auth()->check() && auth()->user()->isAdmin())
                                     <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-sm text-sm font-semibold" style="background:#f59e0b;color:#fff;border:none;">Edit</a>
                                 @endif
