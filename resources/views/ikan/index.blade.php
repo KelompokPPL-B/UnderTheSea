@@ -20,22 +20,17 @@
         <!-- Filter & Sort Controls -->
         <form method="GET" action="{{ route('ikan.index') }}" class="mb-8">
             <div class="bg-white rounded-2xl shadow-sm border border-ocean-100 p-5">
-                <p class="text-xs font-bold text-ocean-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-                    </svg>
-                    Filter &amp; Sort
-                </p>
+                <p class="text-xs font-bold text-ocean-500 uppercase tracking-widest mb-4">🔍 Filter & Sort</p>
                 <div class="flex flex-wrap gap-4 items-end">
 
                     <!-- Sort By -->
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Sort By</label>
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Urutkan</label>
                         <select name="sort" class="select select-bordered select-sm text-sm min-w-[160px]">
-                            <option value="newest" {{ ($sort ?? 'newest') === 'newest' ? 'selected' : '' }}>Newest First</option>
-                            <option value="oldest" {{ ($sort ?? '') === 'oldest' ? 'selected' : '' }}>Oldest First</option>
-                            <option value="name_asc" {{ ($sort ?? '') === 'name_asc' ? 'selected' : '' }}>Name A–Z</option>
-                            <option value="name_desc" {{ ($sort ?? '') === 'name_desc' ? 'selected' : '' }}>Name Z–A</option>
+                            <option value="newest" {{ ($sort ?? 'newest') === 'newest' ? 'selected' : '' }}>Terbaru (Newest)</option>
+                            <option value="oldest" {{ ($sort ?? '') === 'oldest' ? 'selected' : '' }}>Terlama (Oldest)</option>
+                            <option value="name_asc" {{ ($sort ?? '') === 'name_asc' ? 'selected' : '' }}>Nama A–Z</option>
+                            <option value="name_desc" {{ ($sort ?? '') === 'name_desc' ? 'selected' : '' }}>Nama Z–A</option>
                         </select>
                     </div>
 
@@ -43,38 +38,34 @@
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Habitat</label>
                         <select name="habitat" class="select select-bordered select-sm text-sm min-w-[150px]">
-                            <option value="">All Habitats</option>
+                            <option value="">Semua Habitat</option>
                             @foreach($habitatList as $h)
                                 <option value="{{ $h }}" {{ ($filterHabitat ?? '') === $h ? 'selected' : '' }}>{{ $h }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <!-- Filter Conservation Status -->
+                    <!-- Filter Status Konservasi -->
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Conservation Status</label>
-                        <select name="status" class="select select-bordered select-sm text-sm min-w-[190px]">
-                            <option value="">All Statuses</option>
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Status Konservasi</label>
+                        <select name="status" class="select select-bordered select-sm text-sm min-w-[180px]">
+                            <option value="">Semua Status</option>
                             @foreach($statusList as $s)
                                 <option value="{{ $s }}" {{ ($filterStatus ?? '') === $s ? 'selected' : '' }}>{{ $s }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <!-- Apply / Reset Buttons — aligned with dropdowns -->
-                    <div class="flex gap-2 items-center" style="margin-bottom:1px;">
-                        <button type="submit" class="btn btn-sm text-sm font-semibold px-5" style="background:#0e7490;color:#fff;border:none;">
-                            Apply
-                        </button>
-                        <a href="{{ route('ikan.index') }}" class="btn btn-sm btn-ghost text-sm font-semibold px-4 text-gray-500">
-                            Reset
-                        </a>
+                    <!-- Buttons -->
+                    <div class="flex gap-2">
+                        <button type="submit" class="btn btn-sm text-sm font-semibold px-5" style="background:#0e7490;color:#fff;border:none;">Terapkan</button>
+                        <a href="{{ route('ikan.index') }}" class="btn btn-sm btn-ghost text-sm font-semibold px-4 text-gray-500">Reset</a>
                     </div>
                 </div>
 
                 @if(($filterHabitat ?? '') || ($filterStatus ?? ''))
-                    <div class="mt-3 flex flex-wrap gap-2 items-center">
-                        <span class="text-xs text-gray-400 font-medium">Active filters:</span>
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        <span class="text-xs text-gray-500">Filter aktif:</span>
                         @if($filterHabitat ?? '')
                             <span class="badge badge-sm" style="background:#e0f2fe;color:#0369a1;border:none;">Habitat: {{ $filterHabitat }}</span>
                         @endif

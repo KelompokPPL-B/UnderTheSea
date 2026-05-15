@@ -29,7 +29,7 @@
                         id="nama"
                         name="nama"
                         value="{{ old('nama', $ikan->nama) }}"
-                        class="input input-bordered w-full @error('nama') input-error @enderror"
+                        class="input input-bordered w-full rounded-xl @error('nama') input-error @enderror"
                         placeholder="Enter fish species name"
                         required
                     >
@@ -47,7 +47,7 @@
                         id="deskripsi"
                         name="deskripsi"
                         rows="4"
-                        class="textarea textarea-bordered w-full @error('deskripsi') textarea-error @enderror"
+                        class="textarea textarea-bordered w-full rounded-xl @error('deskripsi') textarea-error @enderror"
                         placeholder="Describe the fish species"
                     >{{ old('deskripsi', $ikan->deskripsi) }}</textarea>
                     @error('deskripsi')
@@ -65,7 +65,7 @@
                         id="habitat"
                         name="habitat"
                         value="{{ old('habitat', $ikan->habitat) }}"
-                        class="input input-bordered w-full @error('habitat') input-error @enderror"
+                        class="input input-bordered w-full rounded-xl @error('habitat') input-error @enderror"
                         placeholder="Enter habitat information"
                     >
                     @error('habitat')
@@ -82,7 +82,7 @@
                         id="karakteristik"
                         name="karakteristik"
                         rows="3"
-                        class="textarea textarea-bordered w-full @error('karakteristik') textarea-error @enderror"
+                        class="textarea textarea-bordered w-full rounded-xl @error('karakteristik') textarea-error @enderror"
                         placeholder="Describe physical characteristics"
                     >{{ old('karakteristik', $ikan->karakteristik) }}</textarea>
                     @error('karakteristik')
@@ -100,7 +100,7 @@
                         id="status_konservasi"
                         name="status_konservasi"
                         value="{{ old('status_konservasi', $ikan->status_konservasi) }}"
-                        class="input input-bordered w-full @error('status_konservasi') input-error @enderror"
+                        class="input input-bordered w-full rounded-xl @error('status_konservasi') input-error @enderror"
                         placeholder="e.g., Endangered, Vulnerable, Least Concern"
                     >
                     @error('status_konservasi')
@@ -117,7 +117,7 @@
                         id="fakta_unik"
                         name="fakta_unik"
                         rows="3"
-                        class="textarea textarea-bordered w-full @error('fakta_unik') textarea-error @enderror"
+                        class="textarea textarea-bordered w-full rounded-xl @error('fakta_unik') textarea-error @enderror"
                         placeholder="Share interesting facts about this species"
                     >{{ old('fakta_unik', $ikan->fakta_unik) }}</textarea>
                     @error('fakta_unik')
@@ -172,8 +172,18 @@
 
                 <!-- Buttons -->
                 <div class="flex gap-3 pt-6 border-t border-ocean-100">
-                    <button type="submit" class="btn btn-primary flex-1">Save Changes</button>
-                    <a href="{{ route('ikan.show', $ikan->id_ikan) }}" class="btn btn-outline flex-1">Cancel</a>
+                    <button type="submit"
+                        class="btn flex-1"
+                        style="background-color: #22c55e; color: white; border: none; font-size: 15px; font-weight: 600; border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(34,197,94,0.3);"
+                        onmouseover="this.style.backgroundColor='#16a34a'"
+                        onmouseout="this.style.backgroundColor='#22c55e'"
+                    >Save Changes</button>
+                    <a href="{{ route('ikan.show', $ikan->id_ikan) }}"
+                        class="btn flex-1"
+                        style="background-color: #ef4444; color: white; border: none; font-size: 15px; font-weight: 600; border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(239,68,68,0.3);"
+                        onmouseover="this.style.backgroundColor='#dc2626'"
+                        onmouseout="this.style.backgroundColor='#ef4444'"
+                    >Cancel</a>
                 </div>
             </form>
         </div>
