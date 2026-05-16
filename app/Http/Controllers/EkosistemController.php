@@ -83,7 +83,7 @@ class EkosistemController extends Controller
             'deskripsi' =>'required|string|min:10|max:255',
             'lokasi' => 'required|string|min:5|max:50',
             'peran' => 'required|string|min:5|max:50',
-            'ancaman' => 'required|string|min:10',
+            'ancaman' => 'required|string|min:10|max:100',
             'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
 
@@ -113,7 +113,7 @@ class EkosistemController extends Controller
             'deskripsi' =>'required|string|min:10|max:255',
             'lokasi' => 'required|string|min:5|max:50',
             'peran' => 'required|string|min:5|max:50',
-            'ancaman' => 'required|string|min:10',
+            'ancaman' => 'required|string|min:10|max:100',
             'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
 

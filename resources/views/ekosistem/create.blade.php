@@ -80,7 +80,7 @@
                         <label for="ancaman" class="block text-sm font-semibold text-ocean-900 mb-2">
                             Threats
                         </label>
-                        <textarea id="ancaman" name="ancaman" rows="3"
+                        <textarea id="ancaman" name="ancaman" rows="3" minlength="10" maxlength="100"
                             class="textarea textarea-bordered w-full rounded-xl @error('ancaman') textarea-error @enderror"
                             placeholder="Describe threats to this ecosystem">{{ old('ancaman') }}</textarea>
                         @error('ancaman')
