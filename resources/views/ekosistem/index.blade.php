@@ -228,14 +228,14 @@
                     <svg class="w-4 h-4 {{ request()->has('filter_likes') ? 'fill-current text-white' : 'fill-none' }}" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
-                    {{ request()->has('filter_likes') ? 'Hapus Filter Likes' : 'Likes Saya' }}
+                    Likes Saya
                 </button>
 
                 <button id="filter-bookmarks-btn" class="px-5 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all duration-300 {{ request()->has('filter_bookmarks') ? 'bg-ocean-500 text-white shadow-lg shadow-ocean-500/30 border-ocean-500' : 'bg-white/80 text-gray-600 hover:bg-white hover:text-ocean-500 border-gray-200 border shadow-sm' }}">
                     <svg class="w-4 h-4 {{ request()->has('filter_bookmarks') ? 'fill-current text-white' : 'fill-none' }}" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
                     </svg>
-                    {{ request()->has('filter_bookmarks') ? 'Hapus Filter Bookmarks' : 'Bookmarks Saya' }}
+                    Bookmarks Saya
                 </button>
             </div>
         </div>
