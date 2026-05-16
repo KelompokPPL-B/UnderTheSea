@@ -23,6 +23,54 @@
             </p>
         </div>
 
+        <!-- Mini Statistics Section -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16 relative z-20">
+            <!-- Stat 1 -->
+            <div class="bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 text-center border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transform hover:-translate-y-2 transition-all duration-300 group">
+                <div class="w-14 h-14 mx-auto bg-gradient-to-br from-blue-50 to-cyan-100 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300 border border-white">
+                    <svg class="w-7 h-7 text-ocean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-4xl font-extrabold text-gray-900 mb-1 tracking-tight">24</h3>
+                <p class="text-xs font-bold text-ocean-600 uppercase tracking-wider">Ekosistem Laut</p>
+            </div>
+
+            <!-- Stat 2 -->
+            <div class="bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 text-center border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transform hover:-translate-y-2 transition-all duration-300 group">
+                <div class="w-14 h-14 mx-auto bg-gradient-to-br from-cyan-50 to-teal-100 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300 border border-white">
+                    <svg class="w-7 h-7 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2.25c-5.385 7.42-8.25 10.706-8.25 13.5a8.25 8.25 0 0016.5 0c0-2.794-2.865-6.08-8.25-13.5z" />
+                    </svg>
+                </div>
+                <h3 class="text-4xl font-extrabold text-gray-900 mb-1 tracking-tight">120<span class="text-cyan-500">+</span></h3>
+                <p class="text-xs font-bold text-cyan-700 uppercase tracking-wider">Spesies Laut</p>
+            </div>
+
+            <!-- Stat 3 -->
+            <div class="bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 text-center border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transform hover:-translate-y-2 transition-all duration-300 group">
+                <div class="w-14 h-14 mx-auto bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300 border border-white">
+                    <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-4xl font-extrabold text-gray-900 mb-1 tracking-tight">15</h3>
+                <p class="text-xs font-bold text-blue-700 uppercase tracking-wider">Lokasi Laut</p>
+            </div>
+
+            <!-- Stat 4 -->
+            <div class="bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 text-center border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transform hover:-translate-y-2 transition-all duration-300 group">
+                <div class="w-14 h-14 mx-auto bg-gradient-to-br from-emerald-50 to-teal-100 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300 border border-white">
+                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-4xl font-extrabold text-gray-900 mb-1 tracking-tight">8</h3>
+                <p class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Aksi Konservasi</p>
+            </div>
+        </div>
+
         <!-- Search & Filter Controls -->
         <div class="relative mb-12 flex flex-col md:flex-row items-center justify-center gap-4 z-20">
 
