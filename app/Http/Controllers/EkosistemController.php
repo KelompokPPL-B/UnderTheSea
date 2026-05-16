@@ -25,12 +25,39 @@ class EkosistemController extends Controller
     {
         $sort = $request->query('sort', 'newest');
         $search = $request->query('search');
+        $filterLikes = $request->query('filter_likes');
+        $filterBookmarks = $request->query('filter_bookmarks');
+
         $query = Ekosistem::query();
 
         if ($search) {
-            $query->where('nama_ekosistem', 'like', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('nama_ekosistem', 'like', "%{$search}%")
                   ->orWhere('lokasi', 'like', "%{$search}%")
                   ->orWhere('deskripsi', 'like', "%{$search}%");
+            });
+        }
+
+        // Jika URL mempunyai ?filter_likes=...
+        if ($filterLikes !== null) {
+            if (empty(trim($filterLikes))) {
+                // User klik "Tampilkan Likes" tapi belum punya like sama sekali
+                $query->whereRaw('1 = 0');
+            } else {
+                $ids = array_filter(explode(',', $filterLikes));
+                $query->whereIn('id_ekosistem', $ids);
+            }
+        }
+
+        // Jika URL mempunyai ?filter_bookmarks=...
+        if ($filterBookmarks !== null) {
+            if (empty(trim($filterBookmarks))) {
+                // User klik "Tampilkan Bookmarks" tapi belum punya bookmark sama sekali
+                $query->whereRaw('1 = 0');
+            } else {
+                $ids = array_filter(explode(',', $filterBookmarks));
+                $query->whereIn('id_ekosistem', $ids);
+            }
         }
 
         if ($sort === 'oldest') {

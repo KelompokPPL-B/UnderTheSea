@@ -179,47 +179,65 @@
         </div>
 
         <!-- Search & Filter Controls -->
-        <div class="relative mb-12 flex flex-col md:flex-row items-center justify-center gap-4 z-20">
-
-            <form method="GET" action="{{ route('ekosistem.index') }}" class="w-full max-w-2xl relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-ocean-300 to-cyan-300 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
-                
-                <div class="relative bg-white/80 backdrop-blur-md rounded-full p-1.5 flex items-center shadow-xl border border-white/50">
-                    <span class="pl-5 pr-2 text-2xl">🫧</span>
+        <div class="flex flex-col gap-4 mb-12 relative z-20">
+            <!-- Top Row: Search and Sort -->
+            <div class="relative flex flex-col md:flex-row items-center justify-center gap-4">
+                <form method="GET" action="{{ route('ekosistem.index') }}" class="w-full max-w-2xl relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-ocean-300 to-cyan-300 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
                     
-                    <input 
-                        type="text" 
-                        name="search" 
-                        value="{{ request('search') }}"
-                        placeholder="Cari ekosistem, lokasi, atau deskripsi..." 
-                        class="w-full bg-transparent border-none focus:ring-0 px-2 py-3 text-ocean-900 placeholder-ocean-400 font-medium outline-none"
-                    >
+                    <div class="relative bg-white/80 backdrop-blur-md rounded-full p-1.5 flex items-center shadow-xl border border-white/50">
+                        <span class="pl-5 pr-2 text-2xl">🫧</span>
+                        
+                        <input 
+                            type="text" 
+                            name="search" 
+                            value="{{ request('search') }}"
+                            placeholder="Cari ekosistem, lokasi, atau deskripsi..." 
+                            class="w-full bg-transparent border-none focus:ring-0 px-2 py-3 text-ocean-900 placeholder-ocean-400 font-medium outline-none"
+                        >
 
-                    <button 
-                        type="submit" 
-                        class="bg-gradient-to-r from-ocean-600 to-blue-500 hover:from-ocean-700 hover:to-blue-600 text-white px-8 py-3 rounded-full font-bold tracking-wide shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
-                    >
-                        <span>Search</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </button>
-                </div>
-            </form>
+                        <button 
+                            type="submit" 
+                            class="bg-gradient-to-r from-ocean-600 to-blue-500 hover:from-ocean-700 hover:to-blue-600 text-white px-8 py-3 rounded-full font-bold tracking-wide shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
+                        >
+                            <span>Search</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
 
-            <div class="relative w-full md:w-auto">
-                <select 
-                    onchange="window.location.href='{{ route('ekosistem.index') }}?sort=' + this.value + '&search={{ request('search') }}'" 
-                    class="appearance-none bg-white/80 backdrop-blur-md border border-white/50 text-ocean-700 font-semibold py-3 pl-6 pr-10 rounded-full shadow-lg hover:bg-white transition-all cursor-pointer outline-none focus:ring-2 focus:ring-ocean-300">
-                    
-                    <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>✨ Terbaru</option>
-                    <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>⏳ Terlama</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-ocean-500">
-                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                <div class="relative w-full md:w-auto">
+                    <select 
+                        onchange="window.location.href='{{ route('ekosistem.index') }}?sort=' + this.value + '&search={{ request('search') }}'" 
+                        class="appearance-none bg-white/80 backdrop-blur-md border border-white/50 text-ocean-700 font-semibold py-3 pl-6 pr-10 rounded-full shadow-lg hover:bg-white transition-all cursor-pointer outline-none focus:ring-2 focus:ring-ocean-300">
+                        
+                        <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>✨ Terbaru</option>
+                        <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>⏳ Terlama</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-ocean-500">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
                 </div>
             </div>
 
+            <!-- Bottom Row: Favorites Filters -->
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <button id="filter-likes-btn" class="px-5 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all duration-300 {{ request()->has('filter_likes') ? 'bg-red-500 text-white shadow-lg shadow-red-500/30 border-red-500' : 'bg-white/80 text-gray-600 hover:bg-white hover:text-red-500 border-gray-200 border shadow-sm' }}">
+                    <svg class="w-4 h-4 {{ request()->has('filter_likes') ? 'fill-current text-white' : 'fill-none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                    {{ request()->has('filter_likes') ? 'Hapus Filter Likes' : 'Likes Saya' }}
+                </button>
+
+                <button id="filter-bookmarks-btn" class="px-5 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all duration-300 {{ request()->has('filter_bookmarks') ? 'bg-ocean-500 text-white shadow-lg shadow-ocean-500/30 border-ocean-500' : 'bg-white/80 text-gray-600 hover:bg-white hover:text-ocean-500 border-gray-200 border shadow-sm' }}">
+                    <svg class="w-4 h-4 {{ request()->has('filter_bookmarks') ? 'fill-current text-white' : 'fill-none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                    </svg>
+                    {{ request()->has('filter_bookmarks') ? 'Hapus Filter Bookmarks' : 'Bookmarks Saya' }}
+                </button>
+            </div>
         </div>
 
         @auth
@@ -529,6 +547,41 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(err => console.error('Error loading bookmark state:', err));
+    }
+
+    // === FILTER BUTTON LOGIC ===
+    const filterLikesBtn = document.getElementById('filter-likes-btn');
+    if (filterLikesBtn) {
+        filterLikesBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const currentUrl = new URL(window.location.href);
+            if (currentUrl.searchParams.has('filter_likes')) {
+                currentUrl.searchParams.delete('filter_likes');
+                window.location.href = currentUrl.toString();
+            } else {
+                currentUrl.searchParams.delete('filter_bookmarks');
+                const likes = safeParseJSON(localStorage.getItem('likes_ekosistem'));
+                currentUrl.searchParams.set('filter_likes', likes.join(','));
+                window.location.href = currentUrl.toString();
+            }
+        });
+    }
+
+    const filterBookmarksBtn = document.getElementById('filter-bookmarks-btn');
+    if (filterBookmarksBtn) {
+        filterBookmarksBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const currentUrl = new URL(window.location.href);
+            if (currentUrl.searchParams.has('filter_bookmarks')) {
+                currentUrl.searchParams.delete('filter_bookmarks');
+                window.location.href = currentUrl.toString();
+            } else {
+                currentUrl.searchParams.delete('filter_likes');
+                const bookmarks = safeParseJSON(localStorage.getItem('bookmarks_ekosistem'));
+                currentUrl.searchParams.set('filter_bookmarks', bookmarks.join(','));
+                window.location.href = currentUrl.toString();
+            }
+        });
     }
 });
 </script>
