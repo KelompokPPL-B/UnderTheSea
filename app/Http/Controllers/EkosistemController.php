@@ -80,8 +80,8 @@ class EkosistemController extends Controller
 
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|min:5|max:50|unique:ekosistem,nama_ekosistem',
-            'deskripsi' =>'required|string|min:10',
-            'lokasi' => 'required|string|min:5',
+            'deskripsi' =>'required|string|min:10|max:255',
+            'lokasi' => 'required|string|min:5|max:50',
             'peran' => 'required|string|min:5',
             'ancaman' => 'required|string|min:10',
             'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
@@ -111,7 +111,7 @@ class EkosistemController extends Controller
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|min:5|max:50|unique:ekosistem,nama_ekosistem,'.$id.',id_ekosistem',
             'deskripsi' =>'required|string|min:10|max:255',
-            'lokasi' => 'required|string|min:5',
+            'lokasi' => 'required|string|min:5|max:50',
             'peran' => 'required|string|min:5',
             'ancaman' => 'required|string|min:10',
             'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',

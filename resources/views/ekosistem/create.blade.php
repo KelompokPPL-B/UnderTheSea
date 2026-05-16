@@ -54,7 +54,7 @@
                         <label for="lokasi" class="block text-sm font-semibold text-ocean-900 mb-2">
                             Location
                         </label>
-                        <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi') }}"
+                        <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi') }}" minlength="5" maxlength="50"
                             class="input input-bordered w-full rounded-2xl @error('lokasi') input-error @enderror"
                             placeholder="Enter geographic location">
                         @error('lokasi')
