@@ -110,7 +110,7 @@ class EkosistemController extends Controller
 
         $validated = $request->validate([
             'nama_ekosistem' => 'required|string|min:5|max:50|unique:ekosistem,nama_ekosistem,'.$id.',id_ekosistem',
-            'deskripsi' =>'required|string|min:10',
+            'deskripsi' =>'required|string|min:10|max:255',
             'lokasi' => 'required|string|min:5',
             'peran' => 'required|string|min:5',
             'ancaman' => 'required|string|min:10',

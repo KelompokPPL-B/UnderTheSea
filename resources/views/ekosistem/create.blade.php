@@ -41,7 +41,7 @@
                         <label for="deskripsi" class="block text-sm font-semibold text-ocean-900 mb-2">
                             Description
                         </label>
-                        <textarea id="deskripsi" name="deskripsi" rows="4"
+                        <textarea id="deskripsi" name="deskripsi" rows="4" minlength="10" maxlength="255"
                             class="textarea textarea-bordered w-full rounded-xl @error('deskripsi') textarea-error @enderror"
                             placeholder="Describe the ecosystem">{{ old('deskripsi') }}</textarea>
                         @error('deskripsi')
