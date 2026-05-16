@@ -23,51 +23,158 @@
             </p>
         </div>
 
-        <!-- Mini Statistics Section -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16 relative z-20">
-            <!-- Stat 1 -->
-            <div class="bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 text-center border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transform hover:-translate-y-2 transition-all duration-300 group">
-                <div class="w-14 h-14 mx-auto bg-gradient-to-br from-blue-50 to-cyan-100 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300 border border-white">
-                    <svg class="w-7 h-7 text-ocean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <!-- Dynamic & Interactive Statistics Section (Compact Horizontal) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-14 relative z-20">
+            
+            <!-- Card 1: Ecosystems -->
+            <div class="relative bg-white/90 backdrop-blur-xl rounded-[1.25rem] p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(20,184,166,0.15)] hover:-translate-y-1 transition-all duration-300 border border-white/80 overflow-hidden group flex items-center gap-4 cursor-default">
+                <div class="absolute -right-6 -top-6 w-28 h-28 bg-gradient-to-br from-teal-100/50 to-cyan-100/50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
+                
+                <div class="relative z-10 w-12 h-12 shrink-0 flex items-center justify-center bg-gradient-to-br from-white to-teal-50 rounded-xl border border-teal-100/50 shadow-sm group-hover:rotate-6 transition-transform duration-300">
+                    <svg class="w-6 h-6 text-teal-600 drop-shadow-sm" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M12 22V12" />
+                        <path d="M12 16a4 4 0 0 0 4-4V8" />
+                        <path d="M16 10a3 3 0 0 1 3-3" />
+                        <path d="M12 14a4 4 0 0 1-4-4V7" />
+                        <path d="M8 9a3 3 0 0 0-3-3" />
+                        <path d="M12 12V6" />
+                        <circle cx="16" cy="7" r="1" fill="currentColor" />
+                        <circle cx="8" cy="6" r="1" fill="currentColor" />
+                        <circle cx="12" cy="5" r="1" fill="currentColor" />
                     </svg>
                 </div>
-                <h3 class="text-4xl font-extrabold text-gray-900 mb-1 tracking-tight">24</h3>
-                <p class="text-xs font-bold text-ocean-600 uppercase tracking-wider">Ekosistem Laut</p>
+                
+                <div class="relative z-10 text-left">
+                    <h3 class="text-3xl font-black text-slate-800 tracking-tight leading-none mb-1 group-hover:text-teal-700 transition-colors">24</h3>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Ekosistem Laut</p>
+                </div>
             </div>
 
-            <!-- Stat 2 -->
-            <div class="bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 text-center border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transform hover:-translate-y-2 transition-all duration-300 group">
-                <div class="w-14 h-14 mx-auto bg-gradient-to-br from-cyan-50 to-teal-100 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300 border border-white">
-                    <svg class="w-7 h-7 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2.25c-5.385 7.42-8.25 10.706-8.25 13.5a8.25 8.25 0 0016.5 0c0-2.794-2.865-6.08-8.25-13.5z" />
+            <!-- Card 2: Species -->
+            <div class="relative bg-white/90 backdrop-blur-xl rounded-[1.25rem] p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(6,182,212,0.15)] hover:-translate-y-1 transition-all duration-300 border border-white/80 overflow-hidden group flex items-center gap-4 cursor-default">
+                <div class="absolute -bottom-6 -right-6 w-28 h-28 bg-gradient-to-tl from-cyan-100/50 to-blue-100/50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
+                
+                <div class="relative z-10 w-12 h-12 shrink-0 flex items-center justify-center bg-gradient-to-br from-white to-cyan-50 rounded-xl border border-cyan-100/50 shadow-sm group-hover:-rotate-6 transition-transform duration-300">
+                    <svg class="w-6 h-6 text-cyan-600 drop-shadow-sm" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M22 12C22 12 19 16 12 16C5 16 2 12 2 12C2 12 5 8 12 8C19 8 22 12 22 12Z" />
+                        <circle cx="16" cy="12" r="1.5" fill="currentColor" />
+                        <path d="M5 12L2 9V15L5 12Z" fill="currentColor" />
+                        <path d="M12 8V5L15 8" />
+                        <path d="M12 16V19L15 16" />
                     </svg>
                 </div>
-                <h3 class="text-4xl font-extrabold text-gray-900 mb-1 tracking-tight">120<span class="text-cyan-500">+</span></h3>
-                <p class="text-xs font-bold text-cyan-700 uppercase tracking-wider">Spesies Laut</p>
+                
+                <div class="relative z-10 text-left">
+                    <div class="flex items-baseline">
+                        <h3 class="text-3xl font-black text-slate-800 tracking-tight leading-none mb-1 group-hover:text-cyan-700 transition-colors">120</h3>
+                        <span class="text-2xl font-bold text-cyan-500 ml-0.5">+</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Spesies Laut</p>
+                </div>
             </div>
 
-            <!-- Stat 3 -->
-            <div class="bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 text-center border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transform hover:-translate-y-2 transition-all duration-300 group">
-                <div class="w-14 h-14 mx-auto bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300 border border-white">
-                    <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+            <!-- Card 3: Locations -->
+            <div class="relative bg-white/90 backdrop-blur-xl rounded-[1.25rem] p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(59,130,246,0.15)] hover:-translate-y-1 transition-all duration-300 border border-white/80 overflow-hidden group flex items-center gap-4 cursor-default">
+                <div class="absolute -top-6 -left-6 w-28 h-28 bg-gradient-to-br from-blue-100/50 to-indigo-100/50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
+                
+                <div class="relative z-10 w-12 h-12 shrink-0 flex items-center justify-center bg-gradient-to-br from-white to-blue-50 rounded-xl border border-blue-100/50 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-6 h-6 text-blue-600 drop-shadow-sm" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                     </svg>
                 </div>
-                <h3 class="text-4xl font-extrabold text-gray-900 mb-1 tracking-tight">15</h3>
-                <p class="text-xs font-bold text-blue-700 uppercase tracking-wider">Lokasi Laut</p>
+                
+                <div class="relative z-10 text-left">
+                    <h3 class="text-3xl font-black text-slate-800 tracking-tight leading-none mb-1 group-hover:text-blue-700 transition-colors">15</h3>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Lokasi Laut</p>
+                </div>
             </div>
 
-            <!-- Stat 4 -->
-            <div class="bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 text-center border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transform hover:-translate-y-2 transition-all duration-300 group">
-                <div class="w-14 h-14 mx-auto bg-gradient-to-br from-emerald-50 to-teal-100 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300 border border-white">
-                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <!-- Card 4: Actions -->
+            <div class="relative bg-white/90 backdrop-blur-xl rounded-[1.25rem] p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(16,185,129,0.15)] hover:-translate-y-1 transition-all duration-300 border border-white/80 overflow-hidden group flex items-center gap-4 cursor-default">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-emerald-100/40 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
+                
+                <div class="relative z-10 w-12 h-12 shrink-0 flex items-center justify-center bg-gradient-to-br from-white to-emerald-50 rounded-xl border border-emerald-100/50 shadow-sm group-hover:rotate-6 transition-transform duration-300">
+                    <svg class="w-6 h-6 text-emerald-600 drop-shadow-sm" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <h3 class="text-4xl font-extrabold text-gray-900 mb-1 tracking-tight">8</h3>
-                <p class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Aksi Konservasi</p>
+                
+                <div class="relative z-10 text-left">
+                    <h3 class="text-3xl font-black text-slate-800 tracking-tight leading-none mb-1 group-hover:text-emerald-700 transition-colors">8</h3>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Aksi Konservasi</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured 'Endangered' Carousel Section -->
+        <style>
+            .hide-scrollbar::-webkit-scrollbar { display: none; }
+            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        </style>
+        
+        <div class="mb-16 relative w-full rounded-[2rem] z-20 group bg-slate-100/50 p-4 border border-white/50 shadow-sm">
+            <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-2">
+                
+                <!-- Card 1 -->
+                <div class="relative snap-start shrink-0 w-full md:w-[85%] aspect-[16/9] md:aspect-[21/9] rounded-[1.5rem] overflow-hidden shadow-lg bg-gray-900 group-hover/card:shadow-2xl transition-all flex flex-col justify-end p-8 md:p-12">
+                    <!-- Background Layers (z-0) -->
+                    <img src="https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&q=80" alt="Vulnerable Coral" class="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-overlay hover:scale-105 transition-transform duration-1000 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0 pointer-events-none"></div>
+                    
+                    <!-- Content (z-10) -->
+                    <div class="relative z-10 mb-auto">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-red-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-red-400/50">
+                            ⚠️ Kritis
+                        </span>
+                    </div>
+                    <div class="relative z-10 max-w-2xl transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                        <h2 class="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white mb-3 leading-tight drop-shadow-md">Misteri Terumbu Karang Berisiko Kritis</h2>
+                        <p class="text-gray-200 text-sm md:text-base lg:text-lg mb-6 line-clamp-2 md:line-clamp-none font-medium text-shadow-sm">
+                            Ekosistem karang di wilayah tropis menghadapi ancaman pemutihan massal. Ketahui faktor penyebabnya dan langkah nyata yang bisa kita lakukan untuk menyelamatkan rumah bagi jutaan spesies laut ini.
+                        </p>
+                        <button class="bg-teal-500 hover:bg-teal-400 text-white font-bold py-2.5 px-6 rounded-full shadow-lg hover:shadow-teal-500/50 transition-all duration-300 transform hover:-translate-y-1 text-sm md:text-base cursor-pointer focus:outline-none focus:ring-4 focus:ring-teal-500/30">
+                            Pelajari Lebih Lanjut
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2 (Partial hint) -->
+                <div class="relative snap-start shrink-0 w-full md:w-[85%] aspect-[16/9] md:aspect-[21/9] rounded-[1.5rem] overflow-hidden shadow-lg bg-gray-900 opacity-90 hover:opacity-100 transition-opacity flex flex-col justify-end p-8 md:p-12">
+                    <img src="https://images.unsplash.com/photo-1582967788606-a171c1080cb0?auto=format&fit=crop&q=80" alt="Bleached Coral" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay hover:scale-105 transition-transform duration-1000 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0 pointer-events-none"></div>
+                    
+                    <div class="relative z-10 mb-auto">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-orange-400/50">
+                            📉 Terancam
+                        </span>
+                    </div>
+                    <div class="relative z-10 max-w-2xl transform translate-y-2 hover:translate-y-0 transition-transform duration-500">
+                        <h2 class="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white mb-3 leading-tight drop-shadow-md">Pemutihan Karang Global</h2>
+                        <p class="text-gray-200 text-sm md:text-base lg:text-lg mb-6 line-clamp-2 md:line-clamp-none font-medium">
+                            Suhu laut yang meningkat drastis memicu stres pada alga simbiotik. Dampaknya meluas ke seluruh rantai makanan laut.
+                        </p>
+                        <button class="bg-teal-500 hover:bg-teal-400 text-white font-bold py-2.5 px-6 rounded-full shadow-lg transition-all duration-300 text-sm md:text-base cursor-pointer focus:outline-none focus:ring-4 focus:ring-teal-500/30">
+                            Baca Laporan
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Carousel Navigation (Circular Arrows) -->
+            <button class="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30 transition-all z-30 opacity-0 group-hover:opacity-100 hidden md:flex hover:scale-110 cursor-pointer focus:outline-none shadow-xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button class="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30 transition-all z-30 opacity-0 group-hover:opacity-100 hidden md:flex hover:scale-110 cursor-pointer focus:outline-none shadow-xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+
+            <!-- Pagination Dots -->
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2.5 z-30">
+                <div class="w-2.5 h-2.5 rounded-full bg-white shadow-sm transition-all hover:scale-125 cursor-pointer"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white/70 transition-all hover:scale-125 cursor-pointer"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white/70 transition-all hover:scale-125 cursor-pointer"></div>
             </div>
         </div>
 
