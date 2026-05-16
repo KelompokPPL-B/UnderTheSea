@@ -263,16 +263,24 @@
                     @endif
                     
                     <!-- Dark Gradient Overlay for better contrast -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none"></div>
 
-                    <!-- Bookmark Btn -->
-                    @auth
-                    <button class="bookmark-btn-card absolute top-4 right-4 z-10 p-2.5 bg-white/20 hover:bg-white backdrop-blur-md rounded-full text-white hover:text-ocean-500 hover:shadow-lg transition-all duration-300 border border-white/30 hover:border-white" data-type="ekosistem" data-item-id="{{ $item->id_ekosistem }}">
-                        <svg class="w-5 h-5 bookmark-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
-                        </svg>
-                    </button>
-                    @endauth
+                    <!-- Action Buttons (Like & Bookmark) -->
+                    <div class="absolute top-4 right-4 z-10 flex items-center gap-2">
+                        <!-- Like Btn -->
+                        <button class="like-btn-card p-2.5 bg-white/20 hover:bg-white backdrop-blur-md rounded-full text-white hover:text-red-500 hover:shadow-lg transition-all duration-300 border border-white/30 hover:border-white" data-type="ekosistem" data-item-id="{{ $item->id_ekosistem }}" title="Like Ekosistem">
+                            <svg class="w-5 h-5 like-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Bookmark Btn -->
+                        <button class="bookmark-btn-card p-2.5 bg-white/20 hover:bg-white backdrop-blur-md rounded-full text-white hover:text-ocean-500 hover:shadow-lg transition-all duration-300 border border-white/30 hover:border-white" data-type="ekosistem" data-item-id="{{ $item->id_ekosistem }}" title="Simpan Bookmark">
+                            <svg class="w-5 h-5 bookmark-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                            </svg>
+                        </button>
+                    </div>
 
                     <!-- Location Tag -->
                     @if($item->lokasi)
@@ -304,10 +312,6 @@
 
                     <!-- Card Actions -->
                     <div class="pt-5 border-t border-gray-100/80 mt-auto">
-                        @guest
-                            <a href="{{ route('login') }}" class="block text-center text-xs text-ocean-500 hover:text-ocean-700 font-semibold mb-2">Sign in untuk Bookmark</a>
-                        @endguest
-
                         <div class="flex gap-2.5">
                             <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="flex-1 bg-ocean-100 hover:bg-ocean-600 text-ocean-800 hover:text-white font-bold py-2.5 rounded-xl text-center transition-all duration-300 text-sm border border-ocean-200 hover:border-transparent">
                                 Lihat Detail
@@ -373,85 +377,160 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script type="module">
+<script>
 document.addEventListener('DOMContentLoaded', function() {
-    initializeBookmarkButtonsCard();
-    loadBookmarkStatesCard();
-});
+    const isGuest = {{ auth()->guest() ? 'true' : 'false' }};
 
-function initializeBookmarkButtonsCard() {
-    document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-        btn.addEventListener('click', toggleBookmarkCard);
-    });
-}
+    function safeParseJSON(str) {
+        try {
+            const parsed = JSON.parse(str);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            return [];
+        }
+    }
 
-function toggleBookmarkCard(e) {
-    e.preventDefault();
-    const btn = e.currentTarget;
-    const type = btn.dataset.type;
-    const itemId = btn.dataset.itemId;
-    const isBookmarked = btn.classList.contains('bookmarked');
-    const method = isBookmarked ? 'DELETE' : 'POST';
-
-    fetch('/favorites', {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
-        },
-        body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'success') {
-            btn.classList.toggle('bookmarked');
-            const icon = btn.querySelector('.bookmark-icon');
-            if (icon) {
-                if (btn.classList.contains('bookmarked')) {
-                    icon.setAttribute('fill', 'currentColor');
-                    btn.classList.add('bg-white', 'text-blue-600', 'shadow-md');
-                    btn.classList.remove('bg-white/20', 'text-white', 'hover:text-ocean-500');
-                } else {
-                    icon.setAttribute('fill', 'none');
-                    btn.classList.remove('bg-white', 'text-blue-600', 'shadow-md');
-                    btn.classList.add('bg-white/20', 'text-white', 'hover:text-ocean-500');
-                }
-            }
+    // === LIKE LOGIC ===
+    function updateLikeUI(btn, isLiked) {
+        const icon = btn.querySelector('.like-icon');
+        if (!icon) return;
+        
+        if (isLiked) {
+            btn.classList.add('liked', 'bg-white', 'text-red-500', 'shadow-md');
+            btn.classList.remove('bg-white/20', 'text-white', 'hover:text-red-500');
+            icon.setAttribute('fill', 'currentColor');
         } else {
-            alert(data.message);
+            btn.classList.remove('liked', 'bg-white', 'text-red-500', 'shadow-md');
+            btn.classList.add('bg-white/20', 'text-white', 'hover:text-red-500');
+            icon.setAttribute('fill', 'none');
         }
-    })
-    .catch(err => console.error('Error:', err));
-}
+    }
 
-function loadBookmarkStatesCard() {
-    fetch('/favorites', {
-        method: 'GET',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+    document.querySelectorAll('.like-btn-card').forEach(btn => {
+        // Init state from local storage
+        const type = btn.dataset.type;
+        const itemId = btn.dataset.itemId;
+        const key = `likes_${type}`;
+        const likes = safeParseJSON(localStorage.getItem(key));
+        
+        if (likes.includes(itemId)) {
+            updateLikeUI(btn, true);
         }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'success' && Array.isArray(data.data)) {
-            document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-                const type = btn.dataset.type;
-                const itemId = parseInt(btn.dataset.itemId);
-                const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
+
+        // Click handler
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isLiked = !this.classList.contains('liked');
+            updateLikeUI(this, isLiked);
+            
+            let currentLikes = safeParseJSON(localStorage.getItem(key));
+            if (isLiked) {
+                if (!currentLikes.includes(itemId)) currentLikes.push(itemId);
+            } else {
+                currentLikes = currentLikes.filter(id => id !== itemId);
+            }
+            localStorage.setItem(key, JSON.stringify(currentLikes));
+        });
+    });
+
+    // === BOOKMARK LOGIC ===
+    function updateBookmarkUI(btn, isBookmarked) {
+        const icon = btn.querySelector('.bookmark-icon');
+        if (!icon) return;
+        
+        if (isBookmarked) {
+            btn.classList.add('bookmarked', 'bg-white', 'text-ocean-500', 'shadow-md');
+            btn.classList.remove('bg-white/20', 'text-white', 'hover:text-ocean-500');
+            icon.setAttribute('fill', 'currentColor');
+        } else {
+            btn.classList.remove('bookmarked', 'bg-white', 'text-ocean-500', 'shadow-md');
+            btn.classList.add('bg-white/20', 'text-white', 'hover:text-ocean-500');
+            icon.setAttribute('fill', 'none');
+        }
+    }
+
+    document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
+        const type = btn.dataset.type;
+        const itemId = btn.dataset.itemId;
+        const key = `bookmarks_${type}`;
+        
+        // Init state
+        if (isGuest) {
+            const bookmarks = safeParseJSON(localStorage.getItem(key));
+            if (bookmarks.includes(itemId)) {
+                updateBookmarkUI(btn, true);
+            }
+        }
+
+        // Click handler
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isBookmarked = !this.classList.contains('bookmarked');
+            
+            if (isGuest) {
+                updateBookmarkUI(this, isBookmarked);
+                let currentBookmarks = safeParseJSON(localStorage.getItem(key));
                 if (isBookmarked) {
-                    btn.classList.add('bookmarked');
-                    const icon = btn.querySelector('.bookmark-icon');
-                    if (icon) {
-                        icon.setAttribute('fill', 'currentColor');
-                        btn.classList.add('bg-white', 'text-blue-600', 'shadow-md');
-                        btn.classList.remove('bg-white/20', 'text-white', 'hover:text-ocean-500');
-                    }
+                    if (!currentBookmarks.includes(itemId)) currentBookmarks.push(itemId);
+                } else {
+                    currentBookmarks = currentBookmarks.filter(id => id !== itemId);
                 }
-            });
-        }
-    })
-    .catch(err => console.error('Error loading bookmark state:', err));
-}
+                localStorage.setItem(key, JSON.stringify(currentBookmarks));
+                return;
+            }
+
+            // Authenticated behavior
+            const method = isBookmarked ? 'POST' : 'DELETE';
+            const _btn = this;
+            
+            fetch('/favorites', {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                },
+                body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    updateBookmarkUI(_btn, isBookmarked);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => console.error('Error:', err));
+        });
+    });
+
+    // For authenticated users, fetch bookmark state from DB
+    if (!isGuest) {
+        fetch('/favorites', {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success' && Array.isArray(data.data)) {
+                document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
+                    const type = btn.dataset.type;
+                    const itemId = parseInt(btn.dataset.itemId);
+                    const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
+                    if (isBookmarked) {
+                        updateBookmarkUI(btn, true);
+                    }
+                });
+            }
+        })
+        .catch(err => console.error('Error loading bookmark state:', err));
+    }
+});
 </script>
 @endpush
 @endsection
