@@ -67,7 +67,7 @@ class AksiController extends Controller
     {
         $validated = $request->validate([
             'judul_aksi' => 'required|string|min:5|max:50|unique:aksi_pelestarian,judul_aksi',
-            'deskripsi' => 'required|string|min:10',
+            'deskripsi' => 'required|string|min:10|max:255',
             'manfaat' => 'required|string|min:10',
             'cara_melakukan' => 'required|string|min:10',
             'gambar' => 'required|image|mimes:jpg,jpeg,png|max:2048',
@@ -104,7 +104,7 @@ class AksiController extends Controller
 
         $validated = $request->validate([
             'judul_aksi' => 'required|string|min:5|max:50|unique:aksi_pelestarian,judul_aksi',
-            'deskripsi' => 'required|string|min:10',
+            'deskripsi' => 'required|string|min:10|max:255',
             'manfaat' => 'required|string|min:10',
             'cara_melakukan' => 'required|string|min:10',
             'gambar' => 'required|image|mimes:jpg,jpeg,png|max:2048',

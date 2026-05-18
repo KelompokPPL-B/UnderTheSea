@@ -48,6 +48,8 @@
                         id="deskripsi"
                         name="deskripsi"
                         rows="4"
+                        minlength="10"
+                        maxlength="255"
                         class="textarea textarea-bordered w-full @error('deskripsi') textarea-error @enderror"
                         placeholder="Describe the conservation action"
                     >{{ old('deskripsi') }}</textarea>
