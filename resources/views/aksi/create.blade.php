@@ -67,6 +67,8 @@
                         id="manfaat"
                         name="manfaat"
                         rows="3"
+                        minlength="10"
+                        maxlength="100"
                         class="textarea textarea-bordered w-full @error('manfaat') textarea-error @enderror"
                         placeholder="What are the benefits of this action?"
                     >{{ old('manfaat') }}</textarea>
