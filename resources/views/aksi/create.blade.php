@@ -86,6 +86,8 @@
                         id="cara_melakukan"
                         name="cara_melakukan"
                         rows="3"
+                        minlength="10"
+                        maxlength="255"
                         class="textarea textarea-bordered w-full @error('cara_melakukan') textarea-error @enderror"
                         placeholder="Explain how people can participate"
                     >{{ old('cara_melakukan') }}</textarea>
