@@ -121,6 +121,10 @@ document.addEventListener("DOMContentLoaded", function() {
             e.preventDefault();
             alert("Ecosystem Name must be more than 5 characters"); 
         }
+        if (nama.length > 50) {
+            e.preventDefault();
+            alert("Ecosystem Name must be less than 50 characters");
+        }
 
         const file = document.getElementById("gambar").files[0];
         if (file && file.size > 2 * 1024 * 1024) {
@@ -131,17 +135,37 @@ document.addEventListener("DOMContentLoaded", function() {
             e.preventDefault();
             alert("Description must be more than 10 characters");
         }
+
+        if (deskripsi.length > 255) {
+            e.preventDefault();
+            alert("Description must be less than 255 characters");
+        }
         if (lokasi.length < 5) {
             e.preventDefault();
             alert("Location must be more than 5 characters");
+        }
+
+        if (lokasi.length > 50) {
+            e.preventDefault();
+            alert("Location must be less than 50 characters");
         }
         if (peran.length < 5) {
             e.preventDefault();
             alert("Role must be more than 5 characters");
         }
+
+        if (peran.length > 50) {
+            e.preventDefault();
+            alert("Role must be less than 50 characters");
+        }
         if (ancaman.length < 10) {
             e.preventDefault();
             alert("Threats must be more than 10 characters");
+        }
+
+        if (ancaman.length > 100) {
+            e.preventDefault();
+            alert("Threats must be less than 100 characters");
         }
     });
 });
