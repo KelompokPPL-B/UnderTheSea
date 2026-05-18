@@ -27,6 +27,8 @@
                         type="text"
                         id="judul_aksi"
                         name="judul_aksi"
+                        minlength="5"
+                        maxlength="50"
                         value="{{ old('judul_aksi') }}"
                         class="input input-bordered w-full @error('judul_aksi') input-error @enderror"
                         placeholder="Enter action title"

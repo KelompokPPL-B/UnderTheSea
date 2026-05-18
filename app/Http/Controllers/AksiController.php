@@ -16,10 +16,6 @@ class AksiController extends Controller
         $this->pointsService = $pointsService;
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-19: Manage Action Content
-     */
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest');
@@ -37,19 +33,12 @@ class AksiController extends Controller
         return view('aksi.index', compact('aksi', 'sort'));
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-15: Form Validation UI
-     */
+
     public function create()
     {
         return view('aksi.create');
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-19 : Manage Action Content
-     */
     
     public function show($id)
     {
@@ -62,10 +51,7 @@ class AksiController extends Controller
         return view('aksi.show', compact('aksi'));
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-15: Form Validation UI
-     */
+
     public function edit($id)
     {
         $aksi = AksiPelestarian::findOrFail($id);
@@ -77,15 +63,10 @@ class AksiController extends Controller
         return view('aksi.edit', compact('aksi'));
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-14: User Contribution + Award Points
-     * PBI-18: Input Sanitization & Escaping
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul_aksi' => 'required|string|min:5|unique:aksi_pelestarian,judul_aksi',
+            'judul_aksi' => 'required|string|min:5|max:50|unique:aksi_pelestarian,judul_aksi',
             'deskripsi' => 'required|string|min:10',
             'manfaat' => 'required|string|min:10',
             'cara_melakukan' => 'required|string|min:10',
@@ -112,11 +93,7 @@ class AksiController extends Controller
             ->with('success', 'Conservation action created successfully!');
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-13: Manage Action Content
-     * PBI-18: Input Sanitization & Escaping
-     */
+
     public function update(Request $request, $id)
     {
         $aksi = AksiPelestarian::findOrFail($id);
@@ -126,7 +103,7 @@ class AksiController extends Controller
         }
 
         $validated = $request->validate([
-            'judul_aksi' => 'required|string|min:5|unique:aksi_pelestarian,judul_aksi',
+            'judul_aksi' => 'required|string|min:5|max:50|unique:aksi_pelestarian,judul_aksi',
             'deskripsi' => 'required|string|min:10',
             'manfaat' => 'required|string|min:10',
             'cara_melakukan' => 'required|string|min:10',
@@ -148,10 +125,7 @@ class AksiController extends Controller
             ->with('success', 'Conservation action updated successfully!');
     }
 
-    /**
-     * Owner: Mutiara
-     * PBI-13: Manage Action Content
-     */
+
     public function destroy($id)
     {
         $aksi = AksiPelestarian::findOrFail($id);
