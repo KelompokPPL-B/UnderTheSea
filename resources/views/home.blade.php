@@ -24,8 +24,6 @@
                         🔍 Cari
                     </button>
                 </div>
-
-                {{-- PBI-15: pesan jika input kosong --}}
                 @if($rawQuery !== '' && $query === '')
                     <p class="text-xs text-yellow-600 mt-2 text-center">
                         ⚠️ Masukkan kata kunci untuk melakukan pencarian.
@@ -34,11 +32,76 @@
             </form>
         </div>
 
+        {{-- ===== PBI-29: CATEGORY CARDS ===== --}}
+        @if(!$isSearching)
+        <div class="mb-12">
+            <h2 class="text-xl font-bold text-gray-800 mb-5 text-center">Jelajahi Kategori</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+                {{-- Card: Ikan --}}
+                <a href="{{ route('ikan.index') }}"
+                   class="group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1"
+                   style="background: linear-gradient(135deg, #38BDF8, #0284C7); box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
+                    <div class="p-8 flex flex-col items-center text-center text-white">
+                        <span class="text-6xl mb-4 block group-hover:scale-110 transition-transform duration-300">🐟</span>
+                        <h3 class="text-xl font-bold mb-2">Ikan</h3>
+                        <p class="text-sm leading-relaxed" style="color: rgba(255,255,255,0.85);">
+                            Temukan berbagai jenis ikan laut, habitatnya, dan status konservasi mereka.
+                        </p>
+                        <span class="mt-5 inline-block text-sm font-semibold px-4 py-2 rounded-xl transition"
+                              style="background: rgba(255,255,255,0.2);">
+                            Jelajahi →
+                        </span>
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 w-24 h-24 rounded-full" style="background: rgba(255,255,255,0.1);"></div>
+                    <div class="absolute -top-4 -left-4 w-16 h-16 rounded-full" style="background: rgba(255,255,255,0.1);"></div>
+                </a>
+
+                {{-- Card: Ekosistem --}}
+                <a href="{{ route('ekosistem.index') }}"
+                   class="group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1"
+                   style="background: linear-gradient(135deg, #22C55E, #15803D); box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
+                    <div class="p-8 flex flex-col items-center text-center text-white">
+                        <span class="text-6xl mb-4 block group-hover:scale-110 transition-transform duration-300">🌿</span>
+                        <h3 class="text-xl font-bold mb-2">Ekosistem</h3>
+                        <p class="text-sm leading-relaxed" style="color: rgba(255,255,255,0.85);">
+                            Pelajari ekosistem laut seperti terumbu karang, mangrove, dan padang lamun.
+                        </p>
+                        <span class="mt-5 inline-block text-sm font-semibold px-4 py-2 rounded-xl transition"
+                              style="background: rgba(255,255,255,0.2);">
+                            Jelajahi →
+                        </span>
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 w-24 h-24 rounded-full" style="background: rgba(255,255,255,0.1);"></div>
+                    <div class="absolute -top-4 -left-4 w-16 h-16 rounded-full" style="background: rgba(255,255,255,0.1);"></div>
+                </a>
+
+                {{-- Card: Aksi Pelestarian --}}
+                <a href="{{ route('aksi.index') }}"
+                   class="group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1"
+                   style="background: linear-gradient(135deg, #FACC15, #F97316); box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
+                    <div class="p-8 flex flex-col items-center text-center text-white">
+                        <span class="text-6xl mb-4 block group-hover:scale-110 transition-transform duration-300">🤝</span>
+                        <h3 class="text-xl font-bold mb-2">Aksi Pelestarian</h3>
+                        <p class="text-sm leading-relaxed" style="color: rgba(255,255,255,0.85);">
+                            Bergabung dalam aksi nyata untuk menjaga kelestarian laut Indonesia.
+                        </p>
+                        <span class="mt-5 inline-block text-sm font-semibold px-4 py-2 rounded-xl transition"
+                              style="background: rgba(255,255,255,0.2);">
+                            Jelajahi →
+                        </span>
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 w-24 h-24 rounded-full" style="background: rgba(255,255,255,0.1);"></div>
+                    <div class="absolute -top-4 -left-4 w-16 h-16 rounded-full" style="background: rgba(255,255,255,0.1);"></div>
+                </a>
+
+            </div>
+        </div>
+        @endif
+
         {{-- ===== HASIL SEARCH ===== --}}
         @if($isSearching)
             <div class="mb-12">
-
-                {{-- Info jumlah hasil --}}
                 <p class="text-sm text-gray-500 text-center mb-6">
                     @if($totalResults > 0)
                         Menampilkan <span class="font-semibold text-ocean-600">{{ $totalResults }}</span> hasil untuk
@@ -49,9 +112,9 @@
                     &mdash; <a href="{{ route('home') }}" class="text-ocean-500 hover:underline">Hapus pencarian</a>
                 </p>
 
-                {{-- PBI-15: Not found state --}}
                 @if($totalResults === 0)
-                    <div class="text-center py-16 bg-white rounded-2xl shadow-soft border border-ocean-100">
+                    <div class="text-center py-16 bg-white rounded-2xl border border-ocean-100"
+                         style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
                         <div class="text-5xl mb-4">🔍</div>
                         <p class="text-gray-700 text-lg font-semibold">Hasil tidak ditemukan</p>
                         <p class="text-gray-400 text-sm mt-2">
@@ -60,7 +123,7 @@
                         <p class="text-gray-400 text-sm mt-1">Coba periksa ejaan atau gunakan kata kunci lain.</p>
                         <div class="flex justify-center gap-3 mt-6 flex-wrap">
                             <a href="{{ route('ikan.index') }}" class="px-4 py-2 bg-ocean-50 hover:bg-ocean-100 text-ocean-600 text-sm rounded-xl font-medium transition">🐟 Lihat semua ikan</a>
-                            <a href="{{ route('ekosistem.index') }}" class="px-4 py-2 bg-eco-100 hover:bg-eco-300 text-eco-700 text-sm rounded-xl font-medium transition">🌿 Lihat semua ekosistem</a>
+                            <a href="{{ route('ekosistem.index') }}" class="px-4 py-2 text-sm rounded-xl font-medium transition" style="background:#DCFCE7; color:#15803D;">🌿 Lihat semua ekosistem</a>
                             <a href="{{ route('aksi.index') }}" class="px-4 py-2 bg-ocean-50 hover:bg-ocean-100 text-ocean-600 text-sm rounded-xl font-medium transition">🤝 Lihat semua aksi</a>
                         </div>
                     </div>
@@ -77,7 +140,8 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                         @foreach($searchIkan as $item)
                         <a href="{{ route('ikan.show', $item->id_ikan) }}"
-                           class="group bg-white rounded-2xl shadow-soft hover:shadow-hover border border-ocean-100 overflow-hidden transition-all duration-300">
+                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300"
+                           style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
                             @if($item->gambar)
                                 <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}"
                                      class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
@@ -90,7 +154,7 @@
                                     <p class="text-xs text-gray-400 mt-1">📍 {{ $item->habitat }}</p>
                                 @endif
                                 @if($item->status_konservasi)
-                                    <span class="inline-block mt-2 text-xs px-2 py-0.5 bg-eco-100 text-eco-700 rounded-full">{{ $item->status_konservasi }}</span>
+                                    <span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full" style="background:#DCFCE7; color:#15803D;">{{ $item->status_konservasi }}</span>
                                 @endif
                                 @if($item->deskripsi)
                                     <p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($item->deskripsi, 80) }}</p>
@@ -113,12 +177,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                         @foreach($searchEkosistem as $item)
                         <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}"
-                           class="group bg-white rounded-2xl shadow-soft hover:shadow-hover border border-ocean-100 overflow-hidden transition-all duration-300">
+                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300"
+                           style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
                             @if($item->gambar)
                                 <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama_ekosistem }}"
                                      class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
                             @else
-                                <div class="w-full h-40 bg-eco-100 flex items-center justify-center text-4xl">🌿</div>
+                                <div class="w-full h-40 flex items-center justify-center text-4xl" style="background:#DCFCE7;">🌿</div>
                             @endif
                             <div class="p-4">
                                 <h3 class="font-semibold text-gray-800 group-hover:text-ocean-600 transition text-sm">{{ $item->nama_ekosistem }}</h3>
@@ -146,7 +211,8 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                         @foreach($searchAksi as $item)
                         <a href="{{ route('aksi.show', $item->id_aksi) }}"
-                           class="group bg-white rounded-2xl shadow-soft hover:shadow-hover border border-ocean-100 overflow-hidden transition-all duration-300">
+                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300"
+                           style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
                             @if($item->gambar)
                                 <img src="/storage/{{ $item->gambar }}" alt="{{ $item->judul_aksi }}"
                                      class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
@@ -159,7 +225,7 @@
                                     <p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($item->manfaat, 80) }}</p>
                                 @endif
                                 @if($item->is_user_generated)
-                                    <span class="inline-block mt-2 text-xs px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full">Kontribusi Komunitas</span>
+                                    <span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full" style="background:#FEF9C3; color:#A16207;">Kontribusi Komunitas</span>
                                 @endif
                             </div>
                         </a>
@@ -171,7 +237,7 @@
             </div>
 
         @else
-        {{-- ===== KONTEN NORMAL (belum search / input kosong) ===== --}}
+        {{-- ===== KONTEN NORMAL ===== --}}
 
         <div class="mb-12">
             <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Recommended Content</h2>
