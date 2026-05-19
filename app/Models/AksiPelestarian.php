@@ -42,4 +42,18 @@ class AksiPelestarian extends Model
     {
         return $this->hasMany(Like::class, 'action_id', 'id_aksi');
     }
+
+    /**
+     * =====================================================
+     * ===== MARK ACTION SECTION (PBI-26) =====
+     * =====================================================
+     * Relasi ke model AksiTandai (Satu aksi bisa ditandai banyak session/user)
+     */
+    public function tandai(): HasMany
+    {
+        // Parameter 1: Class target (AksiTandai)
+        // Parameter 2: Foreign key di tabel aksi_tandai (aksi_id)
+        // Parameter 3: Local key di tabel aksi_pelestarian (id_aksi)
+        return $this->hasMany(AksiTandai::class, 'aksi_id', 'id_aksi');
+    }
 }

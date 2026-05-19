@@ -169,6 +169,134 @@
 
                 </div>
 
+                {{-- ===================================================== --}}
+                {{-- ===== MARK ACTION SECTION (PBI-XX) ===== --}}
+                {{-- ===================================================== --}}
+                @php
+                    $sudahTandai = session()->has("tandai_aksi_{$aksi->id_aksi}");
+                    $namaTandai  = session()->get("tandai_aksi_{$aksi->id_aksi}_nama", '');
+                    // Sync dari DB kalau session kosong
+                    if (!$sudahTandai) {
+                        $dbRecord = $aksi->tandai()->where('session_id', session()->getId())->first();
+                        if ($dbRecord) {
+                            $sudahTandai = true;
+                            $namaTandai  = $dbRecord->nama_peserta;
+                            session()->put("tandai_aksi_{$aksi->id_aksi}", true);
+                            session()->put("tandai_aksi_{$aksi->id_aksi}_nama", $namaTandai);
+                        }
+                    }
+                    $totalTandai = $aksi->tandai()->count();
+                @endphp
+
+                <div class="animate-fade rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
+
+                    {{-- Header --}}
+                    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">🌿</span>
+                            <span class="font-bold text-gray-800 text-sm">Track Your Progress</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-white border border-gray-200 rounded-full px-3 py-1">
+                            <span class="text-xs font-bold text-gray-700">{{ $totalTandai }}</span>
+                            <span class="text-xs text-gray-500">joined</span>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-white">
+
+                        {{-- Flash: success --}}
+                        @if(session('tandai_success'))
+                            <div class="mb-5 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium
+                                        bg-green-50 border border-green-200 text-green-800">
+                                <span class="shrink-0 text-base">✅</span>
+                                {{ session('tandai_success') }}
+                            </div>
+                        @endif
+
+                        {{-- Flash: info --}}
+                        @if(session('tandai_info'))
+                            <div class="mb-5 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium
+                                        bg-blue-50 border border-blue-200 text-blue-800">
+                                <span class="shrink-0 text-base">ℹ️</span>
+                                {{ session('tandai_info') }}
+                            </div>
+                        @endif
+
+                        {{-- Validation error --}}
+                        @if($errors->has('nama_peserta'))
+                            <div class="mb-5 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium
+                                        bg-red-50 border border-red-200 text-red-800">
+                                <span class="shrink-0 text-base">⚠️</span>
+                                {{ $errors->first('nama_peserta') }}
+                            </div>
+                        @endif
+
+                        @if($sudahTandai)
+                            {{-- ===== STATE: Sudah ditandai ===== --}}
+                            <div class="flex items-center gap-4">
+                                <div class="w-11 h-11 rounded-full bg-green-100 border-2 border-green-300
+                                            flex items-center justify-center text-xl shrink-0">
+                                    ✅
+                                </div>
+                                <div>
+                                    <p class="font-bold text-gray-900 text-sm">You've marked this action!</p>
+                                    @if($namaTandai)
+                                        <p class="text-gray-600 text-xs mt-0.5">
+                                            Recorded as
+                                            <span class="font-semibold text-ocean-700">{{ $namaTandai }}</span>
+                                        </p>
+                                    @endif
+                                    <p class="text-gray-500 text-xs mt-0.5">Your contribution has been saved 🌊</p>
+                                </div>
+                            </div>
+
+                        @else
+                            {{-- ===== STATE: Belum ditandai ===== --}}
+                            <p class="text-gray-600 text-sm mb-4">
+                                Already done this action? Mark it to record your contribution!
+                            </p>
+                            <form action="{{ route('aksi.tandai', $aksi->id_aksi) }}" method="POST">
+                                @csrf
+                                <div class="flex flex-col gap-3">
+                                    <div class="w-full">
+                                        <label for="nama_peserta" class="block text-sm font-semibold text-gray-700 mb-1.5">
+                                            Your Name <span class="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="nama_peserta"
+                                            name="nama_peserta"
+                                            value="{{ old('nama_peserta') }}"
+                                            placeholder="Enter your name..."
+                                            maxlength="100"
+                                            class="w-full px-4 py-2.5 rounded-xl border text-sm text-gray-800
+                                                   placeholder-gray-400 bg-white transition
+                                                   {{ $errors->has('nama_peserta')
+                                                       ? 'border-red-400 focus:ring-2 focus:ring-red-200'
+                                                       : 'border-gray-300 focus:ring-2 focus:ring-ocean-200 focus:border-ocean-400' }}
+                                                   focus:outline-none"
+                                        >
+                                    </div>
+                                    <button type="submit"
+                                        class="w-full py-3 rounded-xl text-sm font-bold
+                                               bg-blue-600 hover:bg-blue-700
+                                               text-white shadow-md hover:shadow-lg
+                                               transition-all active:scale-95
+                                               flex items-center justify-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span>Mark as Done</span>
+                                    </button>
+                                </div>
+                            </form>
+                        @endif
+
+                    </div>
+                </div>
+                {{-- ===== END MARK ACTION SECTION ===== --}}
+
+
                 {{-- ===== Like Section ===== --}}
                 @auth
                     <div class="bg-gradient-to-r from-ocean-50 to-eco-50 p-6 rounded-xl border border-ocean-200 animate-fade">

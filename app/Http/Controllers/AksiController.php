@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AksiPelestarian;
+use App\Models\AksiTandai; // Ditambahkan untuk mengelola pencatatan data aksi ditandai
 use App\Services\PointsService;
 use App\Services\SanitizationService;
 use Illuminate\Http\Request;
@@ -213,5 +214,58 @@ class AksiController extends Controller
             'message' => 'Action deleted successfully',
             'data'    => null,
         ]);
+    }
+
+    /**
+     * Owner: Grace Magaretha Sirait
+     * PBI-26: Detail Ecosystem - Mark Completed Action
+     * Menyimpan data partisipan yang menandai aksi selesai
+     */
+    public function tandai(Request $request, $id)
+    {
+        $request->validate([
+            'nama_peserta' => 'required|string|max:100',
+        ], [
+            'nama_peserta.required' => 'Your name is required to mark this action.',
+            'nama_peserta.max'      => 'Name must not exceed 100 characters.',
+        ]);
+
+        $sessionId = $request->session()->getId();
+        $isAlreadyMarked = AksiTandai::where('aksi_id', $id)
+                                      ->where('session_id', $sessionId)
+                                      ->exists();
+
+        if (!$isAlreadyMarked) {
+            AksiTandai::create([
+                'aksi_id'      => $id,
+                'nama_peserta' => SanitizationService::sanitize($request->nama_peserta),
+                'session_id'   => $sessionId,
+                'ditandai_pada'=> now(),
+            ]);
+        }
+
+        $request->session()->put("tandai_aksi_{$id}", true);
+        $request->session()->put("tandai_aksi_{$id}_nama", $request->nama_peserta);
+
+        return redirect()->back()->with('success', 'Thank you! You have successfully marked your participation.');
+    }
+
+    /**
+     * Owner: Grace Magaretha Sirait
+     * PBI-26: Detail Ecosystem - Remove Mark Action
+     * Menghapus data partisipan (membatalkan tanda)
+     */
+    public function batalTandai(Request $request, $id)
+    {
+        $sessionId = $request->session()->getId();
+
+        AksiTandai::where('aksi_id', $id)
+                  ->where('session_id', $sessionId)
+                  ->delete();
+
+        $request->session()->forget("tandai_aksi_{$id}");
+        $request->session()->forget("tandai_aksi_{$id}_nama");
+
+        return redirect()->back()->with('success', 'Your participation mark has been removed.');
     }
 }
