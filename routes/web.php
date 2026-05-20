@@ -35,13 +35,18 @@ Route::delete('/ekosistem/{id}', [EkosistemController::class, 'destroy'])->middl
 // --- KELOMPOK RUTE AKSI PELESTARIAN ---
 Route::get('/aksi', [AksiController::class, 'index'])->name('aksi.index');
 Route::get('/aksi/create', [AksiController::class, 'create'])->middleware('auth')->name('aksi.create');
+
+// ⚠️ PENTING: rute static harus di atas rute dynamic {id}
+// Riwayat bisa diakses tanpa login (pakai session)
+Route::get('/aksi/riwayat/saya', [AksiController::class, 'riwayat'])->name('aksi.riwayat');
+
 Route::get('/aksi/{id}', [AksiController::class, 'show'])->name('aksi.show');
 Route::get('/aksi/{id}/edit', [AksiController::class, 'edit'])->middleware('auth')->name('aksi.edit');
 Route::post('/aksi', [AksiController::class, 'store'])->middleware('auth')->name('aksi.store');
 Route::put('/aksi/{id}', [AksiController::class, 'update'])->middleware('auth')->name('aksi.update');
 Route::delete('/aksi/{id}', [AksiController::class, 'destroy'])->middleware('auth')->name('aksi.destroy');
 
-// Fitur Baru Penandaan Aksi (Grace - PBI-XX)
+// Fitur Penandaan Aksi (Grace - PBI-26) — tanpa middleware auth karena pakai session
 Route::post('/aksi/{id}/tandai', [AksiController::class, 'tandai'])->name('aksi.tandai');
 Route::delete('/aksi/{id}/tandai', [AksiController::class, 'batalTandai'])->name('aksi.tandai.destroy');
 
@@ -67,7 +72,7 @@ Route::get('/dashboard', function () {
     $user = auth()->user();
     return view('dashboard', [
         'bookmarkCount' => $user->favorites()->count(),
-        'likeCount' => $user->likes()->count(),
+        'likeCount'     => $user->likes()->count(),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 

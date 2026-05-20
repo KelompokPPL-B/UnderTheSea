@@ -3,22 +3,45 @@
 @section('content')
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-7xl mx-auto px-6 py-6">
+
         <!-- Header -->
         <div class="flex justify-between items-center mb-10">
             <div>
                 <h1 class="text-4xl font-bold text-ocean-900 mb-2">Conservation Actions</h1>
                 <p class="text-gray-500">Join the movement for ocean conservation.</p>
             </div>
-            @auth
-                <a href="{{ route('aksi.create') }}" class="btn btn-primary btn-sm whitespace-nowrap">+ Create Action</a>
-            @endauth
+
+            <div class="flex items-center gap-2">
+                @guest
+                    <a href="{{ route('aksi.riwayat') }}"
+                       class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-ocean-300
+                              bg-white hover:bg-ocean-50 text-ocean-700 text-sm font-semibold
+                              shadow-sm hover:shadow transition whitespace-nowrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-ocean-500" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2
+                                     M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2
+                                     m-6 9l2 2 4-4" />
+                        </svg>
+                        My History
+                    </a>
+                @endguest
+
+                @auth
+                    <a href="{{ route('aksi.create') }}" class="btn btn-primary btn-sm whitespace-nowrap">
+                        + Create Action
+                    </a>
+                @endauth
+            </div>
         </div>
 
         <!-- Sort Controls -->
         <div class="mb-6 flex justify-end">
-            <select onchange="window.location.href='{{ route('aksi.index') }}?sort=' + this.value" class="select select-bordered select-sm">
-                <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Newest First</option>
-                <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
+            <select onchange="window.location.href='{{ route('aksi.index') }}?sort=' + this.value"
+                    class="select select-bordered select-sm">
+                <option value="newest"  {{ $sort === 'newest'  ? 'selected' : '' }}>Newest First</option>
+                <option value="oldest"  {{ $sort === 'oldest'  ? 'selected' : '' }}>Oldest First</option>
                 <option value="popular" {{ $sort === 'popular' ? 'selected' : '' }}>Most Popular</option>
             </select>
         </div>
@@ -35,8 +58,10 @@
                         <!-- Image -->
                         @if($item->gambar)
                             <div class="overflow-hidden h-48 shrink-0">
-                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->judul_aksi }}"
-                                    class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
+                                <img src="/storage/{{ $item->gambar }}"
+                                     alt="{{ $item->judul_aksi }}"
+                                     class="w-full h-48 object-cover group-hover:scale-105 transition"
+                                     loading="lazy">
                             </div>
                         @else
                             <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center shrink-0">
@@ -49,7 +74,7 @@
 
                             <!-- Title -->
                             <a href="{{ route('aksi.show', $item->id_aksi) }}"
-                                class="text-base font-bold text-ocean-900 line-clamp-2 mb-1 group-hover:text-ocean-600 transition">
+                               class="text-base font-bold text-ocean-900 line-clamp-2 mb-1 group-hover:text-ocean-600 transition">
                                 {{ $item->judul_aksi }}
                             </a>
 
@@ -99,6 +124,7 @@
                                     </button>
                                 @endif
                             </div>
+
                         </div>
                     </div>
                 @endforeach
@@ -109,12 +135,13 @@
                 {{ $aksi->appends(request()->query())->links() }}
             </div>
         @endif
+
     </div>
 </div>
 
 @push('scripts')
 <script type="module">
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         loadLikeCountsCard();
         initializeLikeButtonsCard();
         loadLikeStatesCard();
@@ -123,11 +150,11 @@
 
     function initializeDeleteButtons() {
         document.querySelectorAll('.delete-btn-card').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 if (!confirm('Are you sure you want to delete this action?')) return;
                 const actionId = this.dataset.actionId;
-                const card = this.closest('.bg-white');
-                this.disabled = true;
+                const card     = this.closest('.bg-white');
+                this.disabled  = true;
 
                 fetch(`/aksi/${actionId}`, {
                     method: 'DELETE',
@@ -136,7 +163,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        card.style.opacity = '0';
+                        card.style.opacity    = '0';
                         card.style.transition = 'opacity 0.3s';
                         setTimeout(() => card.remove(), 300);
                     }
@@ -148,10 +175,10 @@
 
     function initializeLikeButtonsCard() {
         document.querySelectorAll('.like-btn-card').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const actionId = this.dataset.actionId;
-                const isLiked = this.dataset.liked === 'true';
-                this.disabled = true;
+                const isLiked  = this.dataset.liked === 'true';
+                this.disabled  = true;
 
                 fetch('/likes', {
                     method: isLiked ? 'DELETE' : 'POST',
@@ -164,18 +191,12 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        const isNowLiked = !isLiked;
-                        this.dataset.liked = isNowLiked;
-                        this.textContent = isNowLiked ? '❤️ Unlike' : '❤️ Like';
-                        if (isNowLiked) {
-                            this.style.color = '#ef4444';
-                            this.style.borderColor = '#fca5a5';
-                            this.style.backgroundColor = '#fef2f2';
-                        } else {
-                            this.style.color = '';
-                            this.style.borderColor = '';
-                            this.style.backgroundColor = '';
-                        }
+                        const isNowLiked           = !isLiked;
+                        this.dataset.liked         = isNowLiked;
+                        this.textContent           = isNowLiked ? '❤️ Unlike' : '❤️ Like';
+                        this.style.color           = isNowLiked ? '#ef4444' : '';
+                        this.style.borderColor     = isNowLiked ? '#fca5a5' : '';
+                        this.style.backgroundColor = isNowLiked ? '#fef2f2' : '';
                         const counter = document.querySelector(`.like-count-${actionId}`);
                         if (counter) counter.textContent = data.data.like_count;
                     }
@@ -206,10 +227,10 @@
                 document.querySelectorAll('.like-btn-card').forEach(btn => {
                     const isLiked = data.data.some(like => like.action_id === parseInt(btn.dataset.actionId));
                     if (isLiked) {
-                        btn.dataset.liked = 'true';
-                        btn.textContent = '❤️ Unlike';
-                        btn.style.color = '#ef4444';
-                        btn.style.borderColor = '#fca5a5';
+                        btn.dataset.liked         = 'true';
+                        btn.textContent           = '❤️ Unlike';
+                        btn.style.color           = '#ef4444';
+                        btn.style.borderColor     = '#fca5a5';
                         btn.style.backgroundColor = '#fef2f2';
                     }
                 });
