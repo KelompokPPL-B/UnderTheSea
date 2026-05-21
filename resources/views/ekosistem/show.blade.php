@@ -66,9 +66,6 @@
                     </button>
                     @if(auth()->check() && auth()->user()->isAdmin())
                         <a href="{{ route('ekosistem.edit', $ekosistem->id_ekosistem) }}" class="btn btn-outline btn-sm">Edit</a>
-                        <button class="delete-btn btn btn-error btn-sm" data-ekosistem-id="{{ $ekosistem->id_ekosistem }}">
-                            Delete
-                        </button>
                     @endif
                 </div>
             </div>

@@ -131,22 +131,4 @@ class EkosistemController extends Controller
             ->with('success', 'Ecosystem updated successfully!');
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-11: Manage Ecosystem Content
-     */
-    public function destroy($id)
-    {
-        abort_unless(auth()->user()?->isAdmin(), 403);
-
-        $ekosistem = Ekosistem::findOrFail($id);
-        $ekosistem->delete();
-
-        if (request()->wantsJson()) {
-            return response()->json(['status' => 'success']);
-        }
-
-        return redirect()->route('ekosistem.index')
-            ->with('success', 'Ecosystem deleted successfully!');
-    }
 }

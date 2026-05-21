@@ -28,7 +28,6 @@ Route::get('/ekosistem/{id}', [EkosistemController::class, 'show'])->name('ekosi
 Route::get('/ekosistem/{id}/edit', [EkosistemController::class, 'edit'])->middleware('auth')->name('ekosistem.edit');
 Route::post('/ekosistem', [EkosistemController::class, 'store'])->middleware('auth')->name('ekosistem.store');
 Route::put('/ekosistem/{id}', [EkosistemController::class, 'update'])->middleware('auth')->name('ekosistem.update');
-Route::delete('/ekosistem/{id}', [EkosistemController::class, 'destroy'])->middleware('auth')->name('ekosistem.destroy');
 
 Route::get('/aksi', [AksiController::class, 'index'])->name('aksi.index');
 Route::get('/aksi/create', [AksiController::class, 'create'])->middleware('auth')->name('aksi.create');
