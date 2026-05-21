@@ -37,11 +37,6 @@ Route::post('/aksi', [AksiController::class, 'store'])->middleware('auth')->name
 Route::put('/aksi/{id}', [AksiController::class, 'update'])->middleware('auth')->name('aksi.update');
 Route::delete('/aksi/{id}', [AksiController::class, 'destroy'])->middleware('auth')->name('aksi.destroy');
 
-Route::post('/favorites', [FavoriteController::class, 'store'])->middleware('auth')->name('favorites.store');
-Route::delete('/favorites', [FavoriteController::class, 'destroy'])->middleware('auth')->name('favorites.destroy');
-Route::get('/favorites', [FavoriteController::class, 'index'])->middleware('auth')->name('favorites.index');
-Route::get('/bookmarks', [FavoriteController::class, 'bookmarks'])->middleware('auth')->name('bookmarks.index');
-
 Route::get('/likes', [LikeController::class, 'index'])->middleware('auth')->name('likes.index');
 Route::post('/likes', [LikeController::class, 'store'])->middleware('auth')->name('likes.store');
 Route::delete('/likes', [LikeController::class, 'destroy'])->middleware('auth')->name('likes.destroy');
