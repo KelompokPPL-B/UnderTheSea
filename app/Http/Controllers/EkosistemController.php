@@ -114,12 +114,16 @@ class EkosistemController extends Controller
             'lokasi' => 'required|string|min:5|max:50',
             'peran' => 'required|string|min:5|max:50',
             'ancaman' => 'required|string|min:10|max:100',
-            'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ]);
+
 
         if ($request->hasFile('gambar')) {
             $validated['gambar'] = $request->file('gambar')->store('ecosystem', 'public');
+        } else {
+            unset($validated['gambar']); // pakai gambar lama
         }
+
 
         $ekosistem->update($validated);
 
