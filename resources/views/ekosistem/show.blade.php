@@ -61,9 +61,7 @@
                 <!-- Actions -->
                 <div class="flex flex-wrap gap-3 pt-4 border-t border-ocean-100">
                     <a href="{{ route('ekosistem.index') }}" class="btn btn-outline btn-sm">Back to Ecosystems</a>
-                    <button class="share-btn btn btn-success btn-sm" data-url="{{ request()->url() }}">
-                        Share
-                    </button>
+
                     @if(auth()->check() && auth()->user()->isAdmin())
                         <a href="{{ route('ekosistem.edit', $ekosistem->id_ekosistem) }}" class="btn btn-outline btn-sm">Edit</a>
                     @endif
@@ -90,73 +88,5 @@
         document.body.appendChild(notification);
         setTimeout(() => notification.remove(), 4000);
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const shareBtn = document.querySelector('.share-btn');
-        if (shareBtn) {
-            shareBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                shareContent(this);
-            });
-        }
-
-        const deleteBtn = document.querySelector('.delete-btn');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                if (confirm('Are you sure you want to delete this ecosystem? This cannot be undone.')) {
-                    deleteEkosistem(this);
-                }
-            });
-        }
-    });
-
-    function shareContent(btn) {
-        const url = btn.dataset.url;
-        navigator.clipboard.writeText(url).then(() => {
-            showNotification('Link copied to clipboard!', 'success');
-        }).catch(() => {
-            showNotification('Failed to copy link', 'error');
-        });
-    }
-
-    function deleteEkosistem(btn) {
-        const ekosistemId = btn.dataset.ekosistemId;
-        btn.disabled = true;
-        btn.classList.add('opacity-60');
-        const originalText = btn.textContent;
-        btn.textContent = 'Deleting...';
-
-        fetch(`/ekosistem/${ekosistemId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': getCsrfToken(),
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showNotification('Ecosystem deleted successfully', 'success');
-                setTimeout(() => window.location.href = '{{ route('ekosistem.index') }}', 1500);
-            } else {
-                showNotification(data.message, 'error');
-                btn.disabled = false;
-                btn.classList.remove('opacity-60');
-                btn.textContent = originalText;
-            }
-        })
-        .catch(err => {
-            showNotification('An error occurred. Please try again.', 'error');
-            console.error('Error:', err);
-            btn.disabled = false;
-            btn.classList.remove('opacity-60');
-            btn.textContent = originalText;
-        });
-    }
-
-    function getCsrfToken() {
-        return document.querySelector('meta[name="csrf-token"]')?.content || '';
-    }
-</script>
 @endpush
 @endsection
