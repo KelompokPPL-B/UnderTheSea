@@ -27,11 +27,6 @@
                         <h1 class="text-4xl font-bold text-ocean-900">{{ $ekosistem->nama_ekosistem }}</h1>
                         <p class="text-ocean-600 text-lg mt-2 font-semibold">Marine Ecosystem</p>
                     </div>
-                    @auth
-                        <button class="bookmark-btn btn btn-outline" data-type="ekosistem" data-item-id="{{ $ekosistem->id_ekosistem }}">
-                            <span class="bookmark-text">Bookmark</span>
-                        </button>
-                    @endauth
                 </div>
 
                 <!-- Location Card -->

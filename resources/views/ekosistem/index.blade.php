@@ -67,19 +67,6 @@
                                 </div>
                             @endif
 
-                            <!-- Bookmark Section -->
-                            @auth
-                                <div class="pt-2">
-                                    <button class="bookmark-btn-card w-full btn btn-outline btn-sm" data-type="ekosistem" data-item-id="{{ $item->id_ekosistem }}">
-                                        <span class="bookmark-text">Bookmark</span>
-                                    </button>
-                                </div>
-                            @else
-                                <div class="pt-2">
-                                    <a href="{{ route('login') }}" class="block text-center text-xs text-ocean-600 hover:underline font-semibold">Sign in to bookmark</a>
-                                </div>
-                            @endauth
-
                             <!-- Action Buttons -->
                             <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
                                 <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="btn btn-primary btn-sm flex-1">View</a>
@@ -133,77 +120,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script type="module">
-document.addEventListener('DOMContentLoaded', function() {
-    initializeBookmarkButtonsCard();
-    loadBookmarkStatesCard();
-});
-
-function initializeBookmarkButtonsCard() {
-    document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-        btn.addEventListener('click', toggleBookmarkCard);
-    });
-}
-
-function toggleBookmarkCard(e) {
-    e.preventDefault();
-    const btn = e.currentTarget;
-    const type = btn.dataset.type;
-    const itemId = btn.dataset.itemId;
-    const isBookmarked = btn.classList.contains('bookmarked');
-    const method = isBookmarked ? 'DELETE' : 'POST';
-
-    fetch('/favorites', {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
-        },
-        body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'success') {
-            btn.classList.toggle('bookmarked');
-            btn.classList.toggle('bg-blue-600');
-            btn.classList.toggle('text-white');
-            btn.classList.toggle('border-blue-600');
-            btn.classList.toggle('text-blue-600');
-            btn.classList.toggle('hover:bg-blue-50');
-            const text = btn.querySelector('.bookmark-text');
-            text.textContent = btn.classList.contains('bookmarked') ? 'Bookmarked' : 'Bookmark';
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(err => console.error('Error:', err));
-}
-
-function loadBookmarkStatesCard() {
-    fetch('/favorites', {
-        method: 'GET',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'success' && Array.isArray(data.data)) {
-            document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-                const type = btn.dataset.type;
-                const itemId = parseInt(btn.dataset.itemId);
-                const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
-                if (isBookmarked) {
-                    btn.classList.add('bookmarked', 'bg-blue-600', 'text-white', 'border-blue-600');
-                    btn.classList.remove('text-blue-600', 'hover:bg-blue-50');
-                    const text = btn.querySelector('.bookmark-text');
-                    if (text) text.textContent = 'Bookmarked';
-                }
-            });
-        }
-    })
-    .catch(err => console.error('Error loading bookmark state:', err));
-}
-</script>
 @endpush
 @endsection
