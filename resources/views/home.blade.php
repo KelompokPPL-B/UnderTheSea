@@ -12,22 +12,16 @@
             </div>
             <form action="{{ route('home') }}" method="GET" class="max-w-2xl mx-auto">
                 <div class="flex items-center gap-3">
-                    <input
-                        type="text"
-                        name="q"
-                        value="{{ $rawQuery }}"
+                    <input type="text" name="q" value="{{ $rawQuery }}"
                         placeholder="Cari ikan, ekosistem, atau aksi pelestarian..."
-                        class="w-full rounded-xl border border-ocean-200 bg-white px-5 py-3 text-sm text-gray-700 shadow-soft focus:outline-none focus:ring-2 focus:ring-ocean-400 transition"
-                    />
+                        class="w-full rounded-xl border border-ocean-200 bg-white px-5 py-3 text-sm text-gray-700 shadow-soft focus:outline-none focus:ring-2 focus:ring-ocean-400 transition" />
                     <button type="submit"
                         class="px-6 py-3 bg-ocean-500 hover:bg-ocean-600 text-white text-sm font-semibold rounded-xl shadow-soft transition whitespace-nowrap">
                         🔍 Cari
                     </button>
                 </div>
                 @if($rawQuery !== '' && $query === '')
-                    <p class="text-xs text-yellow-600 mt-2 text-center">
-                        ⚠️ Masukkan kata kunci untuk melakukan pencarian.
-                    </p>
+                    <p class="text-xs text-yellow-600 mt-2 text-center">⚠️ Masukkan kata kunci untuk melakukan pencarian.</p>
                 @endif
             </form>
         </div>
@@ -44,11 +38,8 @@
                     <div class="p-8 flex flex-col items-center text-center text-white">
                         <span class="text-6xl mb-4 block" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">🐠</span>
                         <h3 class="text-xl font-bold mb-2">Ikan</h3>
-                        <p class="text-sm leading-relaxed" style="color: rgba(255,255,255,0.85);">
-                            Temukan berbagai jenis ikan laut, habitatnya, dan status konservasi mereka.
-                        </p>
-                        <span class="mt-5 inline-block text-sm font-semibold px-4 py-2 rounded-xl"
-                              style="background: rgba(255,255,255,0.2);">Jelajahi →</span>
+                        <p class="text-sm leading-relaxed" style="color: rgba(255,255,255,0.85);">Temukan berbagai jenis ikan laut, habitatnya, dan status konservasi mereka.</p>
+                        <span class="mt-5 inline-block text-sm font-semibold px-4 py-2 rounded-xl" style="background: rgba(255,255,255,0.2);">Jelajahi →</span>
                     </div>
                     <div class="absolute -bottom-4 -right-4 w-24 h-24 rounded-full" style="background: rgba(255,255,255,0.08);"></div>
                     <div class="absolute -top-4 -left-4 w-16 h-16 rounded-full" style="background: rgba(255,255,255,0.08);"></div>
@@ -60,11 +51,8 @@
                     <div class="p-8 flex flex-col items-center text-center text-white">
                         <span class="text-6xl mb-4 block" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">🪸</span>
                         <h3 class="text-xl font-bold mb-2">Ekosistem</h3>
-                        <p class="text-sm leading-relaxed" style="color: rgba(255,255,255,0.85);">
-                            Pelajari ekosistem laut seperti terumbu karang, mangrove, dan padang lamun.
-                        </p>
-                        <span class="mt-5 inline-block text-sm font-semibold px-4 py-2 rounded-xl"
-                              style="background: rgba(255,255,255,0.2);">Jelajahi →</span>
+                        <p class="text-sm leading-relaxed" style="color: rgba(255,255,255,0.85);">Pelajari ekosistem laut seperti terumbu karang, mangrove, dan padang lamun.</p>
+                        <span class="mt-5 inline-block text-sm font-semibold px-4 py-2 rounded-xl" style="background: rgba(255,255,255,0.2);">Jelajahi →</span>
                     </div>
                     <div class="absolute -bottom-4 -right-4 w-24 h-24 rounded-full" style="background: rgba(255,255,255,0.08);"></div>
                     <div class="absolute -top-4 -left-4 w-16 h-16 rounded-full" style="background: rgba(255,255,255,0.08);"></div>
@@ -76,17 +64,155 @@
                     <div class="p-8 flex flex-col items-center text-center text-white">
                         <span class="text-6xl mb-4 block" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">🌊</span>
                         <h3 class="text-xl font-bold mb-2">Aksi Pelestarian</h3>
-                        <p class="text-sm leading-relaxed" style="color: rgba(255,255,255,0.85);">
-                            Bergabung dalam aksi nyata untuk menjaga kelestarian laut Indonesia.
-                        </p>
-                        <span class="mt-5 inline-block text-sm font-semibold px-4 py-2 rounded-xl"
-                              style="background: rgba(255,255,255,0.2);">Jelajahi →</span>
+                        <p class="text-sm leading-relaxed" style="color: rgba(255,255,255,0.85);">Bergabung dalam aksi nyata untuk menjaga kelestarian laut Indonesia.</p>
+                        <span class="mt-5 inline-block text-sm font-semibold px-4 py-2 rounded-xl" style="background: rgba(255,255,255,0.2);">Jelajahi →</span>
                     </div>
                     <div class="absolute -bottom-4 -right-4 w-24 h-24 rounded-full" style="background: rgba(255,255,255,0.08);"></div>
                     <div class="absolute -top-4 -left-4 w-16 h-16 rounded-full" style="background: rgba(255,255,255,0.08);"></div>
                 </a>
 
             </div>
+        </div>
+
+        {{-- ===== PBI-38: RECOMMENDED CONTENT ===== --}}
+        <div class="mb-12">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="text-2xl">✨</span>
+                <h2 class="text-2xl font-bold text-gray-900">Rekomendasi untuk Kamu</h2>
+                <span class="text-xs px-2 py-1 rounded-full font-medium"
+                      style="background: #E0F2FE; color: #0369A1;">
+                    Mix ikan, ekosistem & aksi
+                </span>
+            </div>
+
+            @if($recommendedData['items']->count() > 0)
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;" class="mb-6">
+                    @foreach($recommendedData['items'] as $item)
+                        @php $data = $item['data']; $type = $item['type']; @endphp
+
+                        @if($type === 'ikan')
+                        <a href="{{ route('ikan.show', $data->id_ikan) }}"
+                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                           style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+                            <div class="relative">
+                                @if($data->gambar)
+                                    <img src="/storage/{{ $data->gambar }}" alt="{{ $data->nama }}"
+                                         class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                                @else
+                                    <div class="w-full h-40 flex items-center justify-center text-4xl"
+                                         style="background: linear-gradient(135deg, #E0F2FE, #BAE6FD);">🐠</div>
+                                @endif
+                                <span class="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full font-medium"
+                                      style="background: rgba(3,105,161,0.85); color: white;">Ikan</span>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-semibold text-gray-800 group-hover:text-ocean-600 transition text-sm">{{ $data->nama }}</h4>
+                                @if($data->habitat)
+                                    <p class="text-xs text-gray-400 mt-1">📍 {{ $data->habitat }}</p>
+                                @endif
+                                @if($data->status_konservasi)
+                                    <span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full" style="background:#E0F2FE; color:#0369A1;">{{ $data->status_konservasi }}</span>
+                                @endif
+                            </div>
+                        </a>
+
+                        @elseif($type === 'ekosistem')
+                        <a href="{{ route('ekosistem.show', $data->id_ekosistem) }}"
+                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                           style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+                            <div class="relative">
+                                @if($data->gambar)
+                                    <img src="/storage/{{ $data->gambar }}" alt="{{ $data->nama_ekosistem }}"
+                                         class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                                @else
+                                    <div class="w-full h-40 flex items-center justify-center text-4xl"
+                                         style="background: linear-gradient(135deg, #BAE6FD, #7DD3FC);">🪸</div>
+                                @endif
+                                <span class="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full font-medium"
+                                      style="background: rgba(7,89,133,0.85); color: white;">Ekosistem</span>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-semibold text-gray-800 group-hover:text-ocean-600 transition text-sm">{{ $data->nama_ekosistem }}</h4>
+                                @if($data->lokasi)
+                                    <p class="text-xs text-gray-400 mt-1">📍 {{ $data->lokasi }}</p>
+                                @endif
+                                @if($data->deskripsi)
+                                    <p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($data->deskripsi, 80) }}</p>
+                                @endif
+                            </div>
+                        </a>
+
+                        @else
+                        <a href="{{ route('aksi.show', $data->id_aksi) }}"
+                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                           style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+                            <div class="relative">
+                                @if($data->gambar)
+                                    <img src="/storage/{{ $data->gambar }}" alt="{{ $data->judul_aksi }}"
+                                         class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                                @else
+                                    <div class="w-full h-40 flex items-center justify-center text-4xl"
+                                         style="background: linear-gradient(135deg, #E0F2FE, #7DD3FC);">🌊</div>
+                                @endif
+                                <span class="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full font-medium"
+                                      style="background: rgba(12,74,110,0.85); color: white;">Aksi</span>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-semibold text-gray-800 group-hover:text-ocean-600 transition text-sm">{{ $data->judul_aksi }}</h4>
+                                @if($data->manfaat)
+                                    <p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($data->manfaat, 80) }}</p>
+                                @endif
+                            </div>
+                        </a>
+                        @endif
+
+                    @endforeach
+                </div>
+
+                {{-- PAGINATION --}}
+                @if($recommendedData['total_pages'] > 1)
+                <div class="flex items-center justify-center gap-2">
+                    @if($recommendedData['page'] > 1)
+                        <a href="{{ request()->fullUrlWithQuery(['rec_page' => $recommendedData['page'] - 1]) }}"
+                           class="px-4 py-2 rounded-xl text-sm font-medium border border-ocean-200 hover:bg-ocean-50 transition"
+                           style="color: #0369A1;">← Sebelumnya</a>
+                    @else
+                        <span class="px-4 py-2 rounded-xl text-sm font-medium border border-gray-100 cursor-not-allowed text-gray-300">← Sebelumnya</span>
+                    @endif
+
+                    @for($i = 1; $i <= $recommendedData['total_pages']; $i++)
+                        @if($i === $recommendedData['page'])
+                            <span class="w-9 h-9 flex items-center justify-center rounded-xl text-sm font-bold text-white"
+                                  style="background: linear-gradient(135deg, #0EA5E9, #0369A1);">{{ $i }}</span>
+                        @else
+                            <a href="{{ request()->fullUrlWithQuery(['rec_page' => $i]) }}"
+                               class="w-9 h-9 flex items-center justify-center rounded-xl text-sm font-medium text-gray-600 border border-gray-200 hover:bg-ocean-50 transition">
+                                {{ $i }}
+                            </a>
+                        @endif
+                    @endfor
+
+                    @if($recommendedData['page'] < $recommendedData['total_pages'])
+                        <a href="{{ request()->fullUrlWithQuery(['rec_page' => $recommendedData['page'] + 1]) }}"
+                           class="px-4 py-2 rounded-xl text-sm font-medium border border-ocean-200 hover:bg-ocean-50 transition"
+                           style="color: #0369A1;">Berikutnya →</a>
+                    @else
+                        <span class="px-4 py-2 rounded-xl text-sm font-medium border border-gray-100 cursor-not-allowed text-gray-300">Berikutnya →</span>
+                    @endif
+                </div>
+                <p class="text-center text-xs text-gray-400 mt-3">
+                    Halaman {{ $recommendedData['page'] }} dari {{ $recommendedData['total_pages'] }}
+                    ({{ $recommendedData['total'] }} konten)
+                </p>
+                @endif
+
+            @else
+                <div class="text-center py-12 bg-white rounded-2xl border border-ocean-100"
+                     style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+                    <div class="text-4xl mb-3">🌊</div>
+                    <p class="text-gray-500 text-sm">Belum ada konten tersedia.</p>
+                </div>
+            @endif
         </div>
 
         {{-- ===== PBI-37: POPULAR CONTENT ===== --}}
@@ -100,7 +226,6 @@
                 </span>
             </div>
 
-            {{-- Popular Ikan --}}
             @if($popularContent['ikan']->count() > 0)
             <div class="mb-8">
                 <div class="flex items-center justify-between mb-4">
@@ -110,32 +235,22 @@
                     </div>
                     <a href="{{ route('ikan.index') }}" class="text-sm font-medium text-ocean-500 hover:underline">Lihat semua →</a>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;">
                     @foreach($popularContent['ikan'] as $index => $item)
                     <a href="{{ route('ikan.show', $item->id_ikan) }}"
                        class="group relative bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300 hover:-translate-y-1"
                        style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
-                        {{-- Rank badge --}}
                         <div class="absolute top-3 left-3 z-10 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                             style="background: {{ $index === 0 ? '#F59E0B' : ($index === 1 ? '#9CA3AF' : '#CD7C4B') }};">
-                            {{ $index + 1 }}
-                        </div>
+                             style="background: {{ $index === 0 ? '#F59E0B' : ($index === 1 ? '#9CA3AF' : '#CD7C4B') }};">{{ $index + 1 }}</div>
                         @if($item->gambar)
                             <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}"
                                  class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
                         @else
-                            <div class="w-full h-40 flex items-center justify-center text-4xl"
-                                 style="background: linear-gradient(135deg, #E0F2FE, #BAE6FD);">🐠</div>
+                            <div class="w-full h-40 flex items-center justify-center text-4xl" style="background: linear-gradient(135deg, #E0F2FE, #BAE6FD);">🐠</div>
                         @endif
                         <div class="p-4">
                             <h4 class="font-semibold text-gray-800 group-hover:text-ocean-600 transition text-sm">{{ $item->nama }}</h4>
-                            @if($item->habitat)
-                                <p class="text-xs text-gray-400 mt-1">📍 {{ $item->habitat }}</p>
-                            @endif
-                            @if($item->status_konservasi)
-                                <span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full"
-                                      style="background:#E0F2FE; color:#0369A1;">{{ $item->status_konservasi }}</span>
-                            @endif
+                            @if($item->habitat)<p class="text-xs text-gray-400 mt-1">📍 {{ $item->habitat }}</p>@endif
                         </div>
                     </a>
                     @endforeach
@@ -143,7 +258,6 @@
             </div>
             @endif
 
-            {{-- Popular Ekosistem --}}
             @if($popularContent['ekosistem']->count() > 0)
             <div class="mb-8">
                 <div class="flex items-center justify-between mb-4">
@@ -153,30 +267,22 @@
                     </div>
                     <a href="{{ route('ekosistem.index') }}" class="text-sm font-medium text-ocean-500 hover:underline">Lihat semua →</a>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;">
                     @foreach($popularContent['ekosistem'] as $index => $item)
                     <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}"
                        class="group relative bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300 hover:-translate-y-1"
                        style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
                         <div class="absolute top-3 left-3 z-10 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                             style="background: {{ $index === 0 ? '#F59E0B' : ($index === 1 ? '#9CA3AF' : '#CD7C4B') }};">
-                            {{ $index + 1 }}
-                        </div>
+                             style="background: {{ $index === 0 ? '#F59E0B' : ($index === 1 ? '#9CA3AF' : '#CD7C4B') }};">{{ $index + 1 }}</div>
                         @if($item->gambar)
                             <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama_ekosistem }}"
                                  class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
                         @else
-                            <div class="w-full h-40 flex items-center justify-center text-4xl"
-                                 style="background: linear-gradient(135deg, #BAE6FD, #7DD3FC);">🪸</div>
+                            <div class="w-full h-40 flex items-center justify-center text-4xl" style="background: linear-gradient(135deg, #BAE6FD, #7DD3FC);">🪸</div>
                         @endif
                         <div class="p-4">
                             <h4 class="font-semibold text-gray-800 group-hover:text-ocean-600 transition text-sm">{{ $item->nama_ekosistem }}</h4>
-                            @if($item->lokasi)
-                                <p class="text-xs text-gray-400 mt-1">📍 {{ $item->lokasi }}</p>
-                            @endif
-                            @if($item->deskripsi)
-                                <p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($item->deskripsi, 80) }}</p>
-                            @endif
+                            @if($item->lokasi)<p class="text-xs text-gray-400 mt-1">📍 {{ $item->lokasi }}</p>@endif
                         </div>
                     </a>
                     @endforeach
@@ -184,7 +290,6 @@
             </div>
             @endif
 
-            {{-- Popular Aksi --}}
             @if($popularContent['aksi']->count() > 0)
             <div class="mb-8">
                 <div class="flex items-center justify-between mb-4">
@@ -194,31 +299,22 @@
                     </div>
                     <a href="{{ route('aksi.index') }}" class="text-sm font-medium text-ocean-500 hover:underline">Lihat semua →</a>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;">
                     @foreach($popularContent['aksi'] as $index => $item)
                     <a href="{{ route('aksi.show', $item->id_aksi) }}"
                        class="group relative bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300 hover:-translate-y-1"
                        style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
                         <div class="absolute top-3 left-3 z-10 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                             style="background: {{ $index === 0 ? '#F59E0B' : ($index === 1 ? '#9CA3AF' : '#CD7C4B') }};">
-                            {{ $index + 1 }}
-                        </div>
+                             style="background: {{ $index === 0 ? '#F59E0B' : ($index === 1 ? '#9CA3AF' : '#CD7C4B') }};">{{ $index + 1 }}</div>
                         @if($item->gambar)
                             <img src="/storage/{{ $item->gambar }}" alt="{{ $item->judul_aksi }}"
                                  class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
                         @else
-                            <div class="w-full h-40 flex items-center justify-center text-4xl"
-                                 style="background: linear-gradient(135deg, #E0F2FE, #7DD3FC);">🌊</div>
+                            <div class="w-full h-40 flex items-center justify-center text-4xl" style="background: linear-gradient(135deg, #E0F2FE, #7DD3FC);">🌊</div>
                         @endif
                         <div class="p-4">
                             <h4 class="font-semibold text-gray-800 group-hover:text-ocean-600 transition text-sm">{{ $item->judul_aksi }}</h4>
-                            @if($item->manfaat)
-                                <p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($item->manfaat, 80) }}</p>
-                            @endif
-                            @if($item->is_user_generated)
-                                <span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full"
-                                      style="background:#BAE6FD; color:#0C4A6E;">Kontribusi Komunitas</span>
-                            @endif
+                            @if($item->manfaat)<p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($item->manfaat, 80) }}</p>@endif
                         </div>
                     </a>
                     @endforeach
@@ -226,10 +322,8 @@
             </div>
             @endif
 
-            {{-- Empty state jika belum ada data populer --}}
             @if($popularContent['ikan']->count() === 0 && $popularContent['ekosistem']->count() === 0 && $popularContent['aksi']->count() === 0)
-            <div class="text-center py-12 bg-white rounded-2xl border border-ocean-100"
-                 style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+            <div class="text-center py-12 bg-white rounded-2xl border border-ocean-100" style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
                 <div class="text-4xl mb-3">🌊</div>
                 <p class="text-gray-500 text-sm">Belum ada data populer. Mulai eksplorasi konten!</p>
             </div>
@@ -251,18 +345,15 @@
                 </p>
 
                 @if($totalResults === 0)
-                    <div class="text-center py-16 bg-white rounded-2xl border border-ocean-100"
-                         style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+                    <div class="text-center py-16 bg-white rounded-2xl border border-ocean-100" style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
                         <div class="text-5xl mb-4">🔍</div>
                         <p class="text-gray-700 text-lg font-semibold">Hasil tidak ditemukan</p>
-                        <p class="text-gray-400 text-sm mt-2">
-                            Tidak ada data untuk "<span class="font-medium">{{ $query }}</span>".
-                        </p>
+                        <p class="text-gray-400 text-sm mt-2">Tidak ada data untuk "<span class="font-medium">{{ $query }}</span>".</p>
                         <p class="text-gray-400 text-sm mt-1">Coba periksa ejaan atau gunakan kata kunci lain.</p>
                         <div class="flex justify-center gap-3 mt-6 flex-wrap">
-                            <a href="{{ route('ikan.index') }}" class="px-4 py-2 bg-ocean-50 hover:bg-ocean-100 text-ocean-600 text-sm rounded-xl font-medium transition">🐠 Lihat semua ikan</a>
-                            <a href="{{ route('ekosistem.index') }}" class="px-4 py-2 text-sm rounded-xl font-medium transition" style="background:#E0F2FE; color:#0369A1;">🪸 Lihat semua ekosistem</a>
-                            <a href="{{ route('aksi.index') }}" class="px-4 py-2 bg-ocean-50 hover:bg-ocean-100 text-ocean-600 text-sm rounded-xl font-medium transition">🌊 Lihat semua aksi</a>
+                            <a href="{{ route('ikan.index') }}" class="px-4 py-2 bg-ocean-50 text-ocean-600 text-sm rounded-xl font-medium">🐠 Lihat semua ikan</a>
+                            <a href="{{ route('ekosistem.index') }}" class="px-4 py-2 text-sm rounded-xl font-medium" style="background:#E0F2FE; color:#0369A1;">🪸 Lihat semua ekosistem</a>
+                            <a href="{{ route('aksi.index') }}" class="px-4 py-2 bg-ocean-50 text-ocean-600 text-sm rounded-xl font-medium">🌊 Lihat semua aksi</a>
                         </div>
                     </div>
                 @endif
@@ -274,28 +365,19 @@
                         <h2 class="text-lg font-bold text-ocean-700">Ikan</h2>
                         <span class="text-xs bg-ocean-100 text-ocean-600 px-2 py-0.5 rounded-full font-medium">{{ $searchIkan->count() }} hasil</span>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;">
                         @foreach($searchIkan as $item)
                         <a href="{{ route('ikan.show', $item->id_ikan) }}"
-                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300"
-                           style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden" style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
                             @if($item->gambar)
-                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}"
-                                     class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}" class="w-full h-40 object-cover" loading="lazy">
                             @else
-                                <div class="w-full h-40 bg-ocean-50 flex items-center justify-center text-4xl">🐠</div>
+                                <div class="w-full h-40 flex items-center justify-center text-4xl" style="background:#E0F2FE;">🐠</div>
                             @endif
                             <div class="p-4">
-                                <h3 class="font-semibold text-gray-800 group-hover:text-ocean-600 transition text-sm">{{ $item->nama }}</h3>
-                                @if($item->habitat)
-                                    <p class="text-xs text-gray-400 mt-1">📍 {{ $item->habitat }}</p>
-                                @endif
-                                @if($item->status_konservasi)
-                                    <span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full" style="background:#E0F2FE; color:#0369A1;">{{ $item->status_konservasi }}</span>
-                                @endif
-                                @if($item->deskripsi)
-                                    <p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($item->deskripsi, 80) }}</p>
-                                @endif
+                                <h3 class="font-semibold text-gray-800 text-sm">{{ $item->nama }}</h3>
+                                @if($item->habitat)<p class="text-xs text-gray-400 mt-1">📍 {{ $item->habitat }}</p>@endif
+                                @if($item->status_konservasi)<span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full" style="background:#E0F2FE; color:#0369A1;">{{ $item->status_konservasi }}</span>@endif
                             </div>
                         </a>
                         @endforeach
@@ -310,25 +392,18 @@
                         <h2 class="text-lg font-bold text-ocean-700">Ekosistem</h2>
                         <span class="text-xs bg-ocean-100 text-ocean-600 px-2 py-0.5 rounded-full font-medium">{{ $searchEkosistem->count() }} hasil</span>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;">
                         @foreach($searchEkosistem as $item)
                         <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}"
-                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300"
-                           style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden" style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
                             @if($item->gambar)
-                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama_ekosistem }}"
-                                     class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama_ekosistem }}" class="w-full h-40 object-cover" loading="lazy">
                             @else
-                                <div class="w-full h-40 flex items-center justify-center text-4xl" style="background:#E0F2FE;">🪸</div>
+                                <div class="w-full h-40 flex items-center justify-center text-4xl" style="background:#BAE6FD;">🪸</div>
                             @endif
                             <div class="p-4">
-                                <h3 class="font-semibold text-gray-800 group-hover:text-ocean-600 transition text-sm">{{ $item->nama_ekosistem }}</h3>
-                                @if($item->lokasi)
-                                    <p class="text-xs text-gray-400 mt-1">📍 {{ $item->lokasi }}</p>
-                                @endif
-                                @if($item->deskripsi)
-                                    <p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($item->deskripsi, 80) }}</p>
-                                @endif
+                                <h3 class="font-semibold text-gray-800 text-sm">{{ $item->nama_ekosistem }}</h3>
+                                @if($item->lokasi)<p class="text-xs text-gray-400 mt-1">📍 {{ $item->lokasi }}</p>@endif
                             </div>
                         </a>
                         @endforeach
@@ -343,25 +418,18 @@
                         <h2 class="text-lg font-bold text-ocean-700">Aksi Pelestarian</h2>
                         <span class="text-xs bg-ocean-100 text-ocean-600 px-2 py-0.5 rounded-full font-medium">{{ $searchAksi->count() }} hasil</span>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;">
                         @foreach($searchAksi as $item)
                         <a href="{{ route('aksi.show', $item->id_aksi) }}"
-                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden transition-all duration-300"
-                           style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+                           class="group bg-white rounded-2xl border border-ocean-100 overflow-hidden" style="box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
                             @if($item->gambar)
-                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->judul_aksi }}"
-                                     class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->judul_aksi }}" class="w-full h-40 object-cover" loading="lazy">
                             @else
-                                <div class="w-full h-40 bg-ocean-50 flex items-center justify-center text-4xl">🌊</div>
+                                <div class="w-full h-40 flex items-center justify-center text-4xl" style="background:#E0F2FE;">🌊</div>
                             @endif
                             <div class="p-4">
-                                <h3 class="font-semibold text-gray-800 group-hover:text-ocean-600 transition text-sm">{{ $item->judul_aksi }}</h3>
-                                @if($item->manfaat)
-                                    <p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($item->manfaat, 80) }}</p>
-                                @endif
-                                @if($item->is_user_generated)
-                                    <span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full" style="background:#BAE6FD; color:#0C4A6E;">Kontribusi Komunitas</span>
-                                @endif
+                                <h3 class="font-semibold text-gray-800 text-sm">{{ $item->judul_aksi }}</h3>
+                                @if($item->manfaat)<p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($item->manfaat, 80) }}</p>@endif
                             </div>
                         </a>
                         @endforeach
@@ -373,11 +441,10 @@
         @else
         {{-- ===== KONTEN NORMAL ===== --}}
         <div class="mb-12">
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Recommended Content</h2>
-
+            <h2 class="text-2xl font-bold text-gray-900 mb-8">Recommended Content</h2>
             <div class="mb-8">
-                <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Fish</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Fish</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
                     @forelse($randomContent['ikan'] as $item)
                         <a href="{{ route('ikan.show', $item->id_ikan) }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
                             @if($item->gambar)
@@ -397,8 +464,8 @@
             </div>
 
             <div class="mb-8">
-                <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Ecosystems</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Ecosystems</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
                     @forelse($randomContent['ekosistem'] as $item)
                         <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
                             @if($item->gambar)
@@ -418,8 +485,8 @@
             </div>
 
             <div class="mb-8">
-                <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Conservation Actions</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Conservation Actions</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
                     @forelse($randomContent['aksi'] as $item)
                         <a href="{{ route('aksi.show', $item->id_aksi) }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
                             @if($item->gambar)
@@ -440,7 +507,7 @@
         </div>
 
         <div class="mb-12">
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Popular Actions</h2>
+            <h2 class="text-2xl font-bold text-gray-900 mb-8">Popular Actions</h2>
             <div class="bg-white rounded-lg shadow-md">
                 @forelse($popularActions as $action)
                     <a href="{{ route('aksi.show', $action['id']) }}" class="block p-6 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition">
@@ -462,7 +529,7 @@
         </div>
 
         <div class="mb-12">
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Leaderboard</h2>
+            <h2 class="text-2xl font-bold text-gray-900 mb-8">Leaderboard</h2>
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
                 <table class="w-full">
                     <thead>
@@ -490,7 +557,6 @@
                 </table>
             </div>
         </div>
-
         @endif
 
     </div>
