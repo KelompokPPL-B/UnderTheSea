@@ -6,10 +6,7 @@ use App\Models\Ikan;
 use App\Models\Ekosistem;
 use App\Models\AksiPelestarian;
 use App\Models\User;
-use App\Models\UserView;
-use App\Models\Favorite;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -18,11 +15,13 @@ class HomeController extends Controller
      * PBI-08: Homepage
      * PBI-15: Search Enhancement
      * PBI-37: Popular Content
+     * PBI-38: Recommended Content with Pagination
      */
     public function index(Request $request)
     {
         $rawQuery = $request->input('q', '');
-        $query = trim(preg_replace('/\s+/', ' ', $rawQuery));
+        $query    = trim(preg_replace('/\s+/', ' ', $rawQuery));
+        $page     = max(1, (int) $request->input('rec_page', 1));
 
         $searchIkan      = collect();
         $searchEkosistem = collect();
@@ -32,81 +31,90 @@ class HomeController extends Controller
 
         if ($query !== '') {
             $isSearching = true;
-            $keywords = explode(' ', $query);
+            $keywords    = explode(' ', $query);
             $searchIkan      = $this->searchIkan($query, $keywords);
             $searchEkosistem = $this->searchEkosistem($query, $keywords);
             $searchAksi      = $this->searchAksi($query, $keywords);
             $totalResults    = $searchIkan->count() + $searchEkosistem->count() + $searchAksi->count();
         }
 
-        $randomContent  = $this->getRandomContent();
-        $popularActions = $this->getPopularActions();
-        $popularContent = $this->getPopularContent();
-        $leaderboard    = $this->leaderboard();
+        $randomContent   = $this->getRandomContent();
+        $popularActions  = $this->getPopularActions();
+        $popularContent  = $this->getPopularContent();
+        $recommendedData = $this->getRecommendedContent($request, $page);
+        $leaderboard     = $this->leaderboard();
 
         return view('home', compact(
-            'query',
-            'rawQuery',
-            'isSearching',
-            'searchIkan',
-            'searchEkosistem',
-            'searchAksi',
-            'totalResults',
-            'randomContent',
-            'popularActions',
-            'popularContent',
-            'leaderboard'
+            'query', 'rawQuery', 'isSearching',
+            'searchIkan', 'searchEkosistem', 'searchAksi', 'totalResults',
+            'randomContent', 'popularActions', 'popularContent',
+            'recommendedData', 'leaderboard'
         ));
     }
 
     /**
+     * PBI-38: Recommended Content with Pagination
+     * Mix random ikan + ekosistem + aksi, 6 item per halaman
+     * Tidak perlu login
+     */
+    public function getRecommendedContent(Request $request, int $page = 1): array
+    {
+        $perPage = 6;
+
+        $ikan      = Ikan::inRandomOrder()->take(20)->get()
+                         ->map(fn($i) => ['type' => 'ikan', 'data' => $i]);
+        $ekosistem = Ekosistem::inRandomOrder()->take(20)->get()
+                              ->map(fn($i) => ['type' => 'ekosistem', 'data' => $i]);
+        $aksi      = AksiPelestarian::inRandomOrder()->take(20)->get()
+                                    ->map(fn($i) => ['type' => 'aksi', 'data' => $i]);
+
+        $allItems   = $ikan->merge($ekosistem)->merge($aksi)->shuffle()->values();
+        $total      = $allItems->count();
+        $totalPages = max(1, (int) ceil($total / $perPage));
+        $page       = min($page, $totalPages);
+        $items      = $allItems->slice(($page - 1) * $perPage, $perPage)->values();
+
+        return [
+            'items'       => $items,
+            'page'        => $page,
+            'total_pages' => $totalPages,
+            'total'       => $total,
+            'per_page'    => $perPage,
+        ];
+    }
+
+    /**
      * PBI-37: Popular Content
-     * Skor popularitas = jumlah views + (jumlah favorites * 2)
-     * Favorites diberi bobot 2x karena lebih intentional dari views
+     * Skor = views + (favorites * 2)
      */
     public function getPopularContent(): array
     {
-        // Popular Ikan
         $popularIkan = Ikan::select('ikan.*')
             ->selectRaw('
-                (SELECT COUNT(*) FROM user_views
-                 WHERE user_views.content_type = "ikan"
+                (SELECT COUNT(*) FROM user_views WHERE user_views.content_type = "ikan"
                  AND user_views.content_id = ikan.id_ikan) +
-                (SELECT COUNT(*) * 2 FROM favorites
-                 WHERE favorites.type = "ikan"
+                (SELECT COUNT(*) * 2 FROM favorites WHERE favorites.type = "ikan"
                  AND favorites.item_id = ikan.id_ikan) AS popularity_score
             ')
-            ->orderByRaw('popularity_score DESC')
-            ->take(3)
-            ->get();
+            ->orderByRaw('popularity_score DESC')->take(3)->get();
 
-        // Popular Ekosistem
         $popularEkosistem = Ekosistem::select('ekosistem.*')
             ->selectRaw('
-                (SELECT COUNT(*) FROM user_views
-                 WHERE user_views.content_type = "ekosistem"
+                (SELECT COUNT(*) FROM user_views WHERE user_views.content_type = "ekosistem"
                  AND user_views.content_id = ekosistem.id_ekosistem) +
-                (SELECT COUNT(*) * 2 FROM favorites
-                 WHERE favorites.type = "ekosistem"
+                (SELECT COUNT(*) * 2 FROM favorites WHERE favorites.type = "ekosistem"
                  AND favorites.item_id = ekosistem.id_ekosistem) AS popularity_score
             ')
-            ->orderByRaw('popularity_score DESC')
-            ->take(3)
-            ->get();
+            ->orderByRaw('popularity_score DESC')->take(3)->get();
 
-        // Popular Aksi
         $popularAksi = AksiPelestarian::select('aksi_pelestarian.*')
             ->selectRaw('
-                (SELECT COUNT(*) FROM user_views
-                 WHERE user_views.content_type = "aksi"
+                (SELECT COUNT(*) FROM user_views WHERE user_views.content_type = "aksi"
                  AND user_views.content_id = aksi_pelestarian.id_aksi) +
-                (SELECT COUNT(*) * 2 FROM favorites
-                 WHERE favorites.type = "aksi"
+                (SELECT COUNT(*) * 2 FROM favorites WHERE favorites.type = "aksi"
                  AND favorites.item_id = aksi_pelestarian.id_aksi) AS popularity_score
             ')
-            ->orderByRaw('popularity_score DESC')
-            ->take(3)
-            ->get();
+            ->orderByRaw('popularity_score DESC')->take(3)->get();
 
         return [
             'ikan'      => $popularIkan,
@@ -116,11 +124,11 @@ class HomeController extends Controller
     }
 
     /**
-     * PBI-15: Search ikan dengan multi-keyword support
+     * PBI-15: Search ikan
      */
     private function searchIkan(string $query, array $keywords)
     {
-        $exactMatches = Ikan::where(function ($q) use ($query) {
+        $exact = Ikan::where(function ($q) use ($query) {
             $q->where('nama', 'like', "%{$query}%")
               ->orWhere('deskripsi', 'like', "%{$query}%")
               ->orWhere('habitat', 'like', "%{$query}%")
@@ -128,9 +136,7 @@ class HomeController extends Controller
               ->orWhere('status_konservasi', 'like', "%{$query}%")
               ->orWhere('fakta_unik', 'like', "%{$query}%");
         })->limit(10)->get();
-
-        if ($exactMatches->count() > 0) return $exactMatches;
-
+        if ($exact->count() > 0) return $exact;
         return Ikan::where(function ($q) use ($keywords) {
             foreach ($keywords as $word) {
                 $q->orWhere('nama', 'like', "%{$word}%")
@@ -143,20 +149,18 @@ class HomeController extends Controller
     }
 
     /**
-     * PBI-15: Search ekosistem dengan multi-keyword support
+     * PBI-15: Search ekosistem
      */
     private function searchEkosistem(string $query, array $keywords)
     {
-        $exactMatches = Ekosistem::where(function ($q) use ($query) {
+        $exact = Ekosistem::where(function ($q) use ($query) {
             $q->where('nama_ekosistem', 'like', "%{$query}%")
               ->orWhere('deskripsi', 'like', "%{$query}%")
               ->orWhere('lokasi', 'like', "%{$query}%")
               ->orWhere('peran', 'like', "%{$query}%")
               ->orWhere('ancaman', 'like', "%{$query}%");
         })->limit(10)->get();
-
-        if ($exactMatches->count() > 0) return $exactMatches;
-
+        if ($exact->count() > 0) return $exact;
         return Ekosistem::where(function ($q) use ($keywords) {
             foreach ($keywords as $word) {
                 $q->orWhere('nama_ekosistem', 'like', "%{$word}%")
@@ -168,19 +172,17 @@ class HomeController extends Controller
     }
 
     /**
-     * PBI-15: Search aksi dengan multi-keyword support
+     * PBI-15: Search aksi
      */
     private function searchAksi(string $query, array $keywords)
     {
-        $exactMatches = AksiPelestarian::where(function ($q) use ($query) {
+        $exact = AksiPelestarian::where(function ($q) use ($query) {
             $q->where('judul_aksi', 'like', "%{$query}%")
               ->orWhere('deskripsi', 'like', "%{$query}%")
               ->orWhere('manfaat', 'like', "%{$query}%")
               ->orWhere('cara_melakukan', 'like', "%{$query}%");
         })->limit(10)->get();
-
-        if ($exactMatches->count() > 0) return $exactMatches;
-
+        if ($exact->count() > 0) return $exact;
         return AksiPelestarian::where(function ($q) use ($keywords) {
             foreach ($keywords as $word) {
                 $q->orWhere('judul_aksi', 'like', "%{$word}%")
@@ -191,8 +193,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Owner: Keziah
-     * PBI-08: Homepage
+     * PBI-08: Random content
      */
     public function getRandomContent()
     {
@@ -204,45 +205,35 @@ class HomeController extends Controller
     }
 
     /**
-     * Owner: Keziah
-     * PBI-08: Homepage
+     * PBI-08: Popular actions
      */
     public function getPopularActions()
     {
         return AksiPelestarian::withCount('likes')
             ->orderByDesc('likes_count')
-            ->take(5)
-            ->with('createdBy')
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id'         => $item->id_aksi,
-                    'title'      => $item->judul_aksi,
-                    'like_count' => $item->likes_count,
-                    'creator'    => [
-                        'name'  => $item->createdBy->name,
-                        'badge' => $item->createdBy->badge,
-                    ],
-                ];
-            });
+            ->take(5)->with('createdBy')->get()
+            ->map(fn($item) => [
+                'id'         => $item->id_aksi,
+                'title'      => $item->judul_aksi,
+                'like_count' => $item->likes_count,
+                'creator'    => [
+                    'name'  => $item->createdBy->name,
+                    'badge' => $item->createdBy->badge,
+                ],
+            ]);
     }
 
     /**
-     * Owner: Keziah
      * PBI-06: Leaderboard
      */
     public function leaderboard()
     {
-        return User::orderByDesc('points')
-            ->take(10)
-            ->get()
-            ->map(function ($user, $index) {
-                return [
-                    'rank'   => $index + 1,
-                    'name'   => $user->name,
-                    'points' => $user->points,
-                    'badge'  => $user->badge,
-                ];
-            });
+        return User::orderByDesc('points')->take(10)->get()
+            ->map(fn($user, $index) => [
+                'rank'   => $index + 1,
+                'name'   => $user->name,
+                'points' => $user->points,
+                'badge'  => $user->badge,
+            ]);
     }
 }
