@@ -16,6 +16,7 @@ class HomeController extends Controller
      * PBI-15: Search Enhancement
      * PBI-37: Popular Content
      * PBI-38: Recommended Content with Pagination
+     * PROJ-114: Latest Content Section
      */
     public function index(Request $request)
     {
@@ -42,20 +43,49 @@ class HomeController extends Controller
         $popularActions  = $this->getPopularActions();
         $popularContent  = $this->getPopularContent();
         $recommendedData = $this->getRecommendedContent($request, $page);
+        $latestContent   = $this->getLatestContent();
         $leaderboard     = $this->leaderboard();
 
         return view('home', compact(
             'query', 'rawQuery', 'isSearching',
             'searchIkan', 'searchEkosistem', 'searchAksi', 'totalResults',
             'randomContent', 'popularActions', 'popularContent',
-            'recommendedData', 'leaderboard'
+            'recommendedData', 'latestContent', 'leaderboard'
         ));
     }
 
     /**
+     * PROJ-114: Latest Content
+     * Ambil 3 konten terbaru dari masing-masing tipe, urutkan by created_at DESC
+     */
+    public function getLatestContent(): array
+    {
+        $latestIkan = Ikan::orderByDesc('created_at')->take(3)->get();
+        $latestEkosistem = Ekosistem::orderByDesc('created_at')->take(3)->get();
+        $latestAksi = AksiPelestarian::orderByDesc('created_at')->take(3)->get();
+
+        // Gabung semua dan sort by created_at untuk tampilan "terbaru" yang mix
+        $allLatest = collect();
+        foreach ($latestIkan as $item) {
+            $allLatest->push(['type' => 'ikan', 'data' => $item, 'created_at' => $item->created_at]);
+        }
+        foreach ($latestEkosistem as $item) {
+            $allLatest->push(['type' => 'ekosistem', 'data' => $item, 'created_at' => $item->created_at]);
+        }
+        foreach ($latestAksi as $item) {
+            $allLatest->push(['type' => 'aksi', 'data' => $item, 'created_at' => $item->created_at]);
+        }
+
+        return [
+            'ikan'      => $latestIkan,
+            'ekosistem' => $latestEkosistem,
+            'aksi'      => $latestAksi,
+            'mixed'     => $allLatest->sortByDesc('created_at')->take(6)->values(),
+        ];
+    }
+
+    /**
      * PBI-38: Recommended Content with Pagination
-     * Mix random ikan + ekosistem + aksi, 6 item per halaman
-     * Tidak perlu login
      */
     public function getRecommendedContent(Request $request, int $page = 1): array
     {
@@ -85,7 +115,6 @@ class HomeController extends Controller
 
     /**
      * PBI-37: Popular Content
-     * Skor = views + (favorites * 2)
      */
     public function getPopularContent(): array
     {
