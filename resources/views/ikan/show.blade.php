@@ -13,7 +13,7 @@
         <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition overflow-hidden">
             <!-- Hero Image -->
             @if($ikan->gambar)
-                <img src="/storage/{{ $ikan->gambar }}" alt="{{ $ikan->nama }}" class="w-full h-96 object-cover" loading="lazy">
+                <img src="{{ asset('storage/' . $ikan->gambar) }}" alt="{{ $ikan->nama }}" class="w-full h-96 object-cover" loading="lazy">
             @else
                 <div class="w-full h-96 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
                     <span class="text-ocean-400">No image</span>
@@ -27,11 +27,6 @@
                         <h1 class="text-4xl font-bold text-ocean-900">{{ $ikan->nama }}</h1>
                         <p class="text-ocean-600 text-lg mt-2 font-semibold">Fish Species</p>
                     </div>
-                    @auth
-                        <button class="bookmark-btn btn btn-outline" data-type="ikan" data-item-id="{{ $ikan->id_ikan }}">
-                            <span class="bookmark-text">Bookmark</span>
-                        </button>
-                    @endauth
                 </div>
 
                 <!-- Info Grid -->
@@ -66,15 +61,23 @@
 
                 <!-- Actions -->
                 <div class="flex flex-wrap gap-3 pt-4 border-t border-ocean-100">
-                    <a href="{{ route('ikan.index') }}" class="btn btn-outline btn-sm">Back to Fish</a>
-                    <button class="share-btn btn btn-success btn-sm" data-url="{{ request()->url() }}">
-                        Share
-                    </button>
+                    <!-- Back to Fish -->
+                    <a href="{{ route('ikan.index') }}" class="btn btn-sm font-semibold flex items-center gap-2" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                        Back to Fish
+                    </a>
+
                     @if(auth()->check() && auth()->user()->isAdmin())
-                        <a href="{{ route('ikan.edit', $ikan->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
-                        <button class="delete-btn btn btn-error btn-sm" data-ikan-id="{{ $ikan->id_ikan }}">
-                            Delete
-                        </button>
+                    <!-- Edit -->
+                    <a href="{{ route('ikan.edit', $ikan->id_ikan) }}" class="btn btn-sm font-semibold flex items-center gap-2" style="background:#f59e0b;color:#fff;border:none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                        Edit
+                    </a>
                     @endif
                 </div>
             </div>
@@ -101,67 +104,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const shareBtn = document.querySelector('.share-btn');
-        if (shareBtn) {
-            shareBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                shareContent(this);
-            });
-        }
-
-        const deleteBtn = document.querySelector('.delete-btn');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                if (confirm('Are you sure you want to delete this fish species? This cannot be undone.')) {
-                    deleteIkan(this);
-                }
-            });
-        }
     });
-
-    function shareContent(btn) {
-        const url = btn.dataset.url;
-        navigator.clipboard.writeText(url).then(() => {
-            showNotification('Link copied to clipboard!', 'success');
-        }).catch(() => {
-            showNotification('Failed to copy link', 'error');
-        });
-    }
-
-    function deleteIkan(btn) {
-        const ikanId = btn.dataset.ikanId;
-        btn.disabled = true;
-        btn.classList.add('opacity-60');
-        const originalText = btn.textContent;
-        btn.textContent = 'Deleting...';
-
-        fetch(`/ikan/${ikanId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': getCsrfToken(),
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showNotification('Fish species deleted successfully', 'success');
-                setTimeout(() => window.location.href = '{{ route('ikan.index') }}', 1500);
-            } else {
-                showNotification(data.message, 'error');
-                btn.disabled = false;
-                btn.classList.remove('opacity-60');
-                btn.textContent = originalText;
-            }
-        })
-        .catch(err => {
-            showNotification('An error occurred. Please try again.', 'error');
-            console.error('Error:', err);
-            btn.disabled = false;
-            btn.classList.remove('opacity-60');
-            btn.textContent = originalText;
-        });
-    }
 
     function getCsrfToken() {
         return document.querySelector('meta[name="csrf-token"]')?.content || '';

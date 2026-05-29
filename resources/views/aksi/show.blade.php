@@ -3,6 +3,14 @@
 @section('content')
 <!-- PBI-AksiShow -->
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
+    @if(session('success'))
+        <div class="max-w-4xl mx-auto px-6 mb-4">
+            <div class="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded-lg flex items-center gap-2">
+                <span>✅</span>
+                <span>{{ session('success') }}</span>
+            </div>
+        </div>
+    @endif
     <div class="max-w-4xl mx-auto px-6 py-6 mb-6">
         @include('layouts.breadcrumb', ['breadcrumbs' => [
             ['label' => 'Conservation Actions', 'url' => route('aksi.index')],

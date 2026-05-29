@@ -1,3 +1,7 @@
+{{--
+#PBI-16
+#OWNER-Mutiara
+--}}
 @extends('layouts.app')
 
 @section('content')
@@ -7,14 +11,15 @@
             <div class="p-6 sm:p-8">
                 <!-- Header -->
                 <div class="mb-8">
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Create Conservation Action</h1>
-                    <p class="text-sm sm:text-base text-gray-600">Share your conservation idea with the community</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Edit Conservation Action</h1>
+                    <p class="text-sm sm:text-base text-gray-600">Update your conservation action information</p>
                     <p class="text-xs text-red-500 mt-2"><span class="font-bold">*</span> Please fill out this field.</p>
                 </div>
 
                 <!-- Form -->
-                <form id="create-aksi-form" method="POST" action="{{ route('aksi.store') }}" enctype="multipart/form-data" class="space-y-6" novalidate>
+                <form id="edit-aksi-form" action="{{ route('aksi.update', $aksi->id_aksi) }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>
                     @csrf
+                    @method('PUT')
 
                     <!-- Title -->
                     <div>
@@ -33,7 +38,7 @@
                             type="text"
                             id="judul_aksi"
                             name="judul_aksi"
-                            value="{{ old('judul_aksi') }}"
+                            value="{{ old('judul_aksi', $aksi->judul_aksi) }}"
                             class="w-full px-4 py-2 border-2 {{ $errors->has('judul_aksi') ? 'border-red-500' : 'border-gray-200' }} rounded-lg focus:outline-none focus:border-blue-600"
                             placeholder="Enter action title"
                             maxlength="255"
@@ -69,7 +74,7 @@
                             placeholder="Describe the conservation action"
                             maxlength="2000"
                             required
-                        >{{ old('deskripsi') }}</textarea>
+                        >{{ old('deskripsi', $aksi->deskripsi) }}</textarea>
                         <div class="flex justify-between items-center mt-1">
                             <p class="field-error text-xs hidden" style="color: #ef4444;">This field is required.</p>
                             <span class="text-xs text-gray-400 ml-auto char-counter" data-target="deskripsi" data-max="2000">2000 characters remaining</span>
@@ -82,7 +87,7 @@
                     <!-- Benefits -->
                     <div>
                         <div class="flex items-center gap-2 mb-2">
-                            <label for="deskripsi" class="block text-sm font-semibold text-gray-900">
+                            <label for="manfaat" class="block text-sm font-semibold text-gray-900">
                                 Benefits <span class="text-red-500">*</span>
                             </label>
                             <span class="relative group">
@@ -100,7 +105,7 @@
                             placeholder="What are the benefits of this action?"
                             maxlength="2000"
                             required
-                        >{{ old('manfaat') }}</textarea>
+                        >{{ old('manfaat', $aksi->manfaat) }}</textarea>
                         <div class="flex justify-between items-center mt-1">
                             <p class="field-error text-xs hidden" style="color: #ef4444;">This field is required.</p>
                             <span class="text-xs text-gray-400 ml-auto char-counter" data-target="manfaat" data-max="2000">2000 characters remaining</span>
@@ -131,7 +136,7 @@
                             placeholder="Explain how people can participate"
                             maxlength="2000"
                             required
-                        >{{ old('cara_melakukan') }}</textarea>
+                        >{{ old('cara_melakukan', $aksi->cara_melakukan) }}</textarea>
                         <div class="flex justify-between items-center mt-1">
                             <p class="field-error text-xs hidden" style="color: #ef4444;">This field is required.</p>
                             <span class="text-xs text-gray-400 ml-auto char-counter" data-target="cara_melakukan" data-max="2000">2000 characters remaining</span>
@@ -141,22 +146,27 @@
                         @enderror
                     </div>
 
-                    <!-- Image -->
+                    <!-- Current Image -->
                     <div>
-                        <!-- Preview box -->
-                        <div id="preview-container" class="hidden mb-3">
-                            <p class="text-sm font-semibold text-gray-900 mb-2">Image Preview</p>
-                            <img id="image-preview" src="" alt="Preview" class="h-40 rounded-lg object-cover">
-                        </div>
+                        <p class="text-sm font-semibold text-gray-900 mb-2">Current Image</p>
+                        @if($aksi->gambar)
+                            <img id="image-preview" src="{{ asset('storage/' . $aksi->gambar) }}" alt="{{ $aksi->judul_aksi }}" class="h-40 rounded-lg object-cover">
+                        @else
+                            <img id="image-preview" src="" alt="" class="h-40 rounded-lg object-cover hidden">
+                            <p id="no-image-text" class="text-sm text-gray-400 italic">Belum ada gambar</p>
+                        @endif
+                    </div>
 
+                    <!-- New Image -->
+                    <div>
                         <div class="flex items-center gap-2 mb-2">
                             <label for="gambar" class="block text-sm font-semibold text-gray-900">
-                                Image (JPG, PNG - Max 2MB) <span class="text-red-500">*</span>
+                                New Image (JPG, PNG - Max 2MB)
                             </label>
                             <span class="relative group">
                                 <span class="text-gray-400 cursor-help">?</span>
                                 <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs px-3 py-2 rounded whitespace-nowrap z-10">
-                                    Upload a JPG or PNG image (max 2MB)
+                                    Leave empty to keep current image. Max 2MB.
                                 </div>
                             </span>
                         </div>
@@ -166,9 +176,7 @@
                             name="gambar"
                             accept="image/jpeg,image/png,image/jpg"
                             class="w-full px-4 py-2 border-2 {{ $errors->has('gambar') ? 'border-red-500' : 'border-gray-200' }} rounded-lg focus:outline-none focus:border-blue-600"
-                            required
                         >
-                        <p class="field-error text-xs mt-1 hidden" style="color: #ef4444;">Image is required.</p>
                         <p id="size-error" class="text-xs mt-1 hidden font-semibold" style="color: #ef4444;">Max 2MB. Please choose a smaller file.</p>
                         @error('gambar')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -182,10 +190,10 @@
                             id="submitBtn"
                             class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
                         >
-                            Create Action
+                            Save Changes
                         </button>
                         <a
-                            href="{{ route('aksi.index') }}"
+                            href="{{ route('aksi.show', $aksi->id_aksi) }}"
                             class="flex-1 text-center px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-medium"
                         >
                             Cancel
@@ -205,13 +213,11 @@
         gambarInput.addEventListener('change', function (event) {
             const file      = event.target.files[0];
             const sizeError = document.getElementById('size-error');
-            const container = document.getElementById('preview-container');
             const preview   = document.getElementById('image-preview');
+            const noText    = document.getElementById('no-image-text');
 
             // Reset
             sizeError.classList.add('hidden');
-            container.classList.add('hidden');
-            preview.src = '';
             gambarInput.classList.remove('border-red-500', 'ring-2', 'ring-red-300');
 
             if (!file) return;
@@ -224,16 +230,17 @@
                 return;
             }
 
-            // Valid — show preview
+            // Valid — update preview
             const reader = new FileReader();
             reader.onload = function (e) {
                 preview.src = e.target.result;
-                container.classList.remove('hidden');
+                preview.classList.remove('hidden');
+                if (noText) noText.classList.add('hidden');
             };
             reader.readAsDataURL(file);
         });
 
-        const form = document.getElementById('create-aksi-form');
+        const form = document.getElementById('edit-aksi-form');
 
         form.addEventListener('submit', function (e) {
             let firstErrorEl = null;
@@ -253,14 +260,10 @@
                 }
             });
 
-            // Validasi file input gambar
+            // Validasi gambar — hanya cek size jika file dipilih
             const fileInput = document.getElementById('gambar');
-            const sizeErr   = document.getElementById('size-error');
-            if (fileInput.files.length === 0) {
-                markError(fileInput);
-                if (!firstErrorEl) firstErrorEl = fileInput;
-            } else if (fileInput.files[0].size > 2 * 1024 * 1024) {
-                sizeErr.classList.remove('hidden');
+            if (fileInput.files.length > 0 && fileInput.files[0].size > 2 * 1024 * 1024) {
+                document.getElementById('size-error').classList.remove('hidden');
                 markError(fileInput);
                 if (!firstErrorEl) firstErrorEl = fileInput;
             }
@@ -286,7 +289,7 @@
             });
         });
 
-        // Real-time character counter
+        // Real-time character counter (inisialisasi dengan panjang nilai yang sudah ada)
         document.querySelectorAll('.char-counter').forEach(function (counter) {
             const targetId = counter.getAttribute('data-target');
             const maxLen   = parseInt(counter.getAttribute('data-max'));
@@ -306,7 +309,7 @@
             }
 
             field.addEventListener('input', updateCounter);
-            updateCounter();
+            updateCounter(); // inisialisasi langsung dengan data yang sudah ada
         });
     });
 </script>
