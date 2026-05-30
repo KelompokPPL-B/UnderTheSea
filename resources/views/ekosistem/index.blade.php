@@ -17,13 +17,126 @@
             @endauth
         </div>
 
-        <!-- Sort Controls -->
-        <div class="mb-6 flex justify-end">
-            <select onchange="window.location.href='{{ route('ekosistem.index') }}?sort=' + this.value" class="select select-bordered select-sm">
-                <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Newest First</option>
-                <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
-            </select>
+    <!-- Filter & Sort Controls -->
+    <form method="GET" action="{{ route('ekosistem.index') }}" class="mb-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-ocean-100 p-8">
+
+            <!-- Header -->
+            <p class="text-xs font-bold text-ocean-500 uppercase tracking-widest mb-8">
+                🔍 Filter & Sort
+            </p>
+
+            <!-- Filter Row -->
+            <div class="flex flex-wrap items-end gap-8">
+
+                <!-- Sort By -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                        Sort By
+                    </label>
+
+                    <select
+                        name="sort"
+                        class="select select-bordered w-52"
+                    >
+                        <option value="newest" {{ ($sort ?? 'newest') === 'newest' ? 'selected' : '' }}>
+                            Newest First
+                        </option>
+
+                        <option value="oldest" {{ ($sort ?? '') === 'oldest' ? 'selected' : '' }}>
+                            Oldest First
+                        </option>
+
+                        <option value="name_asc" {{ ($sort ?? '') === 'name_asc' ? 'selected' : '' }}>
+                            Name A–Z
+                        </option>
+
+                        <option value="name_desc" {{ ($sort ?? '') === 'name_desc' ? 'selected' : '' }}>
+                            Name Z–A
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Location -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                        Location
+                    </label>
+
+                    <select
+                        name="lokasi"
+                        class="select select-bordered w-80"
+                    >
+                        <option value="">All Locations</option>
+
+                        @foreach($lokasiList as $l)
+                            <option
+                                value="{{ $l }}"
+                                {{ ($filterLokasi ?? '') === $l ? 'selected' : '' }}
+                            >
+                                {{ $l }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Buttons -->
+                <div class="ml-10 flex items-end gap-4">
+                    <button
+                        type="submit"
+                        class="btn h-12 min-h-12 px-6 text-sm font-semibold text-white"
+                        style="background:#0e7490;border:none;border-radius:10px;"
+                    >
+                        Apply
+                    </button>
+
+                    <a
+                        href="{{ route('ekosistem.index') }}"
+                        class="btn btn-ghost h-12 min-h-12 px-6 text-sm font-semibold text-gray-500"
+                    >
+                        Reset
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Active Filters -->
+            @if(($filterLokasi ?? '') || ($sort ?? 'newest') !== 'newest')
+                <div class="mt-6 flex flex-wrap items-center gap-2">
+
+                    <span class="text-xs text-gray-400 font-medium">
+                        Active Filters:
+                    </span>
+
+                    @if(($sort ?? 'newest') !== 'newest')
+                        <span
+                            class="badge badge-sm"
+                            style="background:#f0f9ff;color:#0369a1;border:none;"
+                        >
+                            Sort:
+                            {{ match($sort) {
+                                'oldest' => 'Oldest First',
+                                'name_asc' => 'Name A–Z',
+                                'name_desc' => 'Name Z–A',
+                                default => 'Newest First'
+                            } }}
+                        </span>
+                    @endif
+
+                    @if($filterLokasi ?? '')
+                        <span
+                            class="badge badge-sm"
+                            style="background:#e0f2fe;color:#0369a1;border:none;"
+                        >
+                            📍 {{ $filterLokasi }}
+                        </span>
+                    @endif
+
+                </div>
+            @endif
+
         </div>
+    </form>
 
         @if($ekosistem->isEmpty())
             <div class="bg-white rounded-2xl shadow-card p-12 text-center">
@@ -34,7 +147,6 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($ekosistem as $item)
                     <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] animate-fade overflow-hidden">
-                        <!-- Image -->
                         @if($item->gambar)
                             <div class="overflow-hidden h-48">
                                 <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama_ekosistem }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
@@ -45,80 +157,35 @@
                             </div>
                         @endif
 
-                        <!-- Content -->
                         <div class="p-6 space-y-4">
-                            <!-- Title -->
                             <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="block group-hover:text-ocean-600 transition">
                                 <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->nama_ekosistem }}</h3>
                             </a>
 
-                            <!-- Location -->
                             @if($item->lokasi)
                                 <p class="text-xs text-gray-500 font-semibold">📍 {{ $item->lokasi }}</p>
                             @endif
 
-                            <!-- Description -->
                             <p class="text-gray-600 text-sm line-clamp-2">{{ $item->deskripsi ?? 'No description' }}</p>
 
-                            <!-- Role -->
-                            @if($item->peran)
-                                <div class="pt-2 border-t border-ocean-100">
-                                    <p class="text-xs text-gray-600"><span class="font-semibold">Role:</span> <span class="line-clamp-1">{{ $item->peran }}</span></p>
-                                </div>
-                            @endif
+                            <div class="pt-2 border-t border-ocean-100">
+                                <p class="text-xs text-gray-600">
+                                    Created by <span class="font-semibold text-ocean-900">{{ $item->createdBy->name }}</span>
+                                    <span class="badge badge-success text-xs ml-1">{{ $item->createdBy->badge }}</span>
+                                </p>
+                            </div>
 
-                            <!-- Action Buttons -->
-                            <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="btn btn-primary btn-sm flex-1">View</a>
-                                @if(auth()->check() && auth()->user()->isAdmin())
-                                    <a href="{{ route('ekosistem.edit', $item->id_ekosistem) }}" class="btn btn-outline btn-sm">Edit</a>
-                                @endif
+                            <div class="flex gap-2 mt-3 pt-3">
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
 
-            <!-- Pagination -->
             <div class="mt-8 flex justify-center">
                 {{ $ekosistem->appends(request()->query())->links() }}
             </div>
         @endif
     </div>
 </div>
-
-@push('scripts')
-<script>
-// Global helper - harus di luar module
-function getCsrfToken() {
-    return document.querySelector('meta[name="csrf-token"]')?.content || '';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.delete-btn-card').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const id = this.dataset.ekosistemId;
-            if (!confirm("Yakin mau hapus data ini?")) return;
-
-            fetch(`/ekosistem/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': getCsrfToken(),
-                    'Accept': 'application/json'
-                }
-            })
-            .then(res => {
-                if (res.ok) {
-                    location.reload();
-                } else {
-                    alert("Gagal menghapus data");
-                }
-            })
-            .catch(err => console.error(err));
-        });
-    });
-});
-</script>
-
-@endpush
 @endsection

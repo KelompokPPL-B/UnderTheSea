@@ -33,7 +33,6 @@ class AksiController extends Controller
         return view('aksi.index', compact('aksi', 'sort'));
     }
 
-
     public function create()
     {
         return view('aksi.create');

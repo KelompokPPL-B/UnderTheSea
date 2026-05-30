@@ -15,40 +15,41 @@ class EkosistemController extends Controller
         $this->pointsService = $pointsService;
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-11: Manage Ecosystem Content
-     * PBI-19: Pagination UI
-     * PBI-21: Sort Options
-     */
     public function index(Request $request)
     {
-        $sort = $request->query('sort', 'newest');
+        $sort         = $request->get('sort', 'newest');
+        $filterLokasi = $request->get('lokasi', '');
+
         $query = Ekosistem::query();
 
-        if ($sort === 'oldest') {
-            $query->orderBy('created_at', 'asc');
-        } else {
-            $query->orderBy('created_at', 'desc');
+        if ($filterLokasi) {
+            $query->where('lokasi', $filterLokasi);
         }
 
-        $ekosistem = $query->paginate(10);
-        return view('ekosistem.index', compact('ekosistem', 'sort'));
+        match ($sort) {
+            'oldest'    => $query->orderBy('created_at', 'asc'),
+            'name_asc'  => $query->orderBy('nama_ekosistem', 'asc'),
+            'name_desc' => $query->orderBy('nama_ekosistem', 'desc'),
+            default     => $query->orderBy('created_at', 'desc'),
+        };
+
+        $ekosistem = $query->paginate(10)->withQueryString();
+
+        $lokasiList = Ekosistem::select('lokasi')
+            ->whereNotNull('lokasi')
+            ->where('lokasi', '!=', '')
+            ->distinct()
+            ->orderBy('lokasi')
+            ->pluck('lokasi');
+
+        return view('ekosistem.index', compact('ekosistem', 'sort', 'filterLokasi', 'lokasiList'));
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-15: Form Validation UI
-     */
     public function create()
     {
         return view('ekosistem.create');
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-12: View Ecosystem Detail + Award Points
-     */
     public function show($id)
     {
         $ekosistem = Ekosistem::findOrFail($id);
@@ -60,20 +61,12 @@ class EkosistemController extends Controller
         return view('ekosistem.show', compact('ekosistem'));
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-15: Form Validation UI
-     */
     public function edit($id)
     {
         $ekosistem = Ekosistem::findOrFail($id);
         return view('ekosistem.edit', compact('ekosistem'));
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-11: Manage Ecosystem Content
-     */
     public function store(Request $request)
     {
         abort_unless(auth()->user()?->isAdmin(), 403);
@@ -98,10 +91,6 @@ class EkosistemController extends Controller
             ->with('success', 'Ecosystem created successfully!');
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-11: Manage Ecosystem Content
-     */
     public function update(Request $request, $id)
     {
         abort_unless(auth()->user()?->isAdmin(), 403);
@@ -130,5 +119,4 @@ class EkosistemController extends Controller
         return redirect()->route('ekosistem.show', $id)
             ->with('success', 'Ecosystem updated successfully!');
     }
-
 }
