@@ -1,316 +1,126 @@
 {{--
-#PBI-16
-#OWNER-Mutiara
+#PBI-04
+#OWNER-Arvia
 --}}
 @extends('layouts.app')
 
 @section('content')
-<div class="py-8 sm:py-12 bg-gray-50 min-h-screen">
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div class="p-6 sm:p-8">
-                <!-- Header -->
-                <div class="mb-8">
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Edit Conservation Action</h1>
-                    <p class="text-sm sm:text-base text-gray-600">Update your conservation action information</p>
-                    <p class="text-xs text-red-500 mt-2"><span class="font-bold">*</span> Please fill out this field.</p>
+<div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
+    <div class="max-w-2xl mx-auto px-6">
+        <div class="bg-white rounded-2xl shadow-card p-8">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-ocean-900 mb-2">Edit Conservation Action</h1>
+                <p class="text-ocean-600">Update the conservation action information</p>
+            </div>
+
+            <!-- Form -->
+            <form action="{{ route('aksi.update', $aksi->id_aksi) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                @csrf
+                @method('PUT')
+
+                <!-- Title -->
+                <div>
+                    <label for="judul_aksi" class="block text-sm font-semibold text-ocean-900 mb-2">
+                        Title *
+                    </label>
+                    <input
+                        type="text"
+                        id="judul_aksi"
+                        name="judul_aksi"
+                        value="{{ old('judul_aksi', $aksi->judul_aksi) }}"
+                        class="input input-bordered w-full @error('judul_aksi') input-error @enderror"
+                        placeholder="Enter action title"
+                        required
+                    >
+                    @error('judul_aksi')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
-                <!-- Form -->
-                <form id="edit-aksi-form" action="{{ route('aksi.update', $aksi->id_aksi) }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>
-                    @csrf
-                    @method('PUT')
+                <!-- Description -->
+                <div>
+                    <label for="deskripsi" class="block text-sm font-semibold text-ocean-900 mb-2">
+                        Description
+                    </label>
+                    <textarea
+                        id="deskripsi"
+                        name="deskripsi"
+                        rows="4"
+                        class="textarea textarea-bordered w-full @error('deskripsi') textarea-error @enderror"
+                        placeholder="Describe the conservation action"
+                    >{{ old('deskripsi', $aksi->deskripsi) }}</textarea>
+                    @error('deskripsi')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
-                    <!-- Title -->
+                <!-- Benefits -->
+                <div>
+                    <label for="manfaat" class="block text-sm font-semibold text-ocean-900 mb-2">
+                        Benefits
+                    </label>
+                    <textarea
+                        id="manfaat"
+                        name="manfaat"
+                        rows="3"
+                        class="textarea textarea-bordered w-full @error('manfaat') textarea-error @enderror"
+                        placeholder="What are the benefits of this action?"
+                    >{{ old('manfaat', $aksi->manfaat) }}</textarea>
+                    @error('manfaat')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- How to Participate -->
+                <div>
+                    <label for="cara_melakukan" class="block text-sm font-semibold text-ocean-900 mb-2">
+                        How to Participate
+                    </label>
+                    <textarea
+                        id="cara_melakukan"
+                        name="cara_melakukan"
+                        rows="3"
+                        class="textarea textarea-bordered w-full @error('cara_melakukan') textarea-error @enderror"
+                        placeholder="Explain how people can participate"
+                    >{{ old('cara_melakukan', $aksi->cara_melakukan) }}</textarea>
+                    @error('cara_melakukan')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Current Image -->
+                @if($aksi->gambar)
                     <div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <label for="judul_aksi" class="block text-sm font-semibold text-gray-900">
-                                Title <span class="text-red-500">*</span>
-                            </label>
-                            <span class="relative group">
-                                <span class="text-gray-400 cursor-help">?</span>
-                                <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs px-3 py-2 rounded whitespace-nowrap z-10">
-                                    Give your action a clear, descriptive title
-                                </div>
-                            </span>
-                        </div>
-                        <input
-                            type="text"
-                            id="judul_aksi"
-                            name="judul_aksi"
-                            value="{{ old('judul_aksi', $aksi->judul_aksi) }}"
-                            class="w-full px-4 py-2 border-2 {{ $errors->has('judul_aksi') ? 'border-red-500' : 'border-gray-200' }} rounded-lg focus:outline-none focus:border-blue-600"
-                            placeholder="Enter action title"
-                            maxlength="255"
-                            required
-                        >
-                        <div class="flex justify-between items-center mt-1">
-                            <p class="field-error text-xs hidden" style="color: #ef4444;">This field is required.</p>
-                            <span class="text-xs text-gray-400 ml-auto char-counter" data-target="judul_aksi" data-max="255">255 characters remaining</span>
-                        </div>
-                        @error('judul_aksi')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                        <p class="text-sm font-semibold text-ocean-900 mb-2">Current Image</p>
+                        <img src="/storage/{{ $aksi->gambar }}" alt="{{ $aksi->judul_aksi }}" class="h-40 rounded-lg object-cover">
                     </div>
+                @endif
 
-                    <!-- Description -->
-                    <div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <label for="deskripsi" class="block text-sm font-semibold text-gray-900">
-                                Description
-                            </label>
-                            <span class="relative group">
-                                <span class="text-gray-400 cursor-help">?</span>
-                                <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs px-3 py-2 rounded whitespace-nowrap z-10">
-                                    Explain what this conservation action is about
-                                </div>
-                            </span>
-                        </div>
-                        <textarea
-                            id="deskripsi"
-                            name="deskripsi"
-                            rows="4"
-                            class="w-full px-4 py-2 border-2 {{ $errors->has('deskripsi') ? 'border-red-500' : 'border-gray-200' }} rounded-lg focus:outline-none focus:border-blue-600"
-                            placeholder="Describe the conservation action"
-                            maxlength="2000"
-                            required
-                        >{{ old('deskripsi', $aksi->deskripsi) }}</textarea>
-                        <div class="flex justify-between items-center mt-1">
-                            <p class="field-error text-xs hidden" style="color: #ef4444;">This field is required.</p>
-                            <span class="text-xs text-gray-400 ml-auto char-counter" data-target="deskripsi" data-max="2000">2000 characters remaining</span>
-                        </div>
-                        @error('deskripsi')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <!-- Image -->
+                <div>
+                    <label for="gambar" class="block text-sm font-semibold text-ocean-900 mb-2">
+                        New Image (JPG, PNG - Max 2MB)
+                    </label>
+                    <input
+                        type="file"
+                        id="gambar"
+                        name="gambar"
+                        accept="image/jpeg,image/png,image/jpg"
+                        class="file-input file-input-bordered w-full @error('gambar') file-input-error @enderror"
+                    >
+                    @error('gambar')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
-                    <!-- Benefits -->
-                    <div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <label for="manfaat" class="block text-sm font-semibold text-gray-900">
-                                Benefits <span class="text-red-500">*</span>
-                            </label>
-                            <span class="relative group">
-                                <span class="text-gray-400 cursor-help">?</span>
-                                <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs px-3 py-2 rounded whitespace-nowrap z-10">
-                                    Describe the positive impact of this action
-                                </div>
-                            </span>
-                        </div>
-                        <textarea
-                            id="manfaat"
-                            name="manfaat"
-                            rows="3"
-                            class="w-full px-4 py-2 border-2 {{ $errors->has('manfaat') ? 'border-red-500' : 'border-gray-200' }} rounded-lg focus:outline-none focus:border-blue-600"
-                            placeholder="What are the benefits of this action?"
-                            maxlength="2000"
-                            required
-                        >{{ old('manfaat', $aksi->manfaat) }}</textarea>
-                        <div class="flex justify-between items-center mt-1">
-                            <p class="field-error text-xs hidden" style="color: #ef4444;">This field is required.</p>
-                            <span class="text-xs text-gray-400 ml-auto char-counter" data-target="manfaat" data-max="2000">2000 characters remaining</span>
-                        </div>
-                        @error('manfaat')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- How to Participate -->
-                    <div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <label for="cara_melakukan" class="block text-sm font-semibold text-gray-900">
-                                How to Participate <span class="text-red-500">*</span>
-                            </label>
-                            <span class="relative group">
-                                <span class="text-gray-400 cursor-help">?</span>
-                                <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs px-3 py-2 rounded whitespace-nowrap z-10">
-                                    Provide step-by-step instructions for participation
-                                </div>
-                            </span>
-                        </div>
-                        <textarea
-                            id="cara_melakukan"
-                            name="cara_melakukan"
-                            rows="3"
-                            class="w-full px-4 py-2 border-2 {{ $errors->has('cara_melakukan') ? 'border-red-500' : 'border-gray-200' }} rounded-lg focus:outline-none focus:border-blue-600"
-                            placeholder="Explain how people can participate"
-                            maxlength="2000"
-                            required
-                        >{{ old('cara_melakukan', $aksi->cara_melakukan) }}</textarea>
-                        <div class="flex justify-between items-center mt-1">
-                            <p class="field-error text-xs hidden" style="color: #ef4444;">This field is required.</p>
-                            <span class="text-xs text-gray-400 ml-auto char-counter" data-target="cara_melakukan" data-max="2000">2000 characters remaining</span>
-                        </div>
-                        @error('cara_melakukan')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Current Image -->
-                    <div>
-                        <p class="text-sm font-semibold text-gray-900 mb-2">Current Image</p>
-                        @if($aksi->gambar)
-                            <img id="image-preview" src="{{ asset('storage/' . $aksi->gambar) }}" alt="{{ $aksi->judul_aksi }}" class="h-40 rounded-lg object-cover">
-                        @else
-                            <img id="image-preview" src="" alt="" class="h-40 rounded-lg object-cover hidden">
-                            <p id="no-image-text" class="text-sm text-gray-400 italic">Belum ada gambar</p>
-                        @endif
-                    </div>
-
-                    <!-- New Image -->
-                    <div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <label for="gambar" class="block text-sm font-semibold text-gray-900">
-                                New Image (JPG, PNG - Max 2MB)
-                            </label>
-                            <span class="relative group">
-                                <span class="text-gray-400 cursor-help">?</span>
-                                <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs px-3 py-2 rounded whitespace-nowrap z-10">
-                                    Leave empty to keep current image. Max 2MB.
-                                </div>
-                            </span>
-                        </div>
-                        <input
-                            type="file"
-                            id="gambar"
-                            name="gambar"
-                            accept="image/jpeg,image/png,image/jpg"
-                            class="w-full px-4 py-2 border-2 {{ $errors->has('gambar') ? 'border-red-500' : 'border-gray-200' }} rounded-lg focus:outline-none focus:border-blue-600"
-                        >
-                        <p id="size-error" class="text-xs mt-1 hidden font-semibold" style="color: #ef4444;">Max 2MB. Please choose a smaller file.</p>
-                        @error('gambar')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-gray-200">
-                        <button
-                            type="submit"
-                            id="submitBtn"
-                            class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
-                        >
-                            Save Changes
-                        </button>
-                        <a
-                            href="{{ route('aksi.show', $aksi->id_aksi) }}"
-                            class="flex-1 text-center px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-medium"
-                        >
-                            Cancel
-                        </a>
-                    </div>
-                </form>
-            </div>
+                <!-- Buttons -->
+                <div class="flex gap-3 pt-6 border-t border-ocean-100">
+                    <button type="submit" class="btn btn-primary flex-1">Save Changes</button>
+                    <a href="{{ route('aksi.show', $aksi->id_aksi) }}" class="btn btn-outline flex-1">Cancel</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const gambarInput = document.getElementById('gambar');
-
-        // File input handler — preview & size check
-        gambarInput.addEventListener('change', function (event) {
-            const file      = event.target.files[0];
-            const sizeError = document.getElementById('size-error');
-            const preview   = document.getElementById('image-preview');
-            const noText    = document.getElementById('no-image-text');
-
-            // Reset
-            sizeError.classList.add('hidden');
-            gambarInput.classList.remove('border-red-500', 'ring-2', 'ring-red-300');
-
-            if (!file) return;
-
-            const maxSize = 2 * 1024 * 1024; // 2 MB
-            if (file.size > maxSize) {
-                sizeError.classList.remove('hidden');
-                gambarInput.classList.add('border-red-500', 'ring-2', 'ring-red-300');
-                event.target.value = '';
-                return;
-            }
-
-            // Valid — update preview
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-                preview.classList.remove('hidden');
-                if (noText) noText.classList.add('hidden');
-            };
-            reader.readAsDataURL(file);
-        });
-
-        const form = document.getElementById('edit-aksi-form');
-
-        form.addEventListener('submit', function (e) {
-            let firstErrorEl = null;
-
-            // Reset semua error sebelumnya
-            form.querySelectorAll('.field-error').forEach(el => el.classList.add('hidden'));
-            document.getElementById('size-error').classList.add('hidden');
-            form.querySelectorAll('input, textarea').forEach(el => {
-                el.classList.remove('border-red-500', 'ring-2', 'ring-red-300');
-            });
-
-            // Validasi field required (hanya judul_aksi)
-            form.querySelectorAll('input[required]:not([type="file"]), textarea[required]').forEach(function (field) {
-                if (field.value.trim() === '') {
-                    markError(field);
-                    if (!firstErrorEl) firstErrorEl = field;
-                }
-            });
-
-            // Validasi gambar — hanya cek size jika file dipilih
-            const fileInput = document.getElementById('gambar');
-            if (fileInput.files.length > 0 && fileInput.files[0].size > 2 * 1024 * 1024) {
-                document.getElementById('size-error').classList.remove('hidden');
-                markError(fileInput);
-                if (!firstErrorEl) firstErrorEl = fileInput;
-            }
-
-            if (firstErrorEl) {
-                e.preventDefault();
-                firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
-
-        function markError(field) {
-            field.classList.add('border-red-500', 'ring-2', 'ring-red-300');
-            const errorEl = field.closest('div').querySelector('.field-error');
-            if (errorEl) errorEl.classList.remove('hidden');
-        }
-
-        // Hilangkan error saat user mengetik
-        form.querySelectorAll('input:not([type="file"]), textarea').forEach(function (field) {
-            field.addEventListener('input', function () {
-                field.classList.remove('border-red-500', 'ring-2', 'ring-red-300');
-                const errorEl = field.closest('div').querySelector('.field-error');
-                if (errorEl) errorEl.classList.add('hidden');
-            });
-        });
-
-        // Real-time character counter (inisialisasi dengan panjang nilai yang sudah ada)
-        document.querySelectorAll('.char-counter').forEach(function (counter) {
-            const targetId = counter.getAttribute('data-target');
-            const maxLen   = parseInt(counter.getAttribute('data-max'));
-            const field    = document.getElementById(targetId);
-            if (!field) return;
-
-            function updateCounter() {
-                const remaining = maxLen - field.value.length;
-                counter.textContent = remaining + ' characters remaining';
-                if (remaining === 0) {
-                    counter.style.color = '#ef4444';
-                } else if (remaining <= Math.floor(maxLen * 0.1)) {
-                    counter.style.color = '#f97316';
-                } else {
-                    counter.style.color = '#9ca3af';
-                }
-            }
-
-            field.addEventListener('input', updateCounter);
-            updateCounter(); // inisialisasi langsung dengan data yang sudah ada
-        });
-    });
-</script>
 @endsection

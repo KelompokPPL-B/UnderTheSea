@@ -16,11 +16,28 @@
         <div class="min-h-screen flex flex-col">
             @include('layouts.navigation')
 
+            {{-- Flash Messages --}}
+            @if(session('success'))
+                <div class="max-w-7xl mx-auto px-6 mt-4">
+                    <div class="alert alert-success shadow-lg">
+                        <span>{{ session('success') }}</span>
+                    </div>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="max-w-7xl mx-auto px-6 mt-4">
+                    <div class="alert alert-error shadow-lg">
+                        <span>{{ session('error') }}</span>
+                    </div>
+                </div>
+            @endif
+
             <main class="flex-grow">
                 @yield('content')
             </main>
 
             @include('layouts.footer')
         </div>
+        @stack('scripts')
     </body>
 </html>
