@@ -129,7 +129,7 @@
                         </span>
                     </div>
                     <div class="relative z-10 max-w-2xl transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                        <h2 class="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white mb-3 leading-tight drop-shadow-md">Misteri Terumbu Karang Berisiko Kritis</h2>
+                        <h2 class="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white mb-3 leading-tight drop-shadow-md"> Terumbu Karang Berisiko Kritis</h2>
                         <p class="text-gray-200 text-sm md:text-base lg:text-lg mb-6 line-clamp-2 md:line-clamp-none font-medium text-shadow-sm">
                             Ekosistem karang di wilayah tropis menghadapi ancaman pemutihan massal. Ketahui faktor penyebabnya dan langkah nyata yang bisa kita lakukan untuk menyelamatkan rumah bagi jutaan spesies laut ini.
                         </p>
