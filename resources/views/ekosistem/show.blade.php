@@ -61,27 +61,41 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-8">
         
         <!-- Quick Information Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-            <div class="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-lg border border-white flex flex-col gap-2 hover:-translate-y-1 transition-transform duration-300">
-                <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center mb-1">
-                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <!-- Location (Green) -->
+            <div class="bg-gradient-to-br from-emerald-50 to-green-50/50 p-6 rounded-[2rem] shadow-[0_8px_30px_rgb(16,185,129,0.1)] hover:shadow-[0_20px_40px_rgb(16,185,129,0.15)] border border-emerald-100/60 flex flex-col gap-3 group transform hover:-translate-y-2 transition-all duration-500 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-400/5 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-700"></div>
+                <div class="w-12 h-12 rounded-2xl bg-emerald-100/80 flex items-center justify-center mb-1 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white transition-colors shadow-sm relative z-10">
+                    <svg class="w-6 h-6 animate-[pulse_3s_ease-in-out_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 </div>
-                <span class="text-sm font-bold text-gray-500 uppercase tracking-wider">Lokasi Geografis</span>
-                <p class="text-gray-900 font-bold text-lg leading-tight">{{ $ekosistem->lokasi }}</p>
+                <div class="relative z-10">
+                    <span class="text-xs font-black text-emerald-600/80 uppercase tracking-widest mb-1 block">Lokasi Geografis</span>
+                    <p class="text-gray-900 font-bold text-xl leading-tight group-hover:text-emerald-900 transition-colors">{{ $ekosistem->lokasi }}</p>
+                </div>
             </div>
-            <div class="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-lg border border-white flex flex-col gap-2 hover:-translate-y-1 transition-transform duration-300">
-                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center mb-1">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+
+            <!-- Role (Blue) -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50/50 p-6 rounded-[2rem] shadow-[0_8px_30px_rgb(59,130,246,0.1)] hover:shadow-[0_20px_40px_rgb(59,130,246,0.15)] border border-blue-100/60 flex flex-col gap-3 group transform hover:-translate-y-2 transition-all duration-500 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-blue-400/5 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-700"></div>
+                <div class="w-12 h-12 rounded-2xl bg-blue-100/80 flex items-center justify-center mb-1 text-blue-600 group-hover:bg-blue-500 group-hover:text-white transition-colors shadow-sm relative z-10">
+                    <svg class="w-6 h-6 animate-[pulse_3s_ease-in-out_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
-                <span class="text-sm font-bold text-gray-500 uppercase tracking-wider">Peran Utama</span>
-                <p class="text-gray-900 font-bold text-lg leading-tight line-clamp-2">{{ Str::limit($ekosistem->peran, 60) }}</p>
+                <div class="relative z-10">
+                    <span class="text-xs font-black text-blue-600/80 uppercase tracking-widest mb-1 block">Peran Utama</span>
+                    <p class="text-gray-900 font-bold text-xl leading-tight line-clamp-2 group-hover:text-blue-900 transition-colors">{{ Str::limit($ekosistem->peran, 60) }}</p>
+                </div>
             </div>
-            <div class="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-lg border border-white flex flex-col gap-2 hover:-translate-y-1 transition-transform duration-300">
-                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center mb-1">
-                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+
+            <!-- Threat (Red/Orange) -->
+            <div class="bg-gradient-to-br from-red-50 to-orange-50/50 p-6 rounded-[2rem] shadow-[0_8px_30px_rgb(239,68,68,0.1)] hover:shadow-[0_20px_40px_rgb(239,68,68,0.15)] border border-red-100/60 flex flex-col gap-3 group transform hover:-translate-y-2 transition-all duration-500 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-red-400/5 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-700"></div>
+                <div class="w-12 h-12 rounded-2xl bg-red-100/80 flex items-center justify-center mb-1 text-red-600 group-hover:bg-red-500 group-hover:text-white transition-colors shadow-sm relative z-10">
+                    <svg class="w-6 h-6 animate-[pulse_3s_ease-in-out_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                 </div>
-                <span class="text-sm font-bold text-gray-500 uppercase tracking-wider">Ancaman Kritis</span>
-                <p class="text-gray-900 font-bold text-lg leading-tight line-clamp-2">{{ Str::limit($ekosistem->ancaman, 60) }}</p>
+                <div class="relative z-10">
+                    <span class="text-xs font-black text-red-600/80 uppercase tracking-widest mb-1 block">Ancaman Kritis</span>
+                    <p class="text-gray-900 font-bold text-xl leading-tight line-clamp-2 group-hover:text-red-900 transition-colors">{{ Str::limit($ekosistem->ancaman, 60) }}</p>
+                </div>
             </div>
         </div>
 
@@ -89,31 +103,39 @@
             <!-- Main Content Area -->
             <div class="lg:col-span-2 space-y-8">
                 <!-- Description Card -->
-                <div class="bg-white rounded-[2rem] p-8 md:p-10 shadow-xl border border-gray-100">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-14 h-14 rounded-full bg-ocean-50 flex items-center justify-center">
-                            <svg class="w-7 h-7 text-ocean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_8px_30px_rgb(8,145,178,0.1)] hover:shadow-[0_20px_40px_rgb(8,145,178,0.15)] border border-cyan-100 overflow-hidden relative group transform hover:-translate-y-2 transition-all duration-500">
+                    <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500"></div>
+                    <div class="flex flex-col xl:flex-row xl:items-center gap-5 mb-8">
+                        <div class="w-16 h-16 rounded-2xl bg-cyan-50 flex items-center justify-center text-cyan-600 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-500 shadow-sm shrink-0">
+                            <svg class="w-9 h-9 animate-[pulse_3s_ease-in-out_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
-                        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Tentang Ekosistem</h2>
+                        <div>
+                            <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight group-hover:text-cyan-700 transition-colors">Tentang Ekosistem</h2>
+                        </div>
                     </div>
-                    <div class="prose prose-lg text-gray-600 max-w-none">
+                    <div class="bg-gradient-to-br from-cyan-50/50 to-teal-50/30 rounded-2xl p-6 md:p-8 border border-cyan-100/50 shadow-inner prose prose-lg text-gray-700 max-w-none">
                         <p class="leading-relaxed whitespace-pre-line">{{ $ekosistem->deskripsi }}</p>
                     </div>
                 </div>
 
                 <!-- Ecological Importance -->
-                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-[2rem] p-8 md:p-10 shadow-lg border border-blue-100 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                <div class="bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_8px_30px_rgb(59,130,246,0.1)] hover:shadow-[0_20px_40px_rgb(59,130,246,0.15)] border border-blue-100 overflow-hidden relative group transform hover:-translate-y-2 transition-all duration-500">
+                    <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500"></div>
+                    <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 pointer-events-none transition-opacity duration-500">
                         <svg class="w-32 h-32 text-blue-900" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
                     </div>
                     <div class="relative z-10">
-                        <div class="flex items-center gap-4 mb-6">
-                            <div class="w-14 h-14 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-md">
-                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        <div class="flex flex-col xl:flex-row xl:items-center gap-5 mb-8">
+                            <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all duration-500 shadow-sm shrink-0">
+                                <svg class="w-9 h-9 animate-[pulse_3s_ease-in-out_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                             </div>
-                            <h2 class="text-3xl font-extrabold text-blue-900 tracking-tight">Peran Ekologis</h2>
+                            <div>
+                                <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight group-hover:text-blue-700 transition-colors">Peran Ekologis</h2>
+                            </div>
                         </div>
-                        <p class="text-blue-900/80 leading-relaxed text-lg whitespace-pre-line font-medium">{{ $ekosistem->peran }}</p>
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50/50 rounded-2xl p-6 md:p-8 border border-blue-100/60 shadow-inner">
+                            <p class="text-blue-900/90 leading-relaxed text-lg font-medium whitespace-pre-line">{{ $ekosistem->peran }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -138,17 +160,18 @@
 
                 <!-- Admin Actions -->
                 @if(auth()->check() && auth()->user()->isAdmin())
-                <div class="bg-white rounded-[2rem] p-8 shadow-lg border border-gray-100">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-5 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <div class="bg-white rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.1)] border border-gray-200 overflow-hidden relative group transform hover:-translate-y-1 transition-all duration-500">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-gray-400 to-gray-600"></div>
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         Admin Controls
                     </h3>
-                    <div class="flex flex-col gap-3">
-                        <a href="{{ route('ekosistem.edit', $ekosistem->id_ekosistem) }}" class="flex items-center justify-center gap-2 bg-amber-50 hover:bg-amber-500 text-amber-700 hover:text-white font-bold py-3.5 px-4 rounded-xl transition-all duration-300 text-center w-full border border-amber-200 hover:border-transparent shadow-sm">
+                    <div class="flex flex-col gap-4">
+                        <a href="{{ route('ekosistem.edit', $ekosistem->id_ekosistem) }}" class="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 hover:from-amber-400 hover:to-orange-500 text-amber-700 hover:text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 text-center w-full border border-amber-200 hover:border-transparent shadow-sm hover:shadow-md">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                             Edit Data
                         </a>
-                        <button class="delete-btn flex items-center justify-center gap-2 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white font-bold py-3.5 px-4 rounded-xl transition-all duration-300 text-center w-full border border-red-200 hover:border-transparent shadow-sm" data-ekosistem-id="{{ $ekosistem->id_ekosistem }}">
+                        <button class="delete-btn flex items-center justify-center gap-2 bg-gradient-to-r from-red-50 to-rose-50 hover:from-red-500 hover:to-rose-600 text-red-600 hover:text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 text-center w-full border border-red-200 hover:border-transparent shadow-sm hover:shadow-md" data-ekosistem-id="{{ $ekosistem->id_ekosistem }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                             Hapus
                         </button>
@@ -160,38 +183,42 @@
         
         <!-- Related Ecosystems Section -->
         @if($relatedEkosistems->count() > 0)
-        <div class="mb-20">
-            <div class="flex items-center justify-between mb-8">
+        <div class="mb-24 relative">
+            <div class="flex items-center gap-4 mb-10">
+                <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center shadow-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                </div>
                 <div>
                     <h3 class="text-3xl font-extrabold text-gray-900 tracking-tight">Ekosistem Terkait</h3>
-                    <p class="text-gray-500 mt-2 text-lg">Jelajahi ekosistem laut lainnya yang saling terhubung.</p>
+                    <p class="text-purple-600/80 mt-1 text-lg font-medium">Jelajahi ekosistem laut lainnya yang saling terhubung.</p>
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($relatedEkosistems as $related)
-                <a href="{{ route('ekosistem.show', $related->id_ekosistem) }}" class="group block bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                    <div class="relative h-48 overflow-hidden bg-ocean-100">
+                <a href="{{ route('ekosistem.show', $related->id_ekosistem) }}" class="group flex flex-col bg-white rounded-[2rem] overflow-hidden shadow-[0_8px_30px_rgb(147,51,234,0.08)] hover:shadow-[0_20px_40px_rgb(147,51,234,0.15)] border border-purple-100/50 transform hover:-translate-y-2 transition-all duration-500 relative">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-purple-500 to-fuchsia-500 z-20"></div>
+                    <div class="relative h-56 overflow-hidden bg-purple-50">
                         @if($related->gambar)
-                            <img src="/storage/{{ $related->gambar }}" alt="{{ $related->nama_ekosistem }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <img src="/storage/{{ $related->gambar }}" alt="{{ $related->nama_ekosistem }}" class="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-all duration-700">
                         @else
-                            <div class="w-full h-full bg-ocean-800 flex items-center justify-center">
-                                <span class="text-4xl">🌊</span>
+                            <div class="w-full h-full bg-gradient-to-br from-purple-800 to-indigo-900 flex items-center justify-center">
+                                <span class="text-5xl opacity-30">🌊</span>
                             </div>
                         @endif
-                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
-                        <span class="absolute bottom-4 left-4 bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent"></div>
+                        <span class="absolute bottom-4 left-5 bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
                             {{ $related->lokasi }}
                         </span>
                     </div>
-                    <div class="p-6">
-                        <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-ocean-600 transition-colors">{{ $related->nama_ekosistem }}</h4>
-                        <p class="text-gray-500 text-sm line-clamp-2 mb-4 leading-relaxed">{{ $related->deskripsi }}</p>
-                        <span class="text-ocean-600 font-bold text-sm inline-flex items-center group-hover:translate-x-1 transition-transform">
-                            Jelajahi 
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                        </span>
+                    <div class="p-8 flex flex-col flex-grow bg-gradient-to-b from-white to-purple-50/30">
+                        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-purple-700 transition-colors">{{ $related->nama_ekosistem }}</h4>
+                        <p class="text-gray-600 text-base line-clamp-3 mb-6 leading-relaxed flex-grow">{{ $related->deskripsi }}</p>
+                        <div class="flex items-center text-purple-600 font-bold text-sm uppercase tracking-widest group-hover:text-purple-800 transition-colors mt-auto">
+                            Eksplorasi Ekosistem
+                            <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </div>
                     </div>
                 </a>
                 @endforeach
