@@ -125,9 +125,20 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/95 via-gray-900/50 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto flex justify-between items-start">
-                        <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-red-500/90 text-white text-sm font-bold rounded-full shadow-lg backdrop-blur-md border border-red-400/50">
-                            <span class="animate-pulse">🔴</span> Critical
-                        </span>
+                        <div class="group/badge relative inline-block z-30">
+                            <span tabindex="0" class="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-red-500/90 to-rose-500/90 hover:from-red-500 hover:to-rose-500 text-white text-sm font-bold rounded-full shadow-lg backdrop-blur-md border border-red-400/50 hover:shadow-red-500/40 transition-all duration-300 cursor-help transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-400">
+                                <span class="relative flex h-2.5 w-2.5">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+                                </span>
+                                Critical
+                            </span>
+                            <div class="pointer-events-none absolute left-0 top-full mt-2 w-56 opacity-0 translate-y-1 group-hover/badge:opacity-100 group-hover/badge:translate-y-0 group-focus-within/badge:opacity-100 group-focus-within/badge:translate-y-0 transition-all duration-300 z-50">
+                                <div class="bg-gray-900/95 backdrop-blur-xl text-white text-xs p-3 rounded-xl shadow-xl border border-gray-700/50 leading-relaxed font-medium">
+                                    Ecosystem is facing severe threats and requires immediate action.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="relative z-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
@@ -144,9 +155,20 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-orange-400/50">
-                            🟠 Threatened
-                        </span>
+                        <div class="group/badge relative inline-block z-30">
+                            <span tabindex="0" class="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-orange-500/90 to-amber-500/90 hover:from-orange-500 hover:to-amber-500 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-orange-400/50 hover:shadow-orange-500/40 transition-all duration-300 cursor-help transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-orange-400">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                                </span>
+                                Threatened
+                            </span>
+                            <div class="pointer-events-none absolute left-0 top-full mt-2 w-48 md:w-56 opacity-0 translate-y-1 group-hover/badge:opacity-100 group-hover/badge:translate-y-0 group-focus-within/badge:opacity-100 group-focus-within/badge:translate-y-0 transition-all duration-300 z-50">
+                                <div class="bg-gray-900/95 backdrop-blur-xl text-white text-xs p-3 rounded-xl shadow-xl border border-gray-700/50 leading-relaxed font-medium">
+                                    Ecosystem is at risk of becoming critical if no action is taken.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="relative z-10">
                         <h4 class="text-xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-orange-300 transition-colors">Declining Mangrove Forests</h4>
@@ -162,9 +184,20 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-yellow-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-yellow-400/50">
-                            🟡 Vulnerable
-                        </span>
+                        <div class="group/badge relative inline-block z-30">
+                            <span tabindex="0" class="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-yellow-500/90 to-amber-400/90 hover:from-yellow-500 hover:to-amber-400 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-yellow-400/50 hover:shadow-yellow-500/40 transition-all duration-300 cursor-help transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                                </span>
+                                Vulnerable
+                            </span>
+                            <div class="pointer-events-none absolute left-0 top-full mt-2 w-48 md:w-56 opacity-0 translate-y-1 group-hover/badge:opacity-100 group-hover/badge:translate-y-0 group-focus-within/badge:opacity-100 group-focus-within/badge:translate-y-0 transition-all duration-300 z-50">
+                                <div class="bg-gray-900/95 backdrop-blur-xl text-white text-xs p-3 rounded-xl shadow-xl border border-gray-700/50 leading-relaxed font-medium">
+                                    Ecosystem shows signs of decline and needs continuous monitoring.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="relative z-10">
                         <h4 class="text-xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-yellow-300 transition-colors">Degraded Seagrass Meadows</h4>
@@ -180,9 +213,20 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-orange-400/50">
-                            🟠 Threatened
-                        </span>
+                        <div class="group/badge relative inline-block z-30">
+                            <span tabindex="0" class="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-orange-500/90 to-amber-500/90 hover:from-orange-500 hover:to-amber-500 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-orange-400/50 hover:shadow-orange-500/40 transition-all duration-300 cursor-help transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-orange-400">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                                </span>
+                                Threatened
+                            </span>
+                            <div class="pointer-events-none absolute left-0 top-full mt-2 w-48 md:w-56 opacity-0 translate-y-1 group-hover/badge:opacity-100 group-hover/badge:translate-y-0 group-focus-within/badge:opacity-100 group-focus-within/badge:translate-y-0 transition-all duration-300 z-50">
+                                <div class="bg-gray-900/95 backdrop-blur-xl text-white text-xs p-3 rounded-xl shadow-xl border border-gray-700/50 leading-relaxed font-medium">
+                                    Ecosystem is at risk of becoming critical if no action is taken.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="relative z-10">
                         <h4 class="text-xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-orange-300 transition-colors">Declining Sea Turtle Population</h4>
@@ -198,9 +242,20 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-red-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-red-400/50">
-                            🔴 Critical
-                        </span>
+                        <div class="group/badge relative inline-block z-30">
+                            <span tabindex="0" class="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-red-500/90 to-rose-500/90 hover:from-red-500 hover:to-rose-500 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-red-400/50 hover:shadow-red-500/40 transition-all duration-300 cursor-help transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-400">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                                </span>
+                                Critical
+                            </span>
+                            <div class="pointer-events-none absolute left-0 top-full mt-2 w-48 md:w-56 opacity-0 translate-y-1 group-hover/badge:opacity-100 group-hover/badge:translate-y-0 group-focus-within/badge:opacity-100 group-focus-within/badge:translate-y-0 transition-all duration-300 z-50">
+                                <div class="bg-gray-900/95 backdrop-blur-xl text-white text-xs p-3 rounded-xl shadow-xl border border-gray-700/50 leading-relaxed font-medium">
+                                    Ecosystem is facing severe threats and requires immediate action.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="relative z-10">
                         <h4 class="text-xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-red-300 transition-colors">Ocean Plastic Pollution</h4>
@@ -216,9 +271,20 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto flex justify-between items-start">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-red-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-red-400/50">
-                            🔴 Critical
-                        </span>
+                        <div class="group/badge relative inline-block z-30">
+                            <span tabindex="0" class="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-red-500/90 to-rose-500/90 hover:from-red-500 hover:to-rose-500 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-red-400/50 hover:shadow-red-500/40 transition-all duration-300 cursor-help transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-400">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                                </span>
+                                Critical
+                            </span>
+                            <div class="pointer-events-none absolute left-0 top-full mt-2 w-48 md:w-56 opacity-0 translate-y-1 group-hover/badge:opacity-100 group-hover/badge:translate-y-0 group-focus-within/badge:opacity-100 group-focus-within/badge:translate-y-0 transition-all duration-300 z-50">
+                                <div class="bg-gray-900/95 backdrop-blur-xl text-white text-xs p-3 rounded-xl shadow-xl border border-gray-700/50 leading-relaxed font-medium">
+                                    Ecosystem is facing severe threats and requires immediate action.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="relative z-10 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                         <h4 class="text-2xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-red-300 transition-colors">Global Ocean Warming</h4>
@@ -234,9 +300,20 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto flex justify-between items-start">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-blue-400/50">
-                            🔵 Recovering
-                        </span>
+                        <div class="group/badge relative inline-block z-30">
+                            <span tabindex="0" class="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-blue-500/90 to-cyan-500/90 hover:from-blue-500 hover:to-cyan-500 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-blue-400/50 hover:shadow-blue-500/40 transition-all duration-300 cursor-help transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                                </span>
+                                Recovering
+                            </span>
+                            <div class="pointer-events-none absolute left-0 top-full mt-2 w-48 md:w-56 opacity-0 translate-y-1 group-hover/badge:opacity-100 group-hover/badge:translate-y-0 group-focus-within/badge:opacity-100 group-focus-within/badge:translate-y-0 transition-all duration-300 z-50">
+                                <div class="bg-gray-900/95 backdrop-blur-xl text-white text-xs p-3 rounded-xl shadow-xl border border-gray-700/50 leading-relaxed font-medium">
+                                    Ecosystem is improving due to conservation and restoration efforts.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="relative z-10 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                         <h4 class="text-2xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-blue-300 transition-colors">Raja Ampat Conservation Area</h4>
