@@ -107,74 +107,145 @@
             </div>
         </div>
 
-        <!-- Featured 'Endangered' Carousel Section -->
-        <style>
-            .hide-scrollbar::-webkit-scrollbar { display: none; }
-            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        </style>
+        <!-- Conservation Spotlight Section -->
+        <div class="mb-16 relative w-full z-20">
+            <!-- Decorative background glow for spotlight -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-96 bg-gradient-to-r from-blue-400/20 to-emerald-400/20 rounded-[3rem] blur-3xl pointer-events-none"></div>
         
-        <div class="mb-16 relative w-full rounded-[2rem] z-20 group bg-slate-100/50 p-4 border border-white/50 shadow-sm">
-            <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-2">
+            <div class="text-center mb-10 relative z-10">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">Conservation <span class="text-transparent bg-clip-text bg-gradient-to-r from-ocean-600 to-emerald-500">Spotlight</span></h2>
+                <p class="text-lg text-gray-600 font-medium max-w-2xl mx-auto">Monitor marine ecosystems and critical environmental issues that need our attention.</p>
+            </div>
+        
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
                 
-                <!-- Card 1 -->
-                <div class="relative snap-start shrink-0 w-full md:w-[85%] aspect-[16/9] md:aspect-[21/9] rounded-[1.5rem] overflow-hidden shadow-lg bg-gray-900 group-hover/card:shadow-2xl transition-all flex flex-col justify-end p-8 md:p-12">
-                    <!-- Background Layers (z-0) -->
-                    <img src="https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&q=80" alt="Vulnerable Coral" class="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-overlay hover:scale-105 transition-transform duration-1000 z-0">
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0 pointer-events-none"></div>
+                <!-- Featured Card: Coral Reefs (col-span-2, row-span-2) -->
+                <div class="group relative rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl md:col-span-2 lg:col-span-2 lg:row-span-2 aspect-[4/3] lg:aspect-auto flex flex-col justify-end p-8 border border-white/40 bg-gray-900 transition-all duration-500 hover:-translate-y-2 cursor-default">
+                    <img src="https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&q=80" alt="Coral Reefs at Critical Risk" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/95 via-gray-900/50 to-transparent z-0"></div>
                     
-                    <!-- Content (z-10) -->
-                    <div class="relative z-10 mb-auto">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-red-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-red-400/50">
-                            ⚠️ Kritis
+                    <div class="relative z-10 mb-auto flex justify-between items-start">
+                        <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-red-500/90 text-white text-sm font-bold rounded-full shadow-lg backdrop-blur-md border border-red-400/50">
+                            <span class="animate-pulse">🔴</span> Critical
                         </span>
                     </div>
-                    <div class="relative z-10 max-w-2xl transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                        <h2 class="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white mb-3 leading-tight drop-shadow-md"> Terumbu Karang Berisiko Kritis</h2>
-                        <p class="text-gray-200 text-sm md:text-base lg:text-lg mb-6 line-clamp-2 md:line-clamp-none font-medium text-shadow-sm">
-                            Ekosistem karang di wilayah tropis menghadapi ancaman pemutihan massal. Ketahui faktor penyebabnya dan langkah nyata yang bisa kita lakukan untuk menyelamatkan rumah bagi jutaan spesies laut ini.
+                    
+                    <div class="relative z-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <h3 class="text-3xl lg:text-4xl font-black text-white mb-3 leading-tight drop-shadow-md">Coral Reefs at Critical Risk</h3>
+                        <p class="text-gray-200 text-base lg:text-lg mb-6 line-clamp-3 font-medium text-shadow-sm opacity-90 group-hover:opacity-100 transition-opacity">
+                            Coral bleaching caused by rising ocean temperatures threatens coral reef ecosystems and the marine species that depend on them.
                         </p>
-                        <button class="bg-teal-500 hover:bg-teal-400 text-white font-bold py-2.5 px-6 rounded-full shadow-lg hover:shadow-teal-500/50 transition-all duration-300 transform hover:-translate-y-1 text-sm md:text-base cursor-pointer focus:outline-none focus:ring-4 focus:ring-teal-500/30">
-                            Pelajari Lebih Lanjut
-                        </button>
                     </div>
                 </div>
-
-                <!-- Card 2 (Partial hint) -->
-                <div class="relative snap-start shrink-0 w-full md:w-[85%] aspect-[16/9] md:aspect-[21/9] rounded-[1.5rem] overflow-hidden shadow-lg bg-gray-900 opacity-90 hover:opacity-100 transition-opacity flex flex-col justify-end p-8 md:p-12">
-                    <img src="https://images.unsplash.com/photo-1582967788606-a171c1080cb0?auto=format&fit=crop&q=80" alt="Bleached Coral" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay hover:scale-105 transition-transform duration-1000 z-0">
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0 pointer-events-none"></div>
+        
+                <!-- Card 2: Mangrove Forests -->
+                <div class="group relative rounded-[1.5rem] overflow-hidden shadow-lg hover:shadow-xl aspect-square md:aspect-auto md:min-h-[260px] flex flex-col justify-end p-6 border border-white/40 bg-gray-900 transition-all duration-500 hover:-translate-y-2 cursor-default">
+                    <img src="https://images.unsplash.com/photo-1596395819057-cb3914a1a742?auto=format&fit=crop&q=80" alt="Declining Mangrove Forests" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto">
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-orange-400/50">
-                            📉 Terancam
+                            🟠 Threatened
                         </span>
                     </div>
-                    <div class="relative z-10 max-w-2xl transform translate-y-2 hover:translate-y-0 transition-transform duration-500">
-                        <h2 class="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white mb-3 leading-tight drop-shadow-md">Pemutihan Karang Global</h2>
-                        <p class="text-gray-200 text-sm md:text-base lg:text-lg mb-6 line-clamp-2 md:line-clamp-none font-medium">
-                            Suhu laut yang meningkat drastis memicu stres pada alga simbiotik. Dampaknya meluas ke seluruh rantai makanan laut.
+                    <div class="relative z-10">
+                        <h4 class="text-xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-orange-300 transition-colors">Declining Mangrove Forests</h4>
+                        <p class="text-gray-300 text-sm line-clamp-3 font-medium opacity-0 group-hover:opacity-100 h-0 group-hover:h-auto group-hover:mt-2 transition-all duration-500 overflow-hidden">
+                            Land conversion and illegal logging continue to reduce mangrove coverage, increasing coastal vulnerability.
                         </p>
-                        <button class="bg-teal-500 hover:bg-teal-400 text-white font-bold py-2.5 px-6 rounded-full shadow-lg transition-all duration-300 text-sm md:text-base cursor-pointer focus:outline-none focus:ring-4 focus:ring-teal-500/30">
-                            Baca Laporan
-                        </button>
                     </div>
                 </div>
-
-            </div>
-
-            <!-- Carousel Navigation (Circular Arrows) -->
-            <button class="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30 transition-all z-30 opacity-0 group-hover:opacity-100 hidden md:flex hover:scale-110 cursor-pointer focus:outline-none shadow-xl">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-            </button>
-            <button class="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30 transition-all z-30 opacity-0 group-hover:opacity-100 hidden md:flex hover:scale-110 cursor-pointer focus:outline-none shadow-xl">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </button>
-
-            <!-- Pagination Dots -->
-            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2.5 z-30">
-                <div class="w-2.5 h-2.5 rounded-full bg-white shadow-sm transition-all hover:scale-125 cursor-pointer"></div>
-                <div class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white/70 transition-all hover:scale-125 cursor-pointer"></div>
-                <div class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white/70 transition-all hover:scale-125 cursor-pointer"></div>
+        
+                <!-- Card 3: Seagrass Degradation -->
+                <div class="group relative rounded-[1.5rem] overflow-hidden shadow-lg hover:shadow-xl aspect-square md:aspect-auto md:min-h-[260px] flex flex-col justify-end p-6 border border-white/40 bg-gray-900 transition-all duration-500 hover:-translate-y-2 cursor-default">
+                    <img src="https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?auto=format&fit=crop&q=80" alt="Degraded Seagrass Meadows" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
+                    
+                    <div class="relative z-10 mb-auto">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-yellow-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-yellow-400/50">
+                            🟡 Vulnerable
+                        </span>
+                    </div>
+                    <div class="relative z-10">
+                        <h4 class="text-xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-yellow-300 transition-colors">Degraded Seagrass Meadows</h4>
+                        <p class="text-gray-300 text-sm line-clamp-3 font-medium opacity-0 group-hover:opacity-100 h-0 group-hover:h-auto group-hover:mt-2 transition-all duration-500 overflow-hidden">
+                            Pollution and human activities are damaging seagrass habitats that support dugongs and sea turtles.
+                        </p>
+                    </div>
+                </div>
+        
+                <!-- Card 4: Sea Turtle -->
+                <div class="group relative rounded-[1.5rem] overflow-hidden shadow-lg hover:shadow-xl aspect-square md:aspect-auto md:min-h-[260px] flex flex-col justify-end p-6 border border-white/40 bg-gray-900 transition-all duration-500 hover:-translate-y-2 cursor-default">
+                    <img src="https://images.unsplash.com/photo-1437622368375-d23158e5f8f4?auto=format&fit=crop&q=80" alt="Declining Sea Turtle Population" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
+                    
+                    <div class="relative z-10 mb-auto">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-orange-400/50">
+                            🟠 Threatened
+                        </span>
+                    </div>
+                    <div class="relative z-10">
+                        <h4 class="text-xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-orange-300 transition-colors">Declining Sea Turtle Population</h4>
+                        <p class="text-gray-300 text-sm line-clamp-3 font-medium opacity-0 group-hover:opacity-100 h-0 group-hover:h-auto group-hover:mt-2 transition-all duration-500 overflow-hidden">
+                            Habitat destruction, plastic waste, and egg poaching contribute to decreasing sea turtle populations.
+                        </p>
+                    </div>
+                </div>
+        
+                <!-- Card 5: Ocean Plastic Pollution -->
+                <div class="group relative rounded-[1.5rem] overflow-hidden shadow-lg hover:shadow-xl aspect-square md:aspect-auto md:min-h-[260px] flex flex-col justify-end p-6 border border-white/40 bg-gray-900 transition-all duration-500 hover:-translate-y-2 cursor-default">
+                    <img src="https://images.unsplash.com/photo-1621451537084-4813088d8b13?auto=format&fit=crop&q=80" alt="Ocean Plastic Pollution" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
+                    
+                    <div class="relative z-10 mb-auto">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-red-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-red-400/50">
+                            🔴 Critical
+                        </span>
+                    </div>
+                    <div class="relative z-10">
+                        <h4 class="text-xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-red-300 transition-colors">Ocean Plastic Pollution</h4>
+                        <p class="text-gray-300 text-sm line-clamp-3 font-medium opacity-0 group-hover:opacity-100 h-0 group-hover:h-auto group-hover:mt-2 transition-all duration-500 overflow-hidden">
+                            Plastic waste threatens marine life and disrupts ecosystem balance across the oceans.
+                        </p>
+                    </div>
+                </div>
+        
+                <!-- Card 6: Global Ocean Warming (col-span-2) -->
+                <div class="group relative rounded-[1.5rem] overflow-hidden shadow-lg hover:shadow-xl aspect-[2/1] md:aspect-auto md:col-span-2 lg:col-span-2 md:min-h-[260px] flex flex-col justify-end p-6 md:p-8 border border-white/40 bg-gray-900 transition-all duration-500 hover:-translate-y-2 cursor-default">
+                    <img src="https://images.unsplash.com/photo-1582967788606-a171c1080cb0?auto=format&fit=crop&q=80" alt="Global Ocean Warming" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
+                    
+                    <div class="relative z-10 mb-auto flex justify-between items-start">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-red-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-red-400/50">
+                            🔴 Critical
+                        </span>
+                    </div>
+                    <div class="relative z-10 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                        <h4 class="text-2xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-red-300 transition-colors">Global Ocean Warming</h4>
+                        <p class="text-gray-300 text-sm md:text-base font-medium line-clamp-2 opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                            Rising sea temperatures affect marine biodiversity, migration patterns, and food chains.
+                        </p>
+                    </div>
+                </div>
+        
+                <!-- Card 7: Raja Ampat Conservation Area (col-span-2) -->
+                <div class="group relative rounded-[1.5rem] overflow-hidden shadow-lg hover:shadow-xl aspect-[2/1] md:aspect-auto md:col-span-2 lg:col-span-2 md:min-h-[260px] flex flex-col justify-end p-6 md:p-8 border border-white/40 bg-gray-900 transition-all duration-500 hover:-translate-y-2 cursor-default">
+                    <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&q=80" alt="Raja Ampat Conservation Area" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
+                    
+                    <div class="relative z-10 mb-auto flex justify-between items-start">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-500/90 text-white text-xs font-bold rounded-full shadow-sm backdrop-blur-md border border-blue-400/50">
+                            🔵 Recovering
+                        </span>
+                    </div>
+                    <div class="relative z-10 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                        <h4 class="text-2xl font-bold text-white mb-2 leading-snug drop-shadow-md group-hover:text-blue-300 transition-colors">Raja Ampat Conservation Area</h4>
+                        <p class="text-gray-300 text-sm md:text-base font-medium line-clamp-2 opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                            Conservation efforts have helped restore coral reef health and marine biodiversity in several areas.
+                        </p>
+                    </div>
+                </div>
+                
             </div>
         </div>
 
