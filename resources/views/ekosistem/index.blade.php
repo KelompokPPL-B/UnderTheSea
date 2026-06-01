@@ -140,7 +140,7 @@
         
                 <!-- Card 2: Mangrove Forests -->
                 <div class="group relative rounded-[1.5rem] overflow-hidden shadow-lg hover:shadow-xl aspect-square md:aspect-auto md:min-h-[260px] flex flex-col justify-end p-6 border border-white/40 bg-gray-900 transition-all duration-500 hover:-translate-y-2 cursor-default">
-                    <img src="https://images.unsplash.com/photo-1596395819057-cb3914a1a742?auto=format&fit=crop&q=80" alt="Declining Mangrove Forests" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
+                    <img src="{{ asset('images/conservation/mangrove.png') }}" alt="Declining Mangrove Forests" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto">
@@ -158,7 +158,7 @@
         
                 <!-- Card 3: Seagrass Degradation -->
                 <div class="group relative rounded-[1.5rem] overflow-hidden shadow-lg hover:shadow-xl aspect-square md:aspect-auto md:min-h-[260px] flex flex-col justify-end p-6 border border-white/40 bg-gray-900 transition-all duration-500 hover:-translate-y-2 cursor-default">
-                    <img src="https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?auto=format&fit=crop&q=80" alt="Degraded Seagrass Meadows" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
+                    <img src="{{ asset('images/conservation/seagrass.png') }}" alt="Degraded Seagrass Meadows" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto">
@@ -176,7 +176,7 @@
         
                 <!-- Card 4: Sea Turtle -->
                 <div class="group relative rounded-[1.5rem] overflow-hidden shadow-lg hover:shadow-xl aspect-square md:aspect-auto md:min-h-[260px] flex flex-col justify-end p-6 border border-white/40 bg-gray-900 transition-all duration-500 hover:-translate-y-2 cursor-default">
-                    <img src="https://images.unsplash.com/photo-1437622368375-d23158e5f8f4?auto=format&fit=crop&q=80" alt="Declining Sea Turtle Population" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
+                    <img src="{{ asset('images/conservation/turtle.png') }}" alt="Declining Sea Turtle Population" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto">
@@ -194,7 +194,7 @@
         
                 <!-- Card 5: Ocean Plastic Pollution -->
                 <div class="group relative rounded-[1.5rem] overflow-hidden shadow-lg hover:shadow-xl aspect-square md:aspect-auto md:min-h-[260px] flex flex-col justify-end p-6 border border-white/40 bg-gray-900 transition-all duration-500 hover:-translate-y-2 cursor-default">
-                    <img src="https://images.unsplash.com/photo-1621451537084-4813088d8b13?auto=format&fit=crop&q=80" alt="Ocean Plastic Pollution" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
+                    <img src="{{ asset('images/conservation/plastic.png') }}" alt="Ocean Plastic Pollution" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700 z-0">
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-0"></div>
                     
                     <div class="relative z-10 mb-auto">
