@@ -121,16 +121,18 @@
             <!-- Sidebar -->
             <div class="space-y-6">
                 <!-- Threats Card -->
-                <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-red-100 overflow-hidden relative group">
-                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 to-rose-500"></div>
-                    <div class="flex flex-col gap-4 mb-6">
-                        <div class="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 group-hover:scale-110 group-hover:bg-red-500 group-hover:text-white transition-all duration-300">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <div class="bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_8px_30px_rgb(239,68,68,0.1)] hover:shadow-[0_20px_40px_rgb(239,68,68,0.2)] border border-red-100 overflow-hidden relative group transform hover:-translate-y-2 transition-all duration-500">
+                    <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-red-500 via-rose-500 to-orange-500"></div>
+                    <div class="flex flex-col xl:flex-row xl:items-center gap-5 mb-8">
+                        <div class="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 group-hover:scale-110 group-hover:bg-red-500 group-hover:text-white transition-all duration-500 shadow-sm shrink-0">
+                            <svg class="w-9 h-9 animate-[pulse_3s_ease-in-out_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         </div>
-                        <h2 class="text-2xl font-bold text-gray-900">Ancaman & Tantangan</h2>
+                        <div>
+                            <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight group-hover:text-red-700 transition-colors">Ancaman & Tantangan</h2>
+                        </div>
                     </div>
-                    <div class="bg-red-50/80 rounded-2xl p-6 border border-red-100">
-                        <p class="text-red-900 leading-relaxed font-medium whitespace-pre-line">{{ $ekosistem->ancaman }}</p>
+                    <div class="bg-gradient-to-br from-red-50 to-orange-50/50 rounded-2xl p-6 md:p-8 border border-red-100/60 shadow-inner">
+                        <p class="text-red-900/90 leading-relaxed text-lg font-medium whitespace-pre-line">{{ $ekosistem->ancaman }}</p>
                     </div>
                 </div>
 
