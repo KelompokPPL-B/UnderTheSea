@@ -87,11 +87,16 @@ class EkosistemController extends Controller
     {
         $ekosistem = Ekosistem::findOrFail($id);
 
+        $relatedEkosistems = Ekosistem::where('id_ekosistem', '!=', $id)
+            ->inRandomOrder()
+            ->take(3)
+            ->get();
+
         if (auth()->check()) {
             $this->pointsService->awardPoints(auth()->id(), 'ekosistem', $id);
         }
 
-        return view('ekosistem.show', compact('ekosistem'));
+        return view('ekosistem.show', compact('ekosistem', 'relatedEkosistems'));
     }
 
     /**
