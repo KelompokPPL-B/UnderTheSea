@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AksiPelestarian extends Model
 {
@@ -16,44 +14,42 @@ class AksiPelestarian extends Model
         'deskripsi',
         'manfaat',
         'cara_melakukan',
+        'gambar',
+        'created_by',
+        'is_user_generated',
         'lokasi',
         'tanggal_kegiatan',
         'tujuan_konservasi',
         'isu_lingkungan',
         'volunteer_dibutuhkan',
-        'dampak_aksi',
-        'gambar',
-        'created_by',
-        'is_user_generated',
+        'dampak_aksi'
     ];
 
     protected $casts = [
-        'is_user_generated'   => 'boolean',
-        'tanggal_kegiatan'    => 'date',
-        'volunteer_dibutuhkan' => 'integer',
+        'tanggal_kegiatan' => 'date',
+        'is_user_generated' => 'boolean'
     ];
 
-    public function createdBy(): BelongsTo
+    public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function likes(): HasMany
+    public function likes()
     {
         return $this->hasMany(Like::class, 'action_id', 'id_aksi');
     }
 
-    /**
-     * =====================================================
-     * ===== MARK ACTION SECTION (PBI-26) =====
-     * =====================================================
-     * Relasi ke model AksiTandai (Satu aksi bisa ditandai banyak session/user)
-     */
-    public function tandai(): HasMany
+    public function tandai()
     {
-        // Parameter 1: Class target (AksiTandai)
-        // Parameter 2: Foreign key di tabel aksi_tandai (aksi_id)
-        // Parameter 3: Local key di tabel aksi_pelestarian (id_aksi)
         return $this->hasMany(AksiTandai::class, 'aksi_id', 'id_aksi');
+    }
+
+    /**
+     * Relasi ke feedback ulasan aksi pelestarian (Grace Magaretha Sirait)
+     */
+    public function feedback()
+    {
+        return $this->hasMany(AksiFeedback::class, 'aksi_id', 'id_aksi')->orderBy('created_at', 'desc');
     }
 }

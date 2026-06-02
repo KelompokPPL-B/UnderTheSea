@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AksiPelestarian;
 use App\Models\AksiTandai;
+use App\Models\AksiFeedback;
 use App\Services\PointsService;
 use App\Services\SanitizationService;
 use Illuminate\Http\Request;
@@ -19,9 +20,6 @@ class AksiController extends Controller
 
     /**
      * Owner: Mutiara
-     * PBI-13: Manage Action Content
-     * PBI-19: Pagination UI
-     * PBI-21: Sort Options
      */
     public function index(Request $request)
     {
@@ -42,7 +40,6 @@ class AksiController extends Controller
 
     /**
      * Owner: Mutiara
-     * PBI-15: Form Validation UI
      */
     public function create()
     {
@@ -50,12 +47,11 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Mutiara
-     * PBI-13: Manage Action Content
+     * Owner: Mutiara / Diperbarui oleh Grace
      */
     public function show($id)
     {
-        $aksi = AksiPelestarian::findOrFail($id);
+        $aksi = AksiPelestarian::with('feedback')->findOrFail($id);
 
         if (auth()->check()) {
             $this->pointsService->awardPoints(auth()->id(), 'aksi', $id);
@@ -66,7 +62,6 @@ class AksiController extends Controller
 
     /**
      * Owner: Mutiara
-     * PBI-15: Form Validation UI
      */
     public function edit($id)
     {
@@ -81,8 +76,6 @@ class AksiController extends Controller
 
     /**
      * Owner: Mutiara
-     * PBI-14: User Contribution + Award Points
-     * PBI-18: Input Sanitization & Escaping
      */
     public function store(Request $request)
     {
@@ -119,8 +112,6 @@ class AksiController extends Controller
 
     /**
      * Owner: Mutiara
-     * PBI-13: Manage Action Content
-     * PBI-18: Input Sanitization & Escaping
      */
     public function update(Request $request, $id)
     {
@@ -158,7 +149,6 @@ class AksiController extends Controller
 
     /**
      * Owner: Mutiara
-     * PBI-13: Manage Action Content
      */
     public function destroy($id)
     {
@@ -179,7 +169,7 @@ class AksiController extends Controller
 
     /**
      * Owner: Grace Magaretha Sirait
-     * PBI-26: Mark Completed Action
+     * PBI-26: Menandai aksi pelestarian selesai (Fitur awal dipertahankan penuh)
      */
     public function tandai(Request $request, $id)
     {
@@ -198,8 +188,7 @@ class AksiController extends Controller
             ->exists();
 
         if ($sudahTandai) {
-            return redirect()->route('aksi.show', $id)
-                ->with('tandai_info', 'You have already marked this action before.');
+            return redirect()->route('aksi.show', $id);
         }
 
         AksiTandai::create([
@@ -211,40 +200,75 @@ class AksiController extends Controller
         session()->put("tandai_aksi_{$id}", true);
         session()->put("tandai_aksi_{$id}_nama", $validated['nama_peserta']);
 
-        return redirect()->route('aksi.show', $id)
-            ->with('tandai_success', 'Action successfully marked! Your progress has been recorded.');
+        return redirect()->route('aksi.show', $id);
     }
 
     /**
      * Owner: Grace Magaretha Sirait
-     * PBI-26: Mark Completed Action
+     * PBI-26: Membatalkan penandaan aksi (Hanya dipanggil sistem jika perlu, tombol di UI dihapus)
      */
     public function batalTandai($id)
     {
         AksiPelestarian::findOrFail($id);
-
         $sessionId = session()->getId();
 
-        AksiTandai::where('aksi_id', $id)
-            ->where('session_id', $sessionId)
-            ->delete();
+        AksiTandai::where('aksi_id', $id)->where('session_id', $sessionId)->delete();
+        AksiFeedback::where('aksi_id', $id)->where('session_id', $sessionId)->delete();
 
         session()->forget("tandai_aksi_{$id}");
         session()->forget("tandai_aksi_{$id}_nama");
 
-        return redirect()->route('aksi.show', $id)
-            ->with('tandai_info', 'Your action mark has been removed.');
+        return redirect()->route('aksi.show', $id);
     }
 
     /**
      * Owner: Grace Magaretha Sirait
-     * PBI-27: View Action History
-     * Sort berdasarkan tanggal_kegiatan aksi (awal/akhir selesai dilaksanakan)
+     * PBI-26: Menyimpan ulasan feedback dari peserta yang telah menandai aksi
+     */
+    public function storeFeedback(Request $request, $id)
+    {
+        AksiPelestarian::findOrFail($id);
+        $sessionId = session()->getId();
+
+        $sudahTandai = AksiTandai::where('aksi_id', $id)
+            ->where('session_id', $sessionId)
+            ->exists();
+
+        if (!$sudahTandai) {
+            return redirect()->route('aksi.show', $id);
+        }
+
+        $validated = $request->validate([
+            'nama_peserta' => 'required|string|max:100',
+            'komentar'     => 'required|string|max:2000',
+        ]);
+
+        $validated['komentar'] = SanitizationService::sanitize($validated['komentar']);
+
+        $sudahFeedback = AksiFeedback::where('aksi_id', $id)
+            ->where('session_id', $sessionId)
+            ->exists();
+
+        if ($sudahFeedback) {
+            return redirect()->route('aksi.show', $id);
+        }
+
+        AksiFeedback::create([
+            'aksi_id'      => $id,
+            'nama_peserta' => $validated['nama_peserta'],
+            'komentar'     => $validated['komentar'],
+            'session_id'   => $sessionId,
+        ]);
+
+        return redirect()->route('aksi.show', $id);
+    }
+
+    /**
+     * Owner: Grace Magaretha Sirait
      */
     public function riwayat(Request $request)
     {
         $sessionId = session()->getId();
-        // Menggunakan default 'newest_event' (Aksi yang paling baru selesai)
         $sort      = $request->query('sort', 'newest_event');
 
         $query = AksiTandai::with('aksi')
@@ -253,15 +277,33 @@ class AksiController extends Controller
             ->select('aksi_tandai.*');
 
         if ($sort === 'oldest_event') {
-            // Mengurutkan dari aksi yang duluan / paling awal selesai dilaksanakan
             $query->orderByRaw('COALESCE(aksi_pelestarian.tanggal_kegiatan, "9999-12-31") ASC');
         } else {
-            // Mengurutkan dari aksi yang paling baru / akhir-akhir ini selesai dilaksanakan
             $query->orderByRaw('COALESCE(aksi_pelestarian.tanggal_kegiatan, "1000-01-01") DESC');
         }
 
         $riwayat = $query->paginate(10);
 
         return view('aksi.riwayat', compact('riwayat', 'sort'));
+    }
+
+    /**
+     * Owner: Grace Magaretha Sirait
+     */
+    public function clearRiwayat()
+    {
+        $sessionId = session()->getId();
+
+        $aksiIds = AksiTandai::where('session_id', $sessionId)->pluck('aksi_id');
+
+        AksiTandai::where('session_id', $sessionId)->delete();
+        AksiFeedback::where('session_id', $sessionId)->delete();
+
+        foreach ($aksiIds as $aksiId) {
+            session()->forget("tandai_aksi_{$aksiId}");
+            session()->forget("tandai_aksi_{$aksiId}_nama");
+        }
+
+        return redirect()->route('aksi.riwayat');
     }
 }

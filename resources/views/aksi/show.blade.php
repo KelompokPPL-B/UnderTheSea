@@ -151,9 +151,7 @@
                 </div>
 
                 {{-- ============================================================ --}}
-                {{-- MARK ACTION SECTION (PBI-26)                                 --}}
-                {{-- Hanya tampil untuk GUEST (belum login)                       --}}
-                {{-- Kalau sudah login (admin) = DISEMBUNYIKAN                    --}}
+                {{-- DYNAMIC MARK AS DONE & FEEDBACK FORM SECTION (Grace - PBI-26)--}}
                 {{-- ============================================================ --}}
                 @guest
                 @php
@@ -170,11 +168,10 @@
                         }
                     }
                     $totalTandai = $aksi->tandai()->count();
+                    $sudahFeedback = $aksi->feedback()->where('session_id', session()->getId())->exists();
                 @endphp
 
                 <div class="animate-fade rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
-
-                    {{-- Header --}}
                     <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <span class="text-lg">🌿</span>
@@ -186,50 +183,60 @@
                         </div>
                     </div>
 
-                    <div class="p-6 bg-white">
-
-                        {{-- Flash: success --}}
-                        @if(session('tandai_success'))
-                            <div class="mb-5 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium bg-green-50 border border-green-200 text-green-800">
-                                <span class="shrink-0 text-base">✅</span>
-                                {{ session('tandai_success') }}
-                            </div>
-                        @endif
-
-                        {{-- Flash: info --}}
-                        @if(session('tandai_info'))
-                            <div class="mb-5 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium bg-blue-50 border border-blue-200 text-blue-800">
-                                <span class="shrink-0 text-base">ℹ️</span>
-                                {{ session('tandai_info') }}
-                            </div>
-                        @endif
-
-                        {{-- Validation error --}}
-                        @if($errors->has('nama_peserta'))
-                            <div class="mb-5 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium bg-red-50 border border-red-200 text-red-800">
-                                <span class="shrink-0 text-base">⚠️</span>
-                                {{ $errors->first('nama_peserta') }}
+                    <div class="p-6 bg-white space-y-6">
+                        @if($errors->any())
+                            <div class="flex flex-col gap-1 rounded-xl px-4 py-3 text-sm font-medium bg-red-50 border border-red-200 text-red-800">
+                                @foreach($errors->all() as $error)
+                                    <p>⚠️ {{ $error }}</p>
+                                @endforeach
                             </div>
                         @endif
 
                         @if($sudahTandai)
-                            {{-- STATE: Sudah ditandai --}}
-                            <div class="flex items-center gap-4">
-                                <div class="w-11 h-11 rounded-full bg-green-100 border-2 border-green-300 flex items-center justify-center text-xl shrink-0">
-                                    ✅
-                                </div>
-                                <div>
-                                    <p class="font-bold text-gray-900 text-sm">You've marked this action!</p>
-                                    @if($namaTandai)
-                                        <p class="text-gray-600 text-xs mt-0.5">
-                                            Recorded as <span class="font-semibold text-ocean-700">{{ $namaTandai }}</span>
-                                        </p>
-                                    @endif
-                                    <p class="text-gray-500 text-xs mt-0.5">Your contribution has been saved 🌊</p>
-                                </div>
+                            {{-- Teks Status Sukses Penandaan Awal --}}
+                            <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl">
+                                <p class="text-sm font-semibold text-blue-900 flex items-center gap-1.5">
+                                    ✅ You've marked this action!
+                                </p>
+                                <p class="text-xs text-blue-700 mt-1 font-medium">
+                                    Recorded as <span class="font-bold">{{ $namaTandai }}</span>
+                                </p>
                             </div>
+
+                            {{-- FORM INPUT ULASAN / FEEDBACK --}}
+                            @if(!$sudahFeedback)
+                                <div class="animate-fade pt-2">
+                                    <form action="{{ route('aksi.feedback.store', $aksi->id_aksi) }}" method="POST" class="space-y-4">
+                                        @csrf
+                                        
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-600 mb-1">Name</label>
+                                            <input type="text" name="nama_peserta" value="{{ $namaTandai }}" readonly
+                                                   class="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-100 text-sm text-gray-500 font-medium cursor-not-allowed outline-none">
+                                        </div>
+
+                                        <div>
+                                            <div class="flex justify-between items-center mb-1">
+                                                <label for="komentar" class="block text-xs font-semibold text-gray-700">
+                                                    Your Feedback
+                                                </label>
+                                                {{-- Live Character Counter Indicator --}}
+                                                <span id="charCount" class="text-[11px] text-gray-400 font-mono">0 / 2000</span>
+                                            </div>
+                                            <textarea id="komentar" name="komentar" rows="3" required maxlength="2000"
+                                                      placeholder="Write your review or share tips here..."
+                                                      class="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-sm text-gray-800 transition focus:outline-none focus:ring-2 focus:ring-ocean-200 focus:border-ocean-400"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="w-full btn btn-primary btn-sm rounded-xl py-2.5 text-xs font-bold shadow-md">
+                                            Submit Feedback
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
+
                         @else
-                            {{-- STATE: Belum ditandai --}}
+                            {{-- Fitur Awal Menandai Selesai --}}
                             <p class="text-gray-600 text-sm mb-4">
                                 Already done this action? Mark it to record your contribution!
                             </p>
@@ -271,10 +278,9 @@
                     </div>
                 </div>
                 @endguest
-                {{-- END MARK ACTION SECTION --}}
 
 
-                {{-- Like Section --}}
+                {{-- Like Module Support --}}
                 @auth
                     <div class="bg-gradient-to-r from-ocean-50 to-eco-50 p-6 rounded-xl border border-ocean-200 animate-fade">
                         <div class="flex items-center justify-between">
@@ -305,7 +311,71 @@
                     </div>
                 @endauth
 
-                {{-- Action Buttons --}}
+
+                {{-- ======================================================================= --}}
+                {{-- SECTION KOMENTAR MEDIA SOSIAL (Perfect Circle Avatar & Center Aligned)   --}}
+                {{-- ======================================================================= --}}
+                <div class="border-t border-ocean-100 pt-8 animate-fade">
+                    
+                    {{-- Judul Utama Komentar --}}
+                    <h3 class="text-lg font-bold text-ocean-900 flex items-center gap-2 mb-6">
+                        💬 What People Say
+                    </h3>
+
+                    @if($aksi->feedback->isEmpty())
+                        <div class="bg-gray-50 rounded-xl p-8 text-center border border-dashed border-gray-200">
+                            <span class="text-2xl mb-2 inline-block">🌊</span>
+                            <p class="text-gray-400 text-xs font-medium">No feedback from participants yet.</p>
+                        </div>
+                    @else
+                        {{-- Container Kolom List Komentar --}}
+                        <div class="space-y-5 max-h-[500px] overflow-y-auto pr-2">
+                            @foreach($aksi->feedback as $review)
+                                {{-- items-center: Menghandle avatar berada tepat di tengah-tengah tinggi kolom komentar --}}
+                                <div class="flex items-center gap-4 text-sm animate-fade">
+                                    
+                                    {{-- FIX AVATAR: Diperbesar (w-12 h-12), Lingkaran Sempurna (rounded-full aspect-square), dan teks membesar --}}
+                                    <div class="w-12 h-12 rounded-full aspect-square bg-blue-100 flex items-center justify-center text-blue-700 text-base font-bold shrink-0 shadow-sm border border-gray-100">
+                                        {{ strtoupper(substr($review->nama_peserta, 0, 1)) }}
+                                    </div>
+                                    
+                                    {{-- Box Bubble Chat Utama --}}
+                                    <div class="flex-1 bg-gray-50 rounded-2xl px-5 py-4 border border-gray-100 shadow-sm">
+                                        
+                                        {{-- Header di dalam Bubble: Nama User + (Waktu & Total Feedback Sejajar Horizontal) --}}
+                                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2 mb-2 border-b border-gray-200/60">
+                                            
+                                            {{-- Nama Pembuat Feedback --}}
+                                            <span class="font-bold text-gray-900 text-sm">
+                                                {{ $review->nama_peserta }}
+                                            </span>
+                                            
+                                            {{-- Kontainer Waktu Lama & Jumlah Feedback Sejajar Horizontal --}}
+                                            <div class="flex items-center gap-2 text-xs">
+                                                <span class="text-gray-400 font-medium">
+                                                    {{ $review->created_at->diffForHumans() }}
+                                                </span>
+                                                <span class="text-gray-300">•</span>
+                                                <span class="px-2 py-0.5 bg-gray-200 text-gray-600 rounded text-[11px] font-semibold tracking-wide shadow-sm">
+                                                    {{ $aksi->feedback->count() }} feedback
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {{-- Isi Konten Chat --}}
+                                        <p class="text-gray-700 leading-relaxed text-sm">
+                                            {{ $review->komentar }}
+                                        </p>
+                                    </div>
+
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+
+                {{-- Action Panel Footer --}}
                 <div class="flex flex-wrap gap-3 pt-4 border-t border-ocean-100">
                     <a href="{{ route('aksi.index') }}" class="btn btn-outline btn-sm">← Back to Actions</a>
 
@@ -329,8 +399,8 @@
                     @endif
                 </div>
 
-            </div>{{-- end p-8 --}}
-        </div>{{-- end card --}}
+            </div>
+        </div>
     </div>
 </div>
 
@@ -356,14 +426,37 @@
 
     document.addEventListener('DOMContentLoaded', function () {
 
-        // Share
+        // Live Character Counter & Strictly Limit 2000 keystrokes
+        const textarea = document.getElementById('komentar');
+        const counter  = document.getElementById('charCount');
+        
+        if (textarea && counter) {
+            textarea.addEventListener('input', function () {
+                let currentLength = this.value.length;
+                
+                if (currentLength > 2000) {
+                    this.value = this.value.substring(0, 2000);
+                    currentLength = 2000;
+                }
+                
+                counter.textContent = `${currentLength} / 2000`;
+                
+                if (currentLength >= 1950) {
+                    counter.classList.add('text-red-500');
+                } else {
+                    counter.classList.remove('text-red-500');
+                }
+            });
+        }
+
+        // Handle Share URL Link
         document.querySelector('.share-btn')?.addEventListener('click', function () {
             navigator.clipboard.writeText(this.dataset.url)
                 .then(() => showNotification('Link copied to clipboard!', 'success'))
                 .catch(() => showNotification('Failed to copy link.', 'error'));
         });
 
-        // Delete
+        // Handle Action Destruction
         document.querySelector('.delete-btn')?.addEventListener('click', function () {
             if (!confirm('Are you sure you want to delete this action? This cannot be undone.')) return;
             const actionId = this.dataset.actionId;
@@ -377,7 +470,7 @@
             .then(data => {
                 if (data.status === 'success') {
                     showNotification('Action deleted successfully.', 'success');
-                    setTimeout(() => window.location.href = '{{ route('aksi.index') }}', 1500);
+                    setTimeout(() => window.location.href = '{{ route("aksi.index") }}', 1500);
                 } else {
                     showNotification(data.message || 'Delete failed.', 'error');
                     this.disabled = false;
@@ -389,7 +482,7 @@
             });
         });
 
-        // Like
+        // Like Integration System
         const likeBtn = document.querySelector('.like-btn');
         if (likeBtn) {
             const actionId = likeBtn.dataset.actionId;

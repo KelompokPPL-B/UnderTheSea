@@ -32,29 +32,26 @@ Route::post('/ekosistem', [EkosistemController::class, 'store'])->middleware('au
 Route::put('/ekosistem/{id}', [EkosistemController::class, 'update'])->middleware('auth')->name('ekosistem.update');
 Route::delete('/ekosistem/{id}', [EkosistemController::class, 'destroy'])->middleware('auth')->name('ekosistem.destroy');
 
-// --- KELOMPOK RUTE AKSI PELESTARIAN ---
+// --- KELOMPOK RUTE AKSI PELESTARIAN & FEEDBACK (Grace Magaretha Sirait) ---
 Route::get('/aksi', [AksiController::class, 'index'])->name('aksi.index');
 Route::get('/aksi/create', [AksiController::class, 'create'])->middleware('auth')->name('aksi.create');
-
-// ⚠️ PENTING: rute static harus di atas rute dynamic {id}
-// Riwayat bisa diakses tanpa login (pakai session)
 Route::get('/aksi/riwayat/saya', [AksiController::class, 'riwayat'])->name('aksi.riwayat');
-
+Route::delete('/aksi/riwayat/saya/clear', [AksiController::class, 'clearRiwayat'])->name('aksi.riwayat.clear');
 Route::get('/aksi/{id}', [AksiController::class, 'show'])->name('aksi.show');
 Route::get('/aksi/{id}/edit', [AksiController::class, 'edit'])->middleware('auth')->name('aksi.edit');
 Route::post('/aksi', [AksiController::class, 'store'])->middleware('auth')->name('aksi.store');
 Route::put('/aksi/{id}', [AksiController::class, 'update'])->middleware('auth')->name('aksi.update');
 Route::delete('/aksi/{id}', [AksiController::class, 'destroy'])->middleware('auth')->name('aksi.destroy');
 
-// Fitur Penandaan Aksi (Grace - PBI-26) — tanpa middleware auth karena pakai session
+// Route Penandaan Aksi & Ulasan Feedback (PBI-26)
 Route::post('/aksi/{id}/tandai', [AksiController::class, 'tandai'])->name('aksi.tandai');
 Route::delete('/aksi/{id}/tandai', [AksiController::class, 'batalTandai'])->name('aksi.tandai.destroy');
+Route::post('/aksi/{id}/feedback', [AksiController::class, 'storeFeedback'])->name('aksi.feedback.store');
 
-// --- KELOMPOK RUTE FAVORITES & BOOKMARKS ---
+// --- KELOMPOK RUTE FAVORITE / BOOKMARK ---
+Route::get('/favorites', [FavoriteController::class, 'index'])->middleware('auth')->name('favorites.index');
 Route::post('/favorites', [FavoriteController::class, 'store'])->middleware('auth')->name('favorites.store');
 Route::delete('/favorites', [FavoriteController::class, 'destroy'])->middleware('auth')->name('favorites.destroy');
-Route::get('/favorites', [FavoriteController::class, 'index'])->middleware('auth')->name('favorites.index');
-Route::get('/bookmarks', [FavoriteController::class, 'bookmarks'])->middleware('auth')->name('bookmarks.index');
 
 // --- KELOMPOK RUTE LIKES ---
 Route::get('/likes', [LikeController::class, 'index'])->middleware('auth')->name('likes.index');
