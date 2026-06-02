@@ -17,6 +17,7 @@ class HomeController extends Controller
      * PBI-37: Popular Content
      * PBI-38: Recommended Content with Pagination
      * PROJ-114: Latest Content Section
+     * PBI-46: Homepage Statistics Summary
      */
     public function index(Request $request)
     {
@@ -44,27 +45,40 @@ class HomeController extends Controller
         $popularContent  = $this->getPopularContent();
         $recommendedData = $this->getRecommendedContent($request, $page);
         $latestContent   = $this->getLatestContent();
+        $statistics      = $this->getStatistics();
         $leaderboard     = $this->leaderboard();
 
         return view('home', compact(
             'query', 'rawQuery', 'isSearching',
             'searchIkan', 'searchEkosistem', 'searchAksi', 'totalResults',
             'randomContent', 'popularActions', 'popularContent',
-            'recommendedData', 'latestContent', 'leaderboard'
+            'recommendedData', 'latestContent', 'statistics', 'leaderboard'
         ));
     }
 
     /**
+     * PBI-46: Statistics Summary
+     * Hitung total data yang tersedia di database
+     */
+    public function getStatistics(): array
+    {
+        return [
+            'total_ikan'      => Ikan::count(),
+            'total_ekosistem' => Ekosistem::count(),
+            'total_aksi'      => AksiPelestarian::count(),
+            'total_user'      => User::count(),
+        ];
+    }
+
+    /**
      * PROJ-114: Latest Content
-     * Ambil 3 konten terbaru dari masing-masing tipe, urutkan by created_at DESC
      */
     public function getLatestContent(): array
     {
-        $latestIkan = Ikan::orderByDesc('created_at')->take(3)->get();
+        $latestIkan      = Ikan::orderByDesc('created_at')->take(3)->get();
         $latestEkosistem = Ekosistem::orderByDesc('created_at')->take(3)->get();
-        $latestAksi = AksiPelestarian::orderByDesc('created_at')->take(3)->get();
+        $latestAksi      = AksiPelestarian::orderByDesc('created_at')->take(3)->get();
 
-        // Gabung semua dan sort by created_at untuk tampilan "terbaru" yang mix
         $allLatest = collect();
         foreach ($latestIkan as $item) {
             $allLatest->push(['type' => 'ikan', 'data' => $item, 'created_at' => $item->created_at]);
@@ -91,12 +105,9 @@ class HomeController extends Controller
     {
         $perPage = 6;
 
-        $ikan      = Ikan::inRandomOrder()->take(20)->get()
-                         ->map(fn($i) => ['type' => 'ikan', 'data' => $i]);
-        $ekosistem = Ekosistem::inRandomOrder()->take(20)->get()
-                              ->map(fn($i) => ['type' => 'ekosistem', 'data' => $i]);
-        $aksi      = AksiPelestarian::inRandomOrder()->take(20)->get()
-                                    ->map(fn($i) => ['type' => 'aksi', 'data' => $i]);
+        $ikan      = Ikan::inRandomOrder()->take(20)->get()->map(fn($i) => ['type' => 'ikan', 'data' => $i]);
+        $ekosistem = Ekosistem::inRandomOrder()->take(20)->get()->map(fn($i) => ['type' => 'ekosistem', 'data' => $i]);
+        $aksi      = AksiPelestarian::inRandomOrder()->take(20)->get()->map(fn($i) => ['type' => 'aksi', 'data' => $i]);
 
         $allItems   = $ikan->merge($ekosistem)->merge($aksi)->shuffle()->values();
         $total      = $allItems->count();
@@ -119,37 +130,18 @@ class HomeController extends Controller
     public function getPopularContent(): array
     {
         $popularIkan = Ikan::select('ikan.*')
-            ->selectRaw('
-                (SELECT COUNT(*) FROM user_views WHERE user_views.content_type = "ikan"
-                 AND user_views.content_id = ikan.id_ikan) +
-                (SELECT COUNT(*) * 2 FROM favorites WHERE favorites.type = "ikan"
-                 AND favorites.item_id = ikan.id_ikan) AS popularity_score
-            ')
+            ->selectRaw('(SELECT COUNT(*) FROM user_views WHERE user_views.content_type = "ikan" AND user_views.content_id = ikan.id_ikan) + (SELECT COUNT(*) * 2 FROM favorites WHERE favorites.type = "ikan" AND favorites.item_id = ikan.id_ikan) AS popularity_score')
             ->orderByRaw('popularity_score DESC')->take(3)->get();
 
         $popularEkosistem = Ekosistem::select('ekosistem.*')
-            ->selectRaw('
-                (SELECT COUNT(*) FROM user_views WHERE user_views.content_type = "ekosistem"
-                 AND user_views.content_id = ekosistem.id_ekosistem) +
-                (SELECT COUNT(*) * 2 FROM favorites WHERE favorites.type = "ekosistem"
-                 AND favorites.item_id = ekosistem.id_ekosistem) AS popularity_score
-            ')
+            ->selectRaw('(SELECT COUNT(*) FROM user_views WHERE user_views.content_type = "ekosistem" AND user_views.content_id = ekosistem.id_ekosistem) + (SELECT COUNT(*) * 2 FROM favorites WHERE favorites.type = "ekosistem" AND favorites.item_id = ekosistem.id_ekosistem) AS popularity_score')
             ->orderByRaw('popularity_score DESC')->take(3)->get();
 
         $popularAksi = AksiPelestarian::select('aksi_pelestarian.*')
-            ->selectRaw('
-                (SELECT COUNT(*) FROM user_views WHERE user_views.content_type = "aksi"
-                 AND user_views.content_id = aksi_pelestarian.id_aksi) +
-                (SELECT COUNT(*) * 2 FROM favorites WHERE favorites.type = "aksi"
-                 AND favorites.item_id = aksi_pelestarian.id_aksi) AS popularity_score
-            ')
+            ->selectRaw('(SELECT COUNT(*) FROM user_views WHERE user_views.content_type = "aksi" AND user_views.content_id = aksi_pelestarian.id_aksi) + (SELECT COUNT(*) * 2 FROM favorites WHERE favorites.type = "aksi" AND favorites.item_id = aksi_pelestarian.id_aksi) AS popularity_score')
             ->orderByRaw('popularity_score DESC')->take(3)->get();
 
-        return [
-            'ikan'      => $popularIkan,
-            'ekosistem' => $popularEkosistem,
-            'aksi'      => $popularAksi,
-        ];
+        return ['ikan' => $popularIkan, 'ekosistem' => $popularEkosistem, 'aksi' => $popularAksi];
     }
 
     /**
@@ -158,20 +150,15 @@ class HomeController extends Controller
     private function searchIkan(string $query, array $keywords)
     {
         $exact = Ikan::where(function ($q) use ($query) {
-            $q->where('nama', 'like', "%{$query}%")
-              ->orWhere('deskripsi', 'like', "%{$query}%")
-              ->orWhere('habitat', 'like', "%{$query}%")
-              ->orWhere('karakteristik', 'like', "%{$query}%")
-              ->orWhere('status_konservasi', 'like', "%{$query}%")
-              ->orWhere('fakta_unik', 'like', "%{$query}%");
+            $q->where('nama', 'like', "%{$query}%")->orWhere('deskripsi', 'like', "%{$query}%")
+              ->orWhere('habitat', 'like', "%{$query}%")->orWhere('karakteristik', 'like', "%{$query}%")
+              ->orWhere('status_konservasi', 'like', "%{$query}%")->orWhere('fakta_unik', 'like', "%{$query}%");
         })->limit(10)->get();
         if ($exact->count() > 0) return $exact;
         return Ikan::where(function ($q) use ($keywords) {
             foreach ($keywords as $word) {
-                $q->orWhere('nama', 'like', "%{$word}%")
-                  ->orWhere('deskripsi', 'like', "%{$word}%")
-                  ->orWhere('habitat', 'like', "%{$word}%")
-                  ->orWhere('karakteristik', 'like', "%{$word}%")
+                $q->orWhere('nama', 'like', "%{$word}%")->orWhere('deskripsi', 'like', "%{$word}%")
+                  ->orWhere('habitat', 'like', "%{$word}%")->orWhere('karakteristik', 'like', "%{$word}%")
                   ->orWhere('status_konservasi', 'like', "%{$word}%");
             }
         })->limit(10)->get();
@@ -183,19 +170,15 @@ class HomeController extends Controller
     private function searchEkosistem(string $query, array $keywords)
     {
         $exact = Ekosistem::where(function ($q) use ($query) {
-            $q->where('nama_ekosistem', 'like', "%{$query}%")
-              ->orWhere('deskripsi', 'like', "%{$query}%")
-              ->orWhere('lokasi', 'like', "%{$query}%")
-              ->orWhere('peran', 'like', "%{$query}%")
+            $q->where('nama_ekosistem', 'like', "%{$query}%")->orWhere('deskripsi', 'like', "%{$query}%")
+              ->orWhere('lokasi', 'like', "%{$query}%")->orWhere('peran', 'like', "%{$query}%")
               ->orWhere('ancaman', 'like', "%{$query}%");
         })->limit(10)->get();
         if ($exact->count() > 0) return $exact;
         return Ekosistem::where(function ($q) use ($keywords) {
             foreach ($keywords as $word) {
-                $q->orWhere('nama_ekosistem', 'like', "%{$word}%")
-                  ->orWhere('deskripsi', 'like', "%{$word}%")
-                  ->orWhere('lokasi', 'like', "%{$word}%")
-                  ->orWhere('peran', 'like', "%{$word}%");
+                $q->orWhere('nama_ekosistem', 'like', "%{$word}%")->orWhere('deskripsi', 'like', "%{$word}%")
+                  ->orWhere('lokasi', 'like', "%{$word}%")->orWhere('peran', 'like', "%{$word}%");
             }
         })->limit(10)->get();
     }
@@ -206,16 +189,13 @@ class HomeController extends Controller
     private function searchAksi(string $query, array $keywords)
     {
         $exact = AksiPelestarian::where(function ($q) use ($query) {
-            $q->where('judul_aksi', 'like', "%{$query}%")
-              ->orWhere('deskripsi', 'like', "%{$query}%")
-              ->orWhere('manfaat', 'like', "%{$query}%")
-              ->orWhere('cara_melakukan', 'like', "%{$query}%");
+            $q->where('judul_aksi', 'like', "%{$query}%")->orWhere('deskripsi', 'like', "%{$query}%")
+              ->orWhere('manfaat', 'like', "%{$query}%")->orWhere('cara_melakukan', 'like', "%{$query}%");
         })->limit(10)->get();
         if ($exact->count() > 0) return $exact;
         return AksiPelestarian::where(function ($q) use ($keywords) {
             foreach ($keywords as $word) {
-                $q->orWhere('judul_aksi', 'like', "%{$word}%")
-                  ->orWhere('deskripsi', 'like', "%{$word}%")
+                $q->orWhere('judul_aksi', 'like', "%{$word}%")->orWhere('deskripsi', 'like', "%{$word}%")
                   ->orWhere('manfaat', 'like', "%{$word}%");
             }
         })->limit(10)->get();
@@ -238,17 +218,13 @@ class HomeController extends Controller
      */
     public function getPopularActions()
     {
-        return AksiPelestarian::withCount('likes')
-            ->orderByDesc('likes_count')
+        return AksiPelestarian::withCount('likes')->orderByDesc('likes_count')
             ->take(5)->with('createdBy')->get()
             ->map(fn($item) => [
                 'id'         => $item->id_aksi,
                 'title'      => $item->judul_aksi,
                 'like_count' => $item->likes_count,
-                'creator'    => [
-                    'name'  => $item->createdBy->name,
-                    'badge' => $item->createdBy->badge,
-                ],
+                'creator'    => ['name' => $item->createdBy->name, 'badge' => $item->createdBy->badge],
             ]);
     }
 
