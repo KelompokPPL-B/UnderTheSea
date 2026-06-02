@@ -21,11 +21,11 @@
                 <h1 class="text-3xl font-bold text-ocean-900 mb-4">{{ $ikan->nama ?? $ikan->name }}</h1>
 
                 <div class="space-y-3 text-gray-700">
-                    <p><strong>Scientific Name:</strong> {{ $ikan->scientific_name ?? '-' }}</p>
+                    <p><strong>Scientific Name:</strong> {{ $ikan->scientific_name ?? $ikan->karakteristik ?? '-' }}</p>
                     <p><strong>Habitat:</strong> {{ $ikan->habitat ?? '-' }}</p>
                     <p><strong>Description:</strong> {{ $ikan->deskripsi ?? $ikan->description ?? '-' }}</p>
-                    <p><strong>Diet:</strong> {{ $ikan->diet ?? '-' }}</p>
-                    <p><strong>Size:</strong> {{ $ikan->size ?? '-' }}</p>
+                    <p><strong>Diet:</strong> {{ $ikan->diet ?? $ikan->fakta_unik ?? '-' }}</p>
+                    <p><strong>Size:</strong> {{ $ikan->size ?? $ikan->karakteristik ?? '-' }}</p>
                     <p><strong>Conservation Status:</strong> {{ $ikan->status_konservasi ?? $ikan->conservation_status ?? '-' }}</p>
                 </div>
 

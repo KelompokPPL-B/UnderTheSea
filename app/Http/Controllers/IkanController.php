@@ -42,7 +42,7 @@ class IkanController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $ikans = $query->paginate(10);
+        $ikans = $query->paginate(12)->withQueryString();
 
        return view('ikan.index', compact('ikans', 'sort'));
     }
