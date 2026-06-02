@@ -44,7 +44,7 @@ class IkanController extends Controller
 
         $ikans = $query->paginate(10);
 
-        return view('ikan.index', compact('ikans', 'sort'));
+       return view('ikan.index', compact('ikans', 'sort'));
     }
 
     /**

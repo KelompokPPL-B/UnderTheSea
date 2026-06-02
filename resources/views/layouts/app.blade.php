@@ -10,7 +10,17 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <!-- Load Tailwind via CDN so project works without Vite dev server -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Optional: small Tailwind config can be added inline if needed -->
+        <!-- Project custom CSS -->
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <!-- Axios (required by app scripts) -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- Alpine (required by app scripts) -->
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        <!-- Project JS bundle -->
+        <script src="{{ asset('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased bg-sand">
         <div class="min-h-screen flex flex-col">

@@ -12,19 +12,112 @@
             </div>
         </div>
 
-        <!-- Sort Controls -->
-        <div class="mb-6 flex justify-end">
-            <select onchange="window.location.href='{{ route('ikan.index') }}?sort=' + this.value" class="select select-bordered select-sm">
-                <option value="newest" {{ ($sort ?? 'newest') === 'newest' ? 'selected' : '' }}>Newest First</option>
-                <option value="oldest" {{ ($sort ?? '') === 'oldest' ? 'selected' : '' }}>Oldest First</option>
-                <option value="name_asc" {{ ($sort ?? '') === 'name_asc' ? 'selected' : '' }}>Name A–Z</option>
-                <option value="name_desc" {{ ($sort ?? '') === 'name_desc' ? 'selected' : '' }}>Name Z–A</option>
-            </select>
+        <!-- Search + Sort Controls -->
+        <div class="mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <!-- Search bar (glassmorphism / ocean style) -->
+            <div class="w-full sm:max-w-xl">
+                <!--
+                    ADD: Search input here. This search bar follows Pinterest-like glassmorphism.
+                    Place this block above the card grid and beside the sort dropdown.
+                -->
+                <div class="search-pill relative mx-auto">
+                    <input id="fish-search" type="search" placeholder="Search fish by name..." aria-label="Search fish" class="search-input w-full px-6 py-3 bg-transparent placeholder-ocean-200 text-ocean-900" />
+                    <button id="fish-search-btn" class="search-icon" aria-hidden="true">
+                        <!-- simple magnifier icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-ocean-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1116.65 16.65z" />
+                        </svg>
+                    </button>
+
+                    <!-- Decorative bubbles / liquid shapes (non-interactive) -->
+                    <span class="search-bubble bubble-1" aria-hidden="true"></span>
+                    <span class="search-bubble bubble-2" aria-hidden="true"></span>
+                    <span class="search-bubble bubble-3" aria-hidden="true"></span>
+                </div>
+            </div>
+
+            <!-- Sort dropdown (kept as-is) -->
+            <div class="flex-shrink-0">
+                <select onchange="window.location.href='{{ route('ikan.index') }}?sort=' + this.value" class="select select-bordered select-sm">
+                    <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Newest First</option>
+                    <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
+                </select>
+            </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-card p-12 text-center">
-            <p class="text-ocean-600 text-lg font-semibold">No fish found yet.</p>
-        </div>
+        @if($ikans->isEmpty())
+            <div class="bg-white rounded-2xl shadow-card p-12 text-center">
+                <p class="text-ocean-600 text-lg font-semibold">No fish species found yet.</p>
+            </div>
+        @else
+            <!-- Fish Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="fish-grid">
+                @foreach($ikans as $item)
+                    <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] animate-fade overflow-hidden" data-name="{{ strtolower($item->nama) }}">
+                        <!-- Image -->
+                        @if($item->gambar)
+                            <div class="overflow-hidden h-48">
+                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
+                            </div>
+                        @else
+                            <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
+                                <span class="text-ocean-400">No image</span>
+                            </div>
+                        @endif
+
+                        <!-- Content -->
+                        <div class="p-6 space-y-4">
+                            <!-- Title -->
+                            <a href="{{ route('ikan.show', $item->id_ikan) }}" class="block group-hover:text-ocean-600 transition">
+                                <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->nama }}</h3>
+                            </a>
+
+                            <!-- Habitat -->
+                            @if($item->habitat)
+                                <p class="text-xs text-gray-500 font-semibold">🌊 {{ $item->habitat }}</p>
+                            @endif
+
+                            <!-- Description -->
+                            <p class="text-gray-600 text-sm line-clamp-2">{{ $item->deskripsi ?? 'No description' }}</p>
+
+                            <!-- Conservation Status -->
+                            @if($item->status_konservasi)
+                                <div class="pt-2 border-t border-ocean-100">
+                                    <p class="text-xs"><span class="font-semibold text-ocean-900">Status:</span> <span class="text-gray-600">{{ $item->status_konservasi }}</span></p>
+                                </div>
+                            @endif
+
+                            <!-- Bookmark Section -->
+                            @auth
+                                <div class="pt-2">
+                                    <button class="bookmark-btn-card w-full btn btn-outline btn-sm" data-type="ikan" data-item-id="{{ $item->id_ikan }}">
+                                        <span class="bookmark-text">Bookmark</span>
+                                    </button>
+                                </div>
+                            @else
+                                <div class="pt-2">
+                                    <a href="{{ route('login') }}" class="block text-center text-xs text-ocean-600 hover:underline font-semibold">Sign in to bookmark</a>
+                                </div>
+                            @endauth
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
+                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-primary btn-sm flex-1">View</a>
+                                @if(auth()->check() && auth()->user()->isAdmin())
+                                    <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
+                                    <button class="delete-btn-card btn btn-error btn-sm" data-ikan-id="{{ $item->id_ikan }}">Delete</button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-8 flex justify-center">
+                {{ $ikan->appends(request()->query())->links() }}
+            </div>
+        @endif
     </div>
 </div>
 
@@ -128,8 +221,55 @@ function loadBookmarkStatesCard() {
     .catch(err => console.error('Error loading bookmark state:', err));
 }
 
-function getCsrfToken() {
-    return document.querySelector('meta[name="csrf-token"]')?.content || '';
-}
+    function getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.content || '';
+    }
+
+    /* Live search: filter fish cards by data-name attribute as user types */
+    (function setupLiveSearch(){
+        const input = document.getElementById('fish-search');
+        const button = document.getElementById('fish-search-btn');
+        const grid = document.getElementById('fish-grid');
+        if (!input || !grid) return;
+
+        const cards = Array.from(grid.children);
+
+        // simple debounce
+        function debounce(fn, wait){
+            let t;
+            return function(...args){
+                clearTimeout(t);
+                t = setTimeout(()=>fn.apply(this,args), wait);
+            };
+        }
+
+        function filterCards() {
+            const q = input.value.trim().toLowerCase();
+            if (q === '') {
+                // show all
+                cards.forEach(c => c.style.display = '');
+                return;
+            }
+            cards.forEach(c => {
+                const name = (c.dataset.name || '').toLowerCase();
+                if (name.includes(q)) {
+                    c.style.display = '';
+                } else {
+                    c.style.display = 'none';
+                }
+            });
+        }
+
+        const debouncedFilter = debounce(filterCards, 180);
+        input.addEventListener('input', debouncedFilter);
+
+        // make search button focus the input (mobile friendly)
+        if (button) {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                input.focus();
+            });
+        }
+    })();
 </script>
 @endpush
