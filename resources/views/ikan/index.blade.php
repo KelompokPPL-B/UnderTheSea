@@ -2,32 +2,46 @@
 
 @section('content')
 <!-- PBI-IkanIndex -->
-<div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
-    <div class="max-w-7xl mx-auto px-6 py-6">
+<div id="ikan-page" class="ocean-page uts-page-fish">
+    <div class="uts-bg" aria-hidden="true"></div>
+    <div class="uts-overlay" aria-hidden="true"></div>
+    <div class="caustics" aria-hidden="true"></div>
+    <div class="uts-bubbles" aria-hidden="true">
+        <span class="b1"></span>
+        <span class="b2"></span>
+        <span class="b3"></span>
+        <span class="b4"></span>
+        <span class="b5"></span>
+    </div>
+    <div class="uts-content">
         <!-- Header -->
-        <div class="flex justify-between items-start mb-10">
+        <div class="uts-hero">
             <div>
-                <h1 class="text-4xl font-bold text-ocean-900 mb-3">Marine Fish</h1>
-                <p class="text-gray-600">Discover various fish species and learn about their habitat, food, and characteristics.</p>
+                <div class="uts-title">Fish Species</div>
+                <div class="uts-sub">Explore marine biodiversity — habitats, traits, and conservation status.</div>
+            </div>
+
+            <div class="uts-controls">
+                <!-- search will be inserted below visually but markup kept here for layout control -->
             </div>
         </div>
 
         <!-- Search + Sort Controls -->
-        <div class="mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="uts-search-row">
             <!-- Search bar (glassmorphism / ocean style) -->
-            <div class="w-full sm:max-w-xl">
+            <div class="uts-search">
                 <!--
                     ADD: Search input here. This search bar follows Pinterest-like glassmorphism.
                     Place this block above the card grid and beside the sort dropdown.
                 -->
-                <div class="search-pill relative mx-auto">
-                    <input id="fish-search" type="search" placeholder="Search fish by name..." aria-label="Search fish" class="search-input w-full px-6 py-3 bg-transparent placeholder-ocean-200 text-ocean-900" />
-                    <button id="fish-search-btn" class="search-icon" aria-hidden="true">
+                <div class="uts-search-pill search-pill relative mx-auto">
+                    <button id="fish-search-btn" class="uts-search-btn search-icon icon-left" aria-hidden="true">
                         <!-- simple magnifier icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-ocean-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1116.65 16.65z" />
                         </svg>
                     </button>
+                    <input id="fish-search" type="search" placeholder="Search fish by name..." aria-label="Search fish" class="search-input w-full px-6 py-3 bg-transparent placeholder-ocean-200" />
 
                     <!-- Decorative bubbles / liquid shapes (non-interactive) -->
                     <span class="search-bubble bubble-1" aria-hidden="true"></span>
@@ -37,8 +51,8 @@
             </div>
 
             <!-- Sort dropdown (kept as-is) -->
-            <div class="flex-shrink-0">
-                <select onchange="window.location.href='{{ route('ikan.index') }}?sort=' + this.value" class="select select-bordered select-sm">
+            <div>
+                <select onchange="window.location.href='{{ route('ikan.index') }}?sort=' + this.value" class="uts-sort select select-bordered select-sm">
                     <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Newest First</option>
                     <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
                 </select>
@@ -51,72 +65,55 @@
             </div>
         @else
             <!-- Fish Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="fish-grid">
+            <div class="uts-grid fish-grid" id="fish-grid">
                 @foreach($ikans as $item)
-                    <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] animate-fade overflow-hidden" data-name="{{ strtolower($item->nama) }}">
-                        <!-- Image -->
-                        @if($item->gambar)
-                            <div class="overflow-hidden h-48">
-                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
-                            </div>
-                        @else
-                            <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
-                                <span class="text-ocean-400">No image</span>
-                            </div>
-                        @endif
+                    <div class="fish-card" data-fish-name="{{ strtolower($item->nama) }}">
+                        <div class="fish-card-media">
+                            @if($item->gambar)
+                                <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}" class="fish-image" loading="lazy">
+                            @else
+                                <div class="fish-placeholder">
+                                    <div class="fish-placeholder-icon">🐠</div>
+                                    <div class="fish-placeholder-text">{{ $item->nama }}</div>
+                                </div>
+                            @endif
+                        </div>
 
-                        <!-- Content -->
-                        <div class="p-6 space-y-4">
-                            <!-- Title -->
-                            <a href="{{ route('ikan.show', $item->id_ikan) }}" class="block group-hover:text-ocean-600 transition">
-                                <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->nama }}</h3>
+                        <div class="fish-card-body">
+                            <a href="{{ route('ikan.show', $item->id_ikan) }}">
+                                <h3 class="fish-name">{{ $item->nama }}</h3>
                             </a>
 
-                            <!-- Habitat -->
                             @if($item->habitat)
-                                <p class="text-xs text-gray-500 font-semibold">🌊 {{ $item->habitat }}</p>
+                                <div class="fish-meta">🌊 {{ $item->habitat }}</div>
                             @endif
 
-                            <!-- Description -->
-                            <p class="text-gray-600 text-sm line-clamp-2">{{ $item->deskripsi ?? 'No description' }}</p>
+                            <div class="fish-desc">{{ $item->deskripsi ?? 'No description' }}</div>
 
-                            <!-- Conservation Status -->
                             @if($item->status_konservasi)
-                                <div class="pt-2 border-t border-ocean-100">
-                                    <p class="text-xs"><span class="font-semibold text-ocean-900">Status:</span> <span class="text-gray-600">{{ $item->status_konservasi }}</span></p>
-                                </div>
+                                <div class="fish-status"><strong>Status:</strong> {{ $item->status_konservasi }}</div>
                             @endif
 
-                            <!-- Bookmark Section -->
                             @auth
-                                <div class="pt-2">
-                                    <button class="bookmark-btn-card w-full btn btn-outline btn-sm" data-type="ikan" data-item-id="{{ $item->id_ikan }}">
-                                        <span class="bookmark-text">Bookmark</span>
-                                    </button>
-                                </div>
+                                <button class="bookmark-btn-card fish-bookmark" data-type="ikan" data-item-id="{{ $item->id_ikan }}">Bookmark</button>
                             @else
-                                <div class="pt-2">
-                                    <a href="{{ route('login') }}" class="block text-center text-xs text-ocean-600 hover:underline font-semibold">Sign in to bookmark</a>
-                                </div>
+                                <a href="{{ route('login') }}" class="fish-bookmark">Sign in to bookmark</a>
                             @endauth
 
-                            <!-- Action Buttons -->
-                            <div class="flex gap-2 mt-3 pt-3 border-t border-ocean-100">
-                                <a href="{{ route('ikan.show', $item->id_ikan) }}" class="btn btn-primary btn-sm flex-1">View</a>
-                                @if(auth()->check() && auth()->user()->isAdmin())
-                                    <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="btn btn-outline btn-sm">Edit</a>
-                                    <button class="delete-btn-card btn btn-error btn-sm" data-ikan-id="{{ $item->id_ikan }}">Delete</button>
-                                @endif
-                            </div>
+                            <a href="{{ route('ikan.show', $item->id_ikan) }}" class="view-btn">View <span>›</span></a>
+
                         </div>
                     </div>
                 @endforeach
             </div>
 
             <!-- Pagination -->
-            <div class="mt-8 flex justify-center">
-                {{ $ikan->appends(request()->query())->links() }}
+            <div class="uts-pagination">
+                {{ $ikans->appends(request()->query())->links() }}
             </div>
+
+            <!-- Empty state for search -->
+            <div id="fish-empty-state" class="fish-empty-state" style="display:none;">No fish found</div>
         @endif
     </div>
 </div>
@@ -148,6 +145,8 @@ document.addEventListener('click', function(e) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+    // mark the page so global nav can adapt styling
+    try { document.body.classList.add('page-ikan'); } catch(e){}
     initializeBookmarkButtonsCard();
     loadBookmarkStatesCard();
 });
@@ -225,14 +224,15 @@ function loadBookmarkStatesCard() {
         return document.querySelector('meta[name="csrf-token"]')?.content || '';
     }
 
-    /* Live search: filter fish cards by data-name attribute as user types */
+    /* Live search: filter fish cards by data-fish-name attribute as user types */
     (function setupLiveSearch(){
         const input = document.getElementById('fish-search');
         const button = document.getElementById('fish-search-btn');
         const grid = document.getElementById('fish-grid');
+        const emptyState = document.getElementById('fish-empty-state');
         if (!input || !grid) return;
 
-        const cards = Array.from(grid.children);
+        const cards = Array.from(grid.querySelectorAll('.fish-card'));
 
         // simple debounce
         function debounce(fn, wait){
@@ -245,23 +245,34 @@ function loadBookmarkStatesCard() {
 
         function filterCards() {
             const q = input.value.trim().toLowerCase();
+            let visibleCount = 0;
+
             if (q === '') {
-                // show all
-                cards.forEach(c => c.style.display = '');
+                cards.forEach(c => { c.style.display = ''; visibleCount++; });
+                if (emptyState) emptyState.style.display = 'none';
                 return;
             }
+
             cards.forEach(c => {
-                const name = (c.dataset.name || '').toLowerCase();
+                const name = (c.dataset.fishName || c.dataset.name || '').toLowerCase();
                 if (name.includes(q)) {
                     c.style.display = '';
+                    visibleCount++;
                 } else {
                     c.style.display = 'none';
                 }
             });
+
+            if (emptyState) {
+                emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
         }
 
-        const debouncedFilter = debounce(filterCards, 180);
+        const debouncedFilter = debounce(filterCards, 120);
         input.addEventListener('input', debouncedFilter);
+
+        // prevent Enter from submitting the page
+        input.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); debouncedFilter(); } });
 
         // make search button focus the input (mobile friendly)
         if (button) {
