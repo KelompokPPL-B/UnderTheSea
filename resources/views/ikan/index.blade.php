@@ -71,12 +71,31 @@
         @endauth
 
         @if($ikan->isEmpty())
-            <div class="bg-white/60 backdrop-blur-lg border border-white rounded-3xl shadow-2xl p-16 text-center max-w-2xl mx-auto transform hover:scale-105 transition-transform duration-500">
-                <div class="text-6xl mb-4">🪸</div>
-                <h3 class="text-2xl font-bold text-ocean-800 mb-2">Pencarian Kosong</h3>
-                <p class="text-ocean-600 font-medium">
-                    {{ request('search') ? 'Catatan kosong. Spesies ini belum tercatat dalam jurnal penyelaman kami.' : 'Belum ada data ikan di perairan ini.' }}
+            <style>
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(16px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .animate-fade-in {
+                    animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+            </style>
+            <div class="bg-white/70 backdrop-blur-xl border border-white/60 rounded-[2.5rem] shadow-2xl p-12 md:p-16 text-center max-w-2xl mx-auto animate-fade-in">
+                <div class="w-24 h-24 bg-gradient-to-br from-blue-50 to-cyan-100 rounded-full flex items-center justify-center mx-auto mb-6 text-5xl shadow-inner animate-bounce">
+                    🐠
+                </div>
+                <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight mb-3">Data Tidak Ditemukan</h3>
+                <p class="text-slate-600 font-medium max-w-md mx-auto mb-8">
+                    {{ request('search') ? 'Pencarian Anda tidak menghasilkan data yang sesuai. Coba gunakan kata kunci lain.' : 'Belum ada data ikan di perairan ini.' }}
                 </p>
+                @if(request('search'))
+                    <a href="{{ route('ikan.index') }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-ocean-600 to-blue-500 hover:from-ocean-700 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-ocean-500/30 hover:scale-105 active:scale-95 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18" />
+                        </svg>
+                        Reset Pencarian
+                    </a>
+                @endif
             </div>
         @else
 
