@@ -90,6 +90,90 @@
         @endif
     </div>
 
+    @if(auth()->user()->isAdmin())
+    <!-- Data Distribution Dashboard -->
+    <h2 class="text-xl font-semibold text-ocean-800 mb-4">Data Distribution Monitoring</h2>
+    <div class="grid md:grid-cols-3 gap-6 mb-10">
+        <!-- Conservation Status Distribution -->
+        <div class="bg-white p-5 rounded-xl shadow-md">
+            <h3 class="font-semibold text-ocean-700 mb-4">📊 Fish by Conservation Status</h3>
+            @php $totalFish = $totalFishCount ?: 1; @endphp
+            @if($fishStatusDistribution->count())
+                @foreach($fishStatusDistribution as $dist)
+                    @php
+                        $percentage = round(($dist->count / $totalFish) * 100);
+                        $color = match(strtolower($dist->status_konservasi)) {
+                            'endangered' => 'bg-red-500',
+                            'vulnerable' => 'bg-amber-500',
+                            'least concern' => 'bg-green-500',
+                            default => 'bg-blue-500'
+                        };
+                    @endphp
+                    <div class="mb-4 last:mb-0">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>{{ $dist->status_konservasi }}</span>
+                            <span>{{ $dist->count }} items ({{ $percentage }}%)</span>
+                        </div>
+                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                            <div class="{{ $color }} h-full" style="width: {{ $percentage }}%"></div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <p class="text-gray-400 text-sm italic">No data available</p>
+            @endif
+        </div>
+
+        <!-- Habitat Distribution -->
+        <div class="bg-white p-5 rounded-xl shadow-md">
+            <h3 class="font-semibold text-ocean-700 mb-4">🏠 Top Fish Habitats</h3>
+            @if($fishHabitatDistribution->count())
+                @foreach($fishHabitatDistribution as $dist)
+                    @php
+                        $percentage = round(($dist->count / $totalFish) * 100);
+                    @endphp
+                    <div class="mb-4 last:mb-0">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>{{ $dist->habitat }}</span>
+                            <span>{{ $dist->count }} items ({{ $percentage }}%)</span>
+                        </div>
+                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                            <div class="bg-teal-500 h-full" style="width: {{ $percentage }}%"></div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <p class="text-gray-400 text-sm italic">No data available</p>
+            @endif
+        </div>
+
+        <!-- Action Origin Distribution -->
+        <div class="bg-white p-5 rounded-xl shadow-md">
+            <h3 class="font-semibold text-ocean-700 mb-4">🌱 Conservation Actions Origin</h3>
+            @php $totalActions = $totalActionsCount ?: 1; @endphp
+            @if(count($actionTypeDistribution))
+                @foreach($actionTypeDistribution as $dist)
+                    @php
+                        $percentage = round(($dist['count'] / $totalActions) * 100);
+                        $color = $dist['label'] === 'Official Action' ? 'bg-indigo-600' : 'bg-emerald-500';
+                    @endphp
+                    <div class="mb-4 last:mb-0">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>{{ $dist['label'] }}</span>
+                            <span>{{ $dist['count'] }} items ({{ $percentage }}%)</span>
+                        </div>
+                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                            <div class="{{ $color }} h-full" style="width: {{ $percentage }}%"></div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <p class="text-gray-400 text-sm italic">No data available</p>
+            @endif
+        </div>
+    </div>
+    @endif
+
     <!-- Recommended Content -->
     <h2 class="text-xl font-semibold text-ocean-800 mb-4">Recommended Content</h2>
 
