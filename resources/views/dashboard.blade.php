@@ -5,7 +5,7 @@
 <div class="py-10 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-7xl mx-auto px-6">
 
-    @if(auth()->user()->isAdmin())
+    @if(auth()->check() && auth()->user()->isAdmin())
     <h1 class="text-3xl font-bold text-ocean-900 mb-8">Dashboard</h1>
 
     <!-- Stats Overview -->
@@ -436,72 +436,172 @@
         </table>
     </div>
     @else
-        <!-- User Dashboard Mockup Layout -->
+        <!-- User Dashboard Custom Layout -->
         
+        <!-- User Dashboard Header -->
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
+            <div>
+                <h1 class="text-4xl font-extrabold text-ocean-900 tracking-tight">Dashboard</h1>
+                @auth
+                    <p class="text-gray-600 mt-1">Selamat datang kembali, <span class="font-semibold text-ocean-700">{{ $user->name }}</span>! Kelola aktivitas dan pelajari biota laut hari ini.</p>
+                @else
+                    <p class="text-gray-600 mt-1">Selamat datang di <span class="font-semibold text-ocean-700">Under The Sea</span>! Silakan masuk untuk berkontribusi menjaga kelestarian laut.</p>
+                @endauth
+            </div>
+            
+            @auth
+            <!-- Quick Badge info -->
+            <div class="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-soft border border-ocean-100/60 shrink-0">
+                <span class="text-2xl">🏆</span>
+                <div>
+                    <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider leading-none">Pangkat Anda</p>
+                    <p class="text-sm font-bold text-ocean-900 mt-1.5">{{ $user->badge }}</p>
+                    <p class="text-xs text-gray-500 mt-0.5">{{ $user->points }} Poin</p>
+                </div>
+            </div>
+            @else
+            <!-- Call to Action login -->
+            <div class="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-soft border border-ocean-100/60 shrink-0">
+                <span class="text-2xl">🔑</span>
+                <div>
+                    <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider leading-none">Akses Akun</p>
+                    <a href="{{ route('login') }}" class="text-sm font-bold text-ocean-600 hover:text-ocean-700 hover:underline mt-1 block">Log In / Register →</a>
+                </div>
+            </div>
+            @endauth
+        </div>
+
+        <!-- User Stats Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+            <!-- Bookmarks -->
+            <a href="{{ route('bookmarks.index') }}" class="bg-white p-6 rounded-2xl shadow-card border-l-4 border-amber-500 hover:shadow-hover transition duration-300 group hover:scale-[1.01] flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-bold uppercase text-gray-400 tracking-wider">Bookmark Saya</p>
+                    <p class="text-3xl font-extrabold text-gray-800 mt-1 group-hover:text-ocean-600 transition">{{ $bookmarkCount }}</p>
+                    <p class="text-xs text-gray-500 mt-2">Daftar biota dan aksi yang Anda simpan →</p>
+                </div>
+                <div class="p-4 bg-amber-50 text-amber-500 rounded-2xl text-2xl group-hover:bg-amber-100 transition">
+                    🔖
+                </div>
+            </a>
+
+            <!-- Likes -->
+            <a href="{{ route('aksi.index') }}?sort=popular" class="bg-white p-6 rounded-2xl shadow-card border-l-4 border-rose-500 hover:shadow-hover transition duration-300 group hover:scale-[1.01] flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-bold uppercase text-gray-400 tracking-wider">Suka Saya</p>
+                    <p class="text-3xl font-extrabold text-gray-800 mt-1 group-hover:text-ocean-600 transition">{{ $likeCount }}</p>
+                    <p class="text-xs text-gray-500 mt-2">Jumlah aksi pelestarian yang Anda sukai →</p>
+                </div>
+                <div class="p-4 bg-rose-50 text-rose-500 rounded-2xl text-2xl group-hover:bg-rose-100 transition">
+                    ❤️
+                </div>
+            </a>
+
+            <!-- Leaderboard Rank -->
+            <a href="#leaderboard-section" class="bg-white p-6 rounded-2xl shadow-card border-l-4 border-ocean-500 hover:shadow-hover transition duration-300 group hover:scale-[1.01] flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-bold uppercase text-gray-400 tracking-wider">Total Skor</p>
+                    <p class="text-3xl font-extrabold text-gray-800 mt-1 group-hover:text-ocean-600 transition">{{ auth()->check() ? $user->points : 0 }} <span class="text-xs font-normal text-gray-500">Poin</span></p>
+                    <p class="text-xs text-gray-500 mt-2">Tingkatkan kontribusi Anda di leaderboard →</p>
+                </div>
+                <div class="p-4 bg-ocean-50 text-ocean-500 rounded-2xl text-2xl group-hover:bg-ocean-100 transition">
+                    🏆
+                </div>
+            </a>
+        </div>
+
         <!-- Hero Banner Section -->
-        <div class="bg-gradient-to-r from-ocean-900 via-ocean-800 to-blue-900 text-white rounded-2xl p-8 md:p-12 shadow-lg mb-10 text-center relative overflow-hidden">
+        <div class="bg-gradient-to-br from-ocean-800 via-ocean-900 to-ocean-950 text-white rounded-3xl p-8 md:p-12 shadow-card mb-10 text-center relative overflow-hidden animate-fade border border-ocean-700/40">
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-ocean-500/20 via-transparent to-transparent pointer-events-none"></div>
             <div class="relative z-10 max-w-2xl mx-auto">
-                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">🌊 Under The Sea</h1>
-                <p class="text-ocean-100 mb-8 text-base md:text-lg">
-                    Jelajahi keindahan biota laut dan pelajari pentingnya menjaga kelestarian ekosistem laut kita.
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight drop-shadow-sm">🌊 Under The Sea</h2>
+                <p class="text-ocean-200 mb-8 text-base md:text-lg font-medium leading-relaxed">
+                    Jelajahi keindahan biota laut, temukan keajaiban ekosistem bawah air, dan berkontribusi langsung dalam aksi nyata menjaga kelestarian laut kita.
                 </p>
-                <div class="flex flex-wrap justify-center gap-4 mb-6">
-                    <a href="{{ route('ikan.index') }}" class="px-6 py-3 bg-white text-ocean-900 font-semibold rounded-lg shadow hover:bg-ocean-50 transition duration-150">
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <a href="{{ route('ikan.index') }}" class="btn bg-white hover:bg-ocean-100 text-ocean-900 font-bold border-none shadow-md px-6 py-2.5 transition rounded-xl">
                         Mulai Jelajah
                     </a>
-                    <a href="{{ route('aksi.index') }}" class="px-6 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition duration-150">
+                    <a href="{{ route('aksi.index') }}" class="btn btn-outline border-white text-white hover:bg-white hover:text-ocean-900 font-bold shadow-md px-6 py-2.5 transition rounded-xl">
                         Lihat Aksi
                     </a>
                 </div>
-                <div class="flex justify-center items-center space-x-6 text-sm text-ocean-200 border-t border-white/10 pt-6">
-                    <a href="{{ route('ikan.index') }}" class="hover:text-white transition">Katalog Ikan</a>
-                    <span class="text-white/20">|</span>
-                    <a href="{{ route('ekosistem.index') }}" class="hover:text-white transition">Ekosistem Laut</a>
-                    <span class="text-white/20">|</span>
-                    <a href="{{ route('aksi.index') }}" class="hover:text-white transition">Pelestarian Laut</a>
+                <div class="flex justify-center items-center flex-wrap gap-x-6 gap-y-2 text-sm text-ocean-300 border-t border-white/10 pt-6">
+                    <a href="{{ route('ikan.index') }}" class="hover:text-white transition font-semibold hover:underline">🐟 Katalog Ikan</a>
+                    <span class="text-white/20 hidden sm:inline">|</span>
+                    <a href="{{ route('ekosistem.index') }}" class="hover:text-white transition font-semibold hover:underline">🌊 Ekosistem Laut</a>
+                    <span class="text-white/20 hidden sm:inline">|</span>
+                    <a href="{{ route('aksi.index') }}" class="hover:text-white transition font-semibold hover:underline">🌱 Pelestarian Laut</a>
                 </div>
             </div>
             <div class="absolute inset-0 bg-ocean-950/20 mix-blend-overlay"></div>
         </div>
 
         <!-- Insight Section -->
-        <div class="mb-14">
+        <div class="mb-14 animate-fade">
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-ocean-900">Insight</h2>
-                <p class="text-gray-600 mt-2">Temukan informasi menarik dan edukatif seputar kehidupan laut.</p>
-                <div class="mt-4">
-                    <a href="{{ route('ikan.index') }}" class="inline-block px-5 py-2.5 bg-ocean-900 text-white font-semibold rounded-lg hover:bg-ocean-800 transition duration-150 shadow">
-                        Lihat Semua Ikan
+                <h2 class="text-3xl font-bold text-ocean-900">Featured Content</h2>
+                <p class="text-gray-600 mt-2">Temukan informasi menarik seputar biota dan ekosistem laut yang kami rekomendasikan.</p>
+                <div class="mt-4 flex justify-center gap-3">
+                    <a href="{{ route('ikan.index') }}" class="btn btn-sm btn-primary bg-ocean-600 hover:bg-ocean-700 text-white border-none shadow-sm font-semibold px-4 rounded-lg">
+                        Semua Ikan
+                    </a>
+                    <a href="{{ route('ekosistem.index') }}" class="btn btn-sm btn-outline text-ocean-600 border-ocean-200 hover:bg-ocean-50 font-semibold px-4 rounded-lg">
+                        Semua Ekosistem
                     </a>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($featuredContent as $item)
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-200 flex flex-col justify-between border border-gray-100">
+                    @php
+                        $isFish = ($item->type === 'fish');
+                        $title = $isFish ? $item->nama : $item->nama_ekosistem;
+                        $subtitle = $isFish ? "🌊 " . ($item->habitat ?? 'Tidak ada habitat') : "📍 " . ($item->lokasi ?? 'Tidak ada lokasi');
+                        $description = $item->deskripsi;
+                        $image = $item->gambar;
+                        $type = $isFish ? 'ikan' : 'ekosistem';
+                        $itemId = $isFish ? $item->id_ikan : $item->id_ekosistem;
+                        $detailRoute = $isFish ? route('ikan.show', $item->id_ikan) : route('ekosistem.show', $item->id_ekosistem);
+                        $badgeText = $isFish ? 'Ikan' : 'Ekosistem';
+                        $badgeColor = $isFish ? 'bg-sky-500' : 'bg-emerald-500';
+                    @endphp
+                    <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition duration-300 group hover:scale-[1.02] flex flex-col justify-between overflow-hidden border border-ocean-100/40">
                         <div>
-                            <div class="relative">
-                                @if($item->gambar)
-                                    <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}" class="w-full h-48 object-cover">
+                            <!-- Image -->
+                            <div class="relative overflow-hidden h-48">
+                                @if($image)
+                                    <img src="/storage/{{ $image }}" alt="{{ $title }}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300" loading="lazy">
                                 @else
-                                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">
-                                        <span>No Image</span>
+                                    <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center text-ocean-400">
+                                        <span>Tidak ada gambar</span>
                                     </div>
                                 @endif
-                                <span class="absolute top-3 left-3 bg-ocean-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
-                                    Fish
+                                <span class="absolute top-3 left-3 {{ $badgeColor }} text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
+                                    {{ $badgeText }}
                                 </span>
                             </div>
-                            <div class="p-4">
-                                <h4 class="font-bold text-gray-900 text-base mb-1">{{ $item->nama }}</h4>
-                                <p class="text-xs text-ocean-700 font-semibold mb-2">📍 {{ $item->habitat }}</p>
-                                <p class="text-gray-600 text-xs line-clamp-3">{{ $item->deskripsi }}</p>
+
+                            <!-- Card Content -->
+                            <div class="p-6">
+                                <a href="{{ $detailRoute }}" class="block group-hover:text-ocean-600 transition">
+                                    <h3 class="font-bold text-ocean-900 text-base line-clamp-1 group-hover:text-ocean-600 transition duration-150 mb-1" title="{{ $title }}">{{ $title }}</h3>
+                                </a>
+                                <p class="text-xs text-gray-500 font-semibold mb-2">{{ $subtitle }}</p>
+                                <p class="text-gray-600 text-sm line-clamp-2 leading-relaxed">{{ $description ?? 'Tidak ada deskripsi' }}</p>
                             </div>
                         </div>
-                        <div class="p-4 pt-0">
-                            <a href="{{ route('ikan.show', $item->id_ikan) }}" class="block text-center text-xs bg-ocean-50 text-ocean-700 font-semibold py-2 rounded-lg hover:bg-ocean-100 transition duration-150">
-                                Lihat Detail
-                            </a>
+
+                        <!-- Card Action Buttons -->
+                        <div class="p-6 pt-0">
+                            <div class="flex gap-2">
+                                <a href="{{ $detailRoute }}" class="btn btn-primary btn-sm flex-1 font-semibold transition">
+                                    Detail
+                                </a>
+                                <button class="bookmark-btn-card btn btn-outline btn-sm px-3" data-type="{{ $type }}" data-item-id="{{ $itemId }}">
+                                    <span class="bookmark-text">Bookmark</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -509,41 +609,125 @@
         </div>
 
         <!-- Aksi Pelestarian Laut Section -->
-        <div class="bg-white rounded-2xl shadow-md p-8 border border-gray-100 mb-10">
+        <div class="bg-white rounded-2xl shadow-card p-8 border border-ocean-100 mb-10 animate-fade">
             <div class="grid md:grid-cols-3 gap-8 items-center">
                 
                 <!-- Left Side -->
                 <div class="md:col-span-1 space-y-4">
-                    <h2 class="text-2xl font-bold text-gray-900 leading-tight">Aksi Pelestarian Laut</h2>
-                    <p class="text-gray-600 text-sm">
-                        Mari bersama kita menjaga kebersihan dan keberlanjutan laut.
+                    <h2 class="text-2xl font-bold text-ocean-900 leading-tight">Aksi Pelestarian Laut</h2>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        Mari bersama kita berkontribusi nyata menjaga kebersihan dan keberlanjutan ekosistem laut kita melalui aksi sukarela.
                     </p>
-                    <div>
-                        <a href="{{ route('aksi.index') }}" class="inline-block px-5 py-2.5 bg-black text-white font-semibold rounded-lg hover:bg-gray-900 transition duration-150 shadow">
+                    <div class="pt-2">
+                        <a href="{{ route('aksi.index') }}" class="btn btn-primary bg-ocean-600 hover:bg-ocean-700 text-white border-none shadow-md font-semibold px-6">
                             Ikuti Aksi
                         </a>
                     </div>
                 </div>
+
                 <!-- Right Side (Dynamic List of Conservation Actions) -->
                 <div class="md:col-span-2 space-y-4">
                     @forelse($actions as $act)
-                        <a href="{{ route('aksi.show', $act->id_aksi) }}" class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-ocean-50/50 transition duration-150 border border-gray-100 block">
-                            <div class="w-14 h-14 bg-gray-200 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
-                                @if($act->gambar)
-                                    <img src="/storage/{{ $act->gambar }}" alt="{{ $act->judul_aksi }}" class="w-full h-full object-cover">
-                                @else
-                                    <span class="text-2xl text-ocean-600">🌱</span>
-                                @endif
+                        <div class="flex items-center justify-between p-5 bg-ocean-50/40 rounded-2xl hover:bg-ocean-50/80 transition duration-300 border border-ocean-100/60 group hover:scale-[1.01]">
+                            <a href="{{ route('aksi.show', $act->id_aksi) }}" class="flex items-center space-x-4 flex-1">
+                                <div class="w-14 h-14 bg-white rounded-xl overflow-hidden shrink-0 flex items-center justify-center shadow-sm border border-ocean-100">
+                                    @if($act->gambar)
+                                        <img src="/storage/{{ $act->gambar }}" alt="{{ $act->judul_aksi }}" class="w-full h-full object-cover">
+                                    @else
+                                        <span class="text-2xl text-ocean-500">🌱</span>
+                                    @endif
+                                </div>
+                                <div class="space-y-1">
+                                    <h4 class="font-bold text-ocean-900 text-base group-hover:text-ocean-600 transition duration-150">{{ $act->judul_aksi }}</h4>
+                                    <p class="text-xs text-gray-500 font-medium">
+                                        Oleh <span class="text-ocean-700 font-semibold">{{ $act->createdBy->name }}</span>
+                                        <span class="ml-1 inline-block px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100 text-[10px]">{{ $act->createdBy->badge }}</span>
+                                    </p>
+                                    <p class="text-xs text-gray-600 line-clamp-1 pr-4 leading-relaxed">{{ Str::limit($act->deskripsi, 100) }}</p>
+                                </div>
+                            </a>
+                            <div class="text-right shrink-0">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-100">
+                                    ❤️ {{ $act->likes_count }}
+                                </span>
                             </div>
-                            <div>
-                                <h4 class="font-bold text-gray-900 text-sm">{{ $act->judul_aksi }}</h4>
-                                <p class="text-xs text-gray-600 mt-1">{{ Str::limit($act->deskripsi, 120) }}</p>
-                            </div>
-                        </a>
+                        </div>
                     @empty
-                        <p class="text-gray-400 text-sm italic text-center py-6">No actions available</p>
+                        <p class="text-gray-400 text-sm italic text-center py-6">Belum ada aksi pelestarian yang terdaftar.</p>
                     @endforelse
                 </div>
+
+            </div>
+        </div>
+
+        <!-- Leaderboard Section -->
+        <div id="leaderboard-section" class="bg-white rounded-2xl shadow-card p-8 border border-ocean-100 mb-10 animate-fade">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-ocean-900">Leaderboard Kontributor</h2>
+                    <p class="text-gray-600 text-sm mt-1">Daftar kontributor teratas dalam aksi pelestarian laut.</p>
+                </div>
+                <div>
+                    <a href="{{ route('home') }}#leaderboard" class="btn btn-outline btn-sm text-ocean-600 border-ocean-200 hover:bg-ocean-50">
+                        Lihat Selengkapnya
+                    </a>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-ocean-100">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-ocean-50 text-ocean-900 font-bold border-b border-ocean-100">
+                        <tr>
+                            <th class="p-4 text-center w-16">Peringkat</th>
+                            <th class="p-4">Nama Kontributor</th>
+                            <th class="p-4 text-center">Total Poin</th>
+                            <th class="p-4 text-center">Gelar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($leaderboard as $index => $u)
+                        @php
+                            $isCurrentUser = $u->id === auth()->id();
+                            $rowBg = $isCurrentUser ? 'bg-ocean-50/60 font-semibold' : 'hover:bg-gray-50/50';
+                            $rankColor = match($index) {
+                                0 => 'text-amber-500 font-extrabold text-lg',
+                                1 => 'text-slate-400 font-extrabold text-lg',
+                                2 => 'text-amber-700 font-extrabold text-lg',
+                                default => 'text-gray-500 font-semibold'
+                            };
+                            $badgeEmoji = match($index) {
+                                0 => '🥇',
+                                1 => '🥈',
+                                2 => '🥉',
+                                default => ''
+                            };
+                        @endphp
+                        <tr class="border-b border-ocean-100/50 last:border-b-0 {{ $rowBg }} transition duration-150">
+                            <td class="p-4 text-center {{ $rankColor }}">
+                                @if($index < 3)
+                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-soft border border-ocean-100">{{ $badgeEmoji }}</span>
+                                @else
+                                    {{ $index + 1 }}
+                                @endif
+                            </td>
+                            <td class="p-4 text-ocean-950 font-medium">
+                                <div class="flex items-center gap-2">
+                                    <span>{{ $u->name }}</span>
+                                    @if($isCurrentUser)
+                                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-ocean-600 text-white shadow-sm border border-ocean-700">Anda</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="p-4 text-center font-bold text-ocean-700">{{ $u->points }} Poin</td>
+                            <td class="p-4 text-center">
+                                <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                                    {{ $u->badge }}
+                                </span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     @endif
@@ -551,5 +735,85 @@
 </div>
 
 </div>
+
+@push('scripts')
+<script type="module">
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeBookmarkButtonsCard();
+        loadBookmarkStatesCard();
+    });
+
+    function initializeBookmarkButtonsCard() {
+        document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
+            btn.addEventListener('click', toggleBookmarkCard);
+        });
+    }
+
+    function toggleBookmarkCard(e) {
+        e.preventDefault();
+        const btn = e.currentTarget;
+        const type = btn.dataset.type;
+        const itemId = btn.dataset.itemId;
+        const isBookmarked = btn.classList.contains('bookmarked');
+
+        const method = isBookmarked ? 'DELETE' : 'POST';
+
+        fetch('/favorites', {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken(),
+            },
+            body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                btn.classList.toggle('bookmarked');
+                btn.classList.toggle('bg-blue-600');
+                btn.classList.toggle('text-white');
+                btn.classList.toggle('border-blue-600');
+                btn.classList.toggle('text-blue-600');
+                btn.classList.toggle('hover:bg-blue-50');
+                const text = btn.querySelector('.bookmark-text');
+                text.textContent = btn.classList.contains('bookmarked') ? 'Bookmarked' : 'Bookmark';
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(err => console.error('Error:', err));
+    }
+
+    function loadBookmarkStatesCard() {
+        fetch('/favorites', {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': getCsrfToken(),
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success' && Array.isArray(data.data)) {
+                document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
+                    const type = btn.dataset.type;
+                    const itemId = parseInt(btn.dataset.itemId);
+                    const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
+                    if (isBookmarked) {
+                        btn.classList.add('bookmarked', 'bg-blue-600', 'text-white', 'border-blue-600');
+                        btn.classList.remove('text-blue-600', 'hover:bg-blue-50');
+                        const text = btn.querySelector('.bookmark-text');
+                        if (text) text.textContent = 'Bookmarked';
+                    }
+                });
+            }
+        })
+        .catch(err => console.error('Error loading bookmark state:', err));
+    }
+
+    function getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.content || '';
+    }
+</script>
+@endpush
 
 @endsection
