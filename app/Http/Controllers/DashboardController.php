@@ -8,6 +8,11 @@ use App\Models\AksiPelestarian;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Ikan;
+use App\Models\Ekosistem;
+use App\Models\AksiPelestarian;
 
 class DashboardController extends Controller
 {
@@ -93,7 +98,7 @@ class DashboardController extends Controller
         $featuredContent = $featuredFish->concat($featuredEco)->shuffle();
 
         return view('dashboard', [
-            'user' => $user,
+            'user'          => $user,
             'bookmarkCount' => $bookmarkCount,
             'likeCount' => $likeCount,
             'fish' => $fish,

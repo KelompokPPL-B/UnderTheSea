@@ -25,11 +25,6 @@
                     <a href="/aksi" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-ocean-50 hover:text-ocean-600 transition {{ request()->path() === 'aksi' || request()->routeIs('aksi.*') ? 'bg-ocean-50 text-ocean-600' : '' }}">
                         Actions
                     </a>
-                    @auth
-                        <a href="/bookmarks" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-ocean-50 hover:text-ocean-600 transition {{ request()->routeIs('bookmarks.*') ? 'bg-ocean-50 text-ocean-600' : '' }}">
-                            Bookmarks
-                        </a>
-                    @endauth
                 </div>
             </div>
 
@@ -50,10 +45,6 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('bookmarks.index')">
-                            {{ __('My Bookmarks') }}
-                        </x-dropdown-link>
-
                         <x-dropdown-link :href="route('profile.show')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
@@ -122,10 +113,6 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('bookmarks.index')">
-                    {{ __('My Bookmarks') }}
-                </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
