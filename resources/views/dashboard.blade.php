@@ -5,6 +5,7 @@
 <div class="py-10 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-7xl mx-auto px-6">
 
+    @if(auth()->user()->isAdmin())
     <h1 class="text-3xl font-bold text-ocean-900 mb-8">Dashboard</h1>
 
     <!-- Stats Overview -->
@@ -434,6 +435,118 @@
             </tbody>
         </table>
     </div>
+    @else
+        <!-- User Dashboard Mockup Layout -->
+        
+        <!-- Hero Banner Section -->
+        <div class="bg-gradient-to-r from-ocean-900 via-ocean-800 to-blue-900 text-white rounded-2xl p-8 md:p-12 shadow-lg mb-10 text-center relative overflow-hidden">
+            <div class="relative z-10 max-w-2xl mx-auto">
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">🌊 Under The Sea</h1>
+                <p class="text-ocean-100 mb-8 text-base md:text-lg">
+                    Jelajahi keindahan biota laut dan pelajari pentingnya menjaga kelestarian ekosistem laut kita.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 mb-6">
+                    <a href="{{ route('ikan.index') }}" class="px-6 py-3 bg-white text-ocean-900 font-semibold rounded-lg shadow hover:bg-ocean-50 transition duration-150">
+                        Mulai Jelajah
+                    </a>
+                    <a href="{{ route('aksi.index') }}" class="px-6 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition duration-150">
+                        Lihat Aksi
+                    </a>
+                </div>
+                <div class="flex justify-center items-center space-x-6 text-sm text-ocean-200 border-t border-white/10 pt-6">
+                    <a href="{{ route('ikan.index') }}" class="hover:text-white transition">Katalog Ikan</a>
+                    <span class="text-white/20">|</span>
+                    <a href="{{ route('ekosistem.index') }}" class="hover:text-white transition">Ekosistem Laut</a>
+                    <span class="text-white/20">|</span>
+                    <a href="{{ route('aksi.index') }}" class="hover:text-white transition">Pelestarian Laut</a>
+                </div>
+            </div>
+            <div class="absolute inset-0 bg-ocean-950/20 mix-blend-overlay"></div>
+        </div>
+
+        <!-- Insight Section -->
+        <div class="mb-14">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-ocean-900">Insight</h2>
+                <p class="text-gray-600 mt-2">Temukan informasi menarik dan edukatif seputar kehidupan laut.</p>
+                <div class="mt-4">
+                    <a href="{{ route('ikan.index') }}" class="inline-block px-5 py-2.5 bg-ocean-900 text-white font-semibold rounded-lg hover:bg-ocean-800 transition duration-150 shadow">
+                        Lihat Semua Ikan
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                @foreach($featuredContent as $item)
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-200 flex flex-col justify-between border border-gray-100">
+                        <div>
+                            <div class="relative">
+                                @if($item->gambar)
+                                    <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}" class="w-full h-48 object-cover">
+                                @else
+                                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">
+                                        <span>No Image</span>
+                                    </div>
+                                @endif
+                                <span class="absolute top-3 left-3 bg-ocean-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
+                                    Fish
+                                </span>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-gray-900 text-base mb-1">{{ $item->nama }}</h4>
+                                <p class="text-xs text-ocean-700 font-semibold mb-2">📍 {{ $item->habitat }}</p>
+                                <p class="text-gray-600 text-xs line-clamp-3">{{ $item->deskripsi }}</p>
+                            </div>
+                        </div>
+                        <div class="p-4 pt-0">
+                            <a href="{{ route('ikan.show', $item->id_ikan) }}" class="block text-center text-xs bg-ocean-50 text-ocean-700 font-semibold py-2 rounded-lg hover:bg-ocean-100 transition duration-150">
+                                Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Aksi Pelestarian Laut Section -->
+        <div class="bg-white rounded-2xl shadow-md p-8 border border-gray-100 mb-10">
+            <div class="grid md:grid-cols-3 gap-8 items-center">
+                
+                <!-- Left Side -->
+                <div class="md:col-span-1 space-y-4">
+                    <h2 class="text-2xl font-bold text-gray-900 leading-tight">Aksi Pelestarian Laut</h2>
+                    <p class="text-gray-600 text-sm">
+                        Mari bersama kita menjaga kebersihan dan keberlanjutan laut.
+                    </p>
+                    <div>
+                        <a href="{{ route('aksi.index') }}" class="inline-block px-5 py-2.5 bg-black text-white font-semibold rounded-lg hover:bg-gray-900 transition duration-150 shadow">
+                            Ikuti Aksi
+                        </a>
+                    </div>
+                </div>
+                <!-- Right Side (Dynamic List of Conservation Actions) -->
+                <div class="md:col-span-2 space-y-4">
+                    @forelse($actions as $act)
+                        <a href="{{ route('aksi.show', $act->id_aksi) }}" class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-ocean-50/50 transition duration-150 border border-gray-100 block">
+                            <div class="w-14 h-14 bg-gray-200 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
+                                @if($act->gambar)
+                                    <img src="/storage/{{ $act->gambar }}" alt="{{ $act->judul_aksi }}" class="w-full h-full object-cover">
+                                @else
+                                    <span class="text-2xl text-ocean-600">🌱</span>
+                                @endif
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">{{ $act->judul_aksi }}</h4>
+                                <p class="text-xs text-gray-600 mt-1">{{ Str::limit($act->deskripsi, 120) }}</p>
+                            </div>
+                        </a>
+                    @empty
+                        <p class="text-gray-400 text-sm italic text-center py-6">No actions available</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    @endif
 
 </div>
 
