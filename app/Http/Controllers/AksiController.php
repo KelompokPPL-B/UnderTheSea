@@ -18,7 +18,15 @@ class AksiController extends Controller
         $this->pointsService = $pointsService;
     }
 
-    // 🔥 INDEX (SEARCH + SORT + OPTIMIZED)
+    /**
+     * Owner: Arvia / Mutiara
+     * PBI-13: Manage Action Content
+     * PBI-19: Pagination UI
+     * PBI-21: Sort Options
+     * PBI-22: Filter Options
+     *
+     * Search + Sort + Filter Tahun + Pagination
+     */
     public function index(Request $request)
     {
         // Validasi input search maksimal 100 karakter dan tidak mengandung karakter spesial
@@ -29,66 +37,48 @@ class AksiController extends Controller
             'search.regex' => 'Kata kunci pencarian tidak boleh mengandung karakter spesial.',
         ]);
 
-        $sort = $request->query('sort', 'newest');
-        $search = $request->query('search');
-
-        $query = AksiPelestarian::query()
-            ->select('id_aksi', 'judul_aksi', 'deskripsi', 'gambar', 'created_at');
-
-        // 🔍 SEARCH (Tetap menggunakan prefix search yang optimal)
-        if (!empty($search)) {
-            $query->where('judul_aksi', 'like', "{$search}%");
-        }
-
-        // 🔽 SORT
-        if ($sort === 'oldest') {
-            $query->orderBy('created_at', 'asc');
-        } elseif ($sort === 'popular') {
-            $query->withCount('likes')->orderByDesc('likes_count');
-        } else {
-            $query->orderBy('created_at', 'desc');
-        }
-
-        // 📄 PAGINATION
-        $aksi = $query->paginate(10)->appends($request->query());
-
-        return view('aksi.index', compact('aksi', 'sort', 'search'));
-    }
-
-    /**
-     * Owner: Arvia / Mutiara
-     * PBI-13: Manage Action Content
-     * PBI-19: Pagination UI
-     * PBI-21: Sort Options
-     * PBI-22: Filter Options
-     */
-    public function index(Request $request)
-    {
-        $sort        = $request->get('sort', 'newest');
+        $sort = $request->get('sort', 'newest');
+        $search = $request->get('search', '');
         $filterTahun = $request->get('tahun', '');
 
         $query = AksiPelestarian::query();
 
-        if ($filterTahun) {
+        // Search berdasarkan judul aksi
+        if (!empty($search)) {
+            $query->where('judul_aksi', 'like', '%' . $search . '%');
+        }
+
+        // Filter berdasarkan tahun created_at
+        if (!empty($filterTahun)) {
             $query->whereYear('created_at', $filterTahun);
         }
 
+        // Sort
         match ($sort) {
             'oldest'     => $query->orderBy('created_at', 'asc'),
+            'popular'    => $query->withCount('likes')->orderByDesc('likes_count'),
             'title_asc'  => $query->orderBy('judul_aksi', 'asc'),
             'title_desc' => $query->orderBy('judul_aksi', 'desc'),
             default      => $query->orderBy('created_at', 'desc'),
         };
 
+        // Pagination
         $aksi = $query->paginate(10)->withQueryString();
 
+        // List tahun untuk filter
         $tahunList = AksiPelestarian::selectRaw('YEAR(created_at) as tahun')
             ->whereNotNull('created_at')
             ->distinct()
             ->orderBy('tahun', 'desc')
             ->pluck('tahun');
 
-        return view('aksi.index', compact('aksi', 'sort', 'filterTahun', 'tahunList'));
+        return view('aksi.index', compact(
+            'aksi',
+            'sort',
+            'search',
+            'filterTahun',
+            'tahunList'
+        ));
     }
 
     /**
@@ -155,7 +145,7 @@ class AksiController extends Controller
             $validated['gambar'] = $request->file('gambar')->store('action', 'public');
         }
 
-        $validated['created_by']        = auth()->id();
+        $validated['created_by'] = auth()->id();
         $validated['is_user_generated'] = !auth()->user()->isAdmin();
 
         $aksi = AksiPelestarian::create($validated);
@@ -179,7 +169,7 @@ class AksiController extends Controller
         }
 
         $validated = $request->validate([
-            'judul_aksi'     => 'required|string|min:5|max:50|unique:aksi_pelestarian,judul_aksi,'.$id.',id_aksi',
+            'judul_aksi'     => 'required|string|min:5|max:50|unique:aksi_pelestarian,judul_aksi,' . $id . ',id_aksi',
             'deskripsi'      => 'required|string|min:10|max:255',
             'manfaat'        => 'required|string|min:10|max:100',
             'cara_melakukan' => 'required|string|min:10|max:255',
@@ -236,7 +226,8 @@ class AksiController extends Controller
             'nama_peserta.max'      => 'Name must not exceed 100 characters.',
         ]);
 
-        $sessionId   = session()->getId();
+        $sessionId = session()->getId();
+
         $sudahTandai = AksiTandai::where('aksi_id', $id)
             ->where('session_id', $sessionId)
             ->exists();
@@ -264,10 +255,16 @@ class AksiController extends Controller
     public function batalTandai($id)
     {
         AksiPelestarian::findOrFail($id);
+
         $sessionId = session()->getId();
 
-        AksiTandai::where('aksi_id', $id)->where('session_id', $sessionId)->delete();
-        AksiFeedback::where('aksi_id', $id)->where('session_id', $sessionId)->delete();
+        AksiTandai::where('aksi_id', $id)
+            ->where('session_id', $sessionId)
+            ->delete();
+
+        AksiFeedback::where('aksi_id', $id)
+            ->where('session_id', $sessionId)
+            ->delete();
 
         session()->forget("tandai_aksi_{$id}");
         session()->forget("tandai_aksi_{$id}_nama");
@@ -282,6 +279,7 @@ class AksiController extends Controller
     public function storeFeedback(Request $request, $id)
     {
         AksiPelestarian::findOrFail($id);
+
         $sessionId = session()->getId();
 
         $sudahTandai = AksiTandai::where('aksi_id', $id)
@@ -323,7 +321,7 @@ class AksiController extends Controller
     public function riwayat(Request $request)
     {
         $sessionId = session()->getId();
-        $sort      = $request->query('sort', 'newest_event');
+        $sort = $request->query('sort', 'newest_event');
 
         $query = AksiTandai::with('aksi')
             ->where('aksi_tandai.session_id', $sessionId)
