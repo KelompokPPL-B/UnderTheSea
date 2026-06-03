@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ekosistem;
 use App\Services\PointsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EkosistemController extends Controller
 {
@@ -17,7 +18,7 @@ class EkosistemController extends Controller
 
     public function index(Request $request)
     {
-        $sort         = $request->get('sort', 'newest');
+        $sort = $request->get('sort', 'newest');
         $filterLokasi = $request->get('lokasi', '');
 
         $query = Ekosistem::query();
@@ -27,10 +28,10 @@ class EkosistemController extends Controller
         }
 
         match ($sort) {
-            'oldest'    => $query->orderBy('created_at', 'asc'),
-            'name_asc'  => $query->orderBy('nama_ekosistem', 'asc'),
+            'oldest' => $query->orderBy('created_at', 'asc'),
+            'name_asc' => $query->orderBy('nama_ekosistem', 'asc'),
             'name_desc' => $query->orderBy('nama_ekosistem', 'desc'),
-            default     => $query->orderBy('created_at', 'desc'),
+            default => $query->orderBy('created_at', 'desc'),
         };
 
         $ekosistem = $query->paginate(10)->withQueryString();
@@ -64,6 +65,7 @@ class EkosistemController extends Controller
     public function edit($id)
     {
         $ekosistem = Ekosistem::findOrFail($id);
+
         return view('ekosistem.edit', compact('ekosistem'));
     }
 
@@ -72,18 +74,20 @@ class EkosistemController extends Controller
         abort_unless(auth()->user()?->isAdmin(), 403);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|min:5|max:50|unique:ekosistem,nama_ekosistem',
-            'deskripsi' => 'required|string|min:10|max:255',
-            'lokasi' => 'required|string|min:5|max:50',
-            'peran' => 'required|string|min:5|max:50',
-            'karakteristik' => 'nullable|string',
-            'manfaat' => 'nullable|string',
-            'ancaman' => 'required|string|min:10|max:100',
-            'cara_pelestarian' => 'nullable|string',
-            'gambar' => 'required|image|mimes:jpg,jpeg,png,jfif|max:2048',
+            'nama_ekosistem'   => 'required|string|min:5|max:50|unique:ekosistem,nama_ekosistem',
+            'deskripsi'        => 'required|string|min:10|max:255',
+            'lokasi'           => 'required|string|min:5|max:50',
+            'peran'            => 'required|string|min:5|max:50',
+            'ancaman'          => 'required|string|min:10|max:100',
+            'cara_menjaga'     => 'nullable|string',
+            'larangan'         => 'nullable|string',
+            'dampak_kerusakan' => 'nullable|string',
+            'gambar'           => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
         ], [
-            'gambar.mimes' => 'Format gambar harus JPG, JPEG, PNG, atau JFIF.',
-            'gambar.max' => 'Ukuran gambar maksimal 2 MB.',
+            'gambar.required' => 'Gambar wajib diunggah.',
+            'gambar.image'    => 'File yang diunggah harus berupa gambar.',
+            'gambar.mimes'    => 'Format gambar harus JPG, JPEG, atau PNG.',
+            'gambar.max'      => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         if ($request->hasFile('gambar')) {
@@ -91,34 +95,44 @@ class EkosistemController extends Controller
         }
 
         $validated['created_by'] = auth()->id();
+
         Ekosistem::create($validated);
 
-        return redirect()->route('ekosistem.index')->with('success', 'Ecosystem created successfully!');
+        return redirect()->route('ekosistem.index')
+            ->with('success', 'Ecosystem created successfully!');
     }
 
     public function update(Request $request, $id)
     {
         abort_unless(auth()->user()?->isAdmin(), 403);
+
         $ekosistem = Ekosistem::findOrFail($id);
+
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|min:5|max:50|unique:ekosistem,nama_ekosistem,'.$id.',id_ekosistem',
-            'deskripsi' => 'required|string|min:10|max:255',
-            'lokasi' => 'required|string|min:5|max:50',
-            'peran' => 'required|string|min:5|max:50',
-            'karakteristik' => 'nullable|string',
-            'manfaat' => 'nullable|string',
-            'ancaman' => 'required|string|min:10|max:100',
-            'cara_pelestarian' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,jfif|max:2048',
+            'nama_ekosistem'   => 'required|string|min:5|max:50|unique:ekosistem,nama_ekosistem,' . $id . ',id_ekosistem',
+            'deskripsi'        => 'required|string|min:10|max:255',
+            'lokasi'           => 'required|string|min:5|max:50',
+            'peran'            => 'required|string|min:5|max:50',
+            'ancaman'          => 'required|string|min:10|max:100',
+            'cara_menjaga'     => 'nullable|string',
+            'larangan'         => 'nullable|string',
+            'dampak_kerusakan' => 'nullable|string',
+            'gambar'           => 'nullable|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
+        ], [
+            'gambar.image' => 'File yang diunggah harus berupa gambar.',
+            'gambar.mimes' => 'Format gambar harus JPG, JPEG, atau PNG.',
+            'gambar.max'   => 'Ukuran gambar maksimal 2MB.',
         ]);
 
-
         if ($request->hasFile('gambar')) {
+            if ($ekosistem->gambar) {
+                Storage::disk('public')->delete($ekosistem->gambar);
+            }
+
             $validated['gambar'] = $request->file('gambar')->store('ecosystem', 'public');
         } else {
-            unset($validated['gambar']); // pakai gambar lama
+            unset($validated['gambar']);
         }
-
 
         $ekosistem->update($validated);
 
@@ -126,16 +140,19 @@ class EkosistemController extends Controller
             ->with('success', 'Ecosystem updated successfully!');
     }
 
-    /**
-     * Owner: Arvia
-     * PBI-11: Manage Ecosystem Content
-     */
     public function destroy($id)
     {
         abort_unless(auth()->user()?->isAdmin(), 403);
+
         $ekosistem = Ekosistem::findOrFail($id);
+
+        if ($ekosistem->gambar) {
+            Storage::disk('public')->delete($ekosistem->gambar);
+        }
+
         $ekosistem->delete();
 
-        return redirect()->route('ekosistem.index')->with('success', 'Ecosystem deleted successfully!');
+        return redirect()->route('ekosistem.index')
+            ->with('success', 'Ecosystem deleted successfully!');
     }
 }
