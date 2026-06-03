@@ -10,7 +10,6 @@
     </div>
     <div class="max-w-4xl mx-auto px-6 py-6">
         <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition overflow-hidden">
-            <!-- Hero Image -->
             @if($ekosistem->gambar)
                 <img src="/storage/{{ $ekosistem->gambar }}" alt="{{ $ekosistem->nama_ekosistem }}" class="w-full h-96 object-cover" loading="lazy">
             @else
@@ -20,26 +19,18 @@
             @endif
 
             <div class="p-8 space-y-8">
-                <!-- Header -->
                 <div class="flex justify-between items-start pb-6 border-b border-ocean-100 animate-fade">
                     <div>
                         <h1 class="text-4xl font-bold text-ocean-900">{{ $ekosistem->nama_ekosistem }}</h1>
                         <p class="text-ocean-600 text-lg mt-2 font-semibold">Marine Ecosystem</p>
                     </div>
-                    @auth
-                        <button class="bookmark-btn btn btn-outline" data-type="ekosistem" data-item-id="{{ $ekosistem->id_ekosistem }}">
-                            <span class="bookmark-text">Bookmark</span>
-                        </button>
-                    @endauth
                 </div>
 
-                <!-- Location Card -->
                 <div class="p-4 bg-ocean-50 rounded-xl border border-ocean-200 animate-fade">
                     <h3 class="text-sm font-bold text-ocean-700 mb-2 uppercase">Location</h3>
                     <p class="text-gray-700">{{ $ekosistem->lokasi ?? 'Not specified' }}</p>
                 </div>
 
-                <!-- Prose Content -->
                 <div class="prose prose-sm max-w-none space-y-6">
                     <div class="animate-fade">
                         <h3 class="text-2xl font-bold text-ocean-900 mb-3">Description</h3>
@@ -57,12 +48,10 @@
                     </div>
                 </div>
 
-                <!-- Conservation Section -->
                 @if($ekosistem->cara_menjaga || $ekosistem->larangan || $ekosistem->dampak_kerusakan)
                     <div class="border-t border-ocean-100 pt-8 space-y-6">
                         <h2 class="text-2xl font-bold text-ocean-900">Conservation Guide</h2>
 
-                        <!-- Protection Tips -->
                         @if($ekosistem->cara_menjaga)
                             <div class="p-5 bg-green-50 rounded-xl border border-green-200 animate-fade">
                                 <h3 class="text-lg font-bold text-green-800 mb-3">Protection Tips</h3>
@@ -70,7 +59,6 @@
                             </div>
                         @endif
 
-                        <!-- Warnings -->
                         @if($ekosistem->larangan)
                             <div class="p-5 bg-red-50 rounded-xl border border-red-200 animate-fade">
                                 <h3 class="text-lg font-bold text-red-800 mb-3">Warnings</h3>
@@ -78,7 +66,6 @@
                             </div>
                         @endif
 
-                        <!-- Impact -->
                         @if($ekosistem->dampak_kerusakan)
                             <div class="p-5 bg-yellow-50 rounded-xl border border-yellow-200 animate-fade">
                                 <h3 class="text-lg font-bold text-yellow-800 mb-3">Impact</h3>
@@ -88,7 +75,6 @@
                     </div>
                 @endif
 
-                <!-- Actions -->
                 <div class="flex flex-wrap gap-3 pt-4 border-t border-ocean-100">
                     <a href="{{ route('ekosistem.index') }}" class="btn btn-outline btn-sm">Back to Ecosystems</a>
 

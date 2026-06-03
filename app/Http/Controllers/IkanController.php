@@ -55,6 +55,8 @@ class IkanController extends Controller
 
     public function store(Request $request)
     {
+        abort_unless(auth()->user()?->isAdmin(), 403);
+
         $validated = $request->validate([
             'nama'              => 'required|string|max:255',
             'deskripsi'         => 'nullable|string',
@@ -74,14 +76,16 @@ class IkanController extends Controller
         }
 
         $validated['created_by'] = auth()->id();
-        $ikan = Ikan::create($validated);
+        Ikan::create($validated);
 
-        return redirect()->route('ikan.show', $ikan->id_ikan)
-            ->with('success', 'Fish species created successfully!');
+        return redirect()->route('ikan.index')
+            ->with('success', 'Fish created successfully!');
     }
 
     public function update(Request $request, $id)
     {
+        abort_unless(auth()->user()?->isAdmin(), 403);
+
         $ikan = Ikan::findOrFail($id);
 
         $validated = $request->validate([
@@ -107,12 +111,14 @@ class IkanController extends Controller
 
         $ikan->update($validated);
 
-        return redirect()->route('ikan.show', $ikan->id_ikan)
-            ->with('success', 'Fish species updated successfully!');
+        return redirect()->route('ikan.show', $id)
+            ->with('success', 'Fish updated successfully!');
     }
 
     public function destroy($id)
     {
+        abort_unless(auth()->user()?->isAdmin(), 403);
+
         $ikan = Ikan::findOrFail($id);
 
         if ($ikan->gambar) {

@@ -1,0 +1,10 @@
+[33m1d6cb34[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32marvia_branch[m[33m, [m[1;31morigin/arvia_branch[m[33m)[m PROJ-72 - feat : Menambahkan validasi input bagaimana cara berpatisipasi pada aksi pelestarian
+[33m7f63612[m PROJ-72 - feat : Menambahkan validasi input benefit pada aksi pelestarian
+[33me9c5b9f[m PROJ-72 - feat : Menambahkan validasi input deskripsi pada aksi pelestarian
+[33meba5bc3[m PROJ-72 - feat : menambahkan validasi input judul aksi
+[33m63caca4[m PROJ-42 - feat : menambahkan alert notif untuk validasi input form ekosistem
+[33m3763c42[m PROJ-42 - feat : menambahkan maksimal karakter validasi input ancaman  ekosistem
+[33m8045717[m PROJ-42 - feat : menambahkan maksimal karakter validasi input peran ekosistem
+[33m8462dc0[m PROJ-42 - feat : menambahkan maksimal karakter validasi input lokasi ekosistem
+[33m3d961d8[m PROJ-42 - feat: menambahkan maksimal validasi input pada deskripsi ekosistem
+[33m0f02ed4[m PROJ-42 - feat: menambahkan maksimal kalimat pada nama ekosistem

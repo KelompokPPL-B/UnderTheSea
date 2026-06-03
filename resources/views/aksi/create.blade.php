@@ -1,10 +1,13 @@
+{{--
+#PBI-04
+#OWNER-Arvia
+--}}
 @extends('layouts.app')
 
 @section('content')
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-2xl mx-auto px-6">
         <div class="bg-white rounded-2xl shadow-card p-8">
-
             <!-- Header -->
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-ocean-900 mb-2">Create Conservation Action</h1>
@@ -30,16 +33,17 @@
                 <!-- Title -->
                 <div>
                     <label for="judul_aksi" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Title
+                        Title *
                     </label>
                     <input
                         type="text"
                         id="judul_aksi"
                         name="judul_aksi"
                         value="{{ old('judul_aksi') }}"
+                        minlength="5"
                         maxlength="200"
                         class="input input-bordered w-full @error('judul_aksi') input-error @enderror"
-                        placeholder="Title"
+                        placeholder="Enter action title"
                         required
                     >
                     <div class="flex justify-between mt-1">
@@ -52,7 +56,7 @@
                     </div>
                 </div>
 
-                <!-- Description (max 5000 chars) -->
+                <!-- Description -->
                 <div>
                     <label for="deskripsi" class="block text-sm font-semibold text-ocean-900 mb-2">
                         Description
@@ -61,9 +65,10 @@
                         id="deskripsi"
                         name="deskripsi"
                         rows="4"
+                        minlength="10"
                         maxlength="5000"
                         class="textarea textarea-bordered w-full @error('deskripsi') textarea-error @enderror"
-                        placeholder="Description"
+                        placeholder="Describe the conservation action"
                     >{{ old('deskripsi') }}</textarea>
                     <div class="flex justify-between mt-1">
                         @error('deskripsi')
@@ -75,7 +80,7 @@
                     </div>
                 </div>
 
-                <!-- Benefits (max 3000 chars) -->
+                <!-- Benefits -->
                 <div>
                     <label for="manfaat" class="block text-sm font-semibold text-ocean-900 mb-2">
                         Benefits
@@ -84,9 +89,10 @@
                         id="manfaat"
                         name="manfaat"
                         rows="3"
+                        minlength="10"
                         maxlength="3000"
                         class="textarea textarea-bordered w-full @error('manfaat') textarea-error @enderror"
-                        placeholder="Benefits"
+                        placeholder="What are the benefits of this action?"
                     >{{ old('manfaat') }}</textarea>
                     <div class="flex justify-between mt-1">
                         @error('manfaat')
@@ -98,7 +104,7 @@
                     </div>
                 </div>
 
-                <!-- How to Participate (max 3000 chars) -->
+                <!-- How to Participate -->
                 <div>
                     <label for="cara_melakukan" class="block text-sm font-semibold text-ocean-900 mb-2">
                         How to Participate
@@ -107,9 +113,10 @@
                         id="cara_melakukan"
                         name="cara_melakukan"
                         rows="3"
+                        minlength="10"
                         maxlength="3000"
                         class="textarea textarea-bordered w-full @error('cara_melakukan') textarea-error @enderror"
-                        placeholder="How to Participate"
+                        placeholder="Explain how people can participate"
                     >{{ old('cara_melakukan') }}</textarea>
                     <div class="flex justify-between mt-1">
                         @error('cara_melakukan')
@@ -126,7 +133,7 @@
                     <h2 class="text-sm font-bold text-ocean-500 uppercase tracking-widest">Event Details</h2>
                 </div>
 
-                <!-- Location (max 255 chars) -->
+                <!-- Location -->
                 <div>
                     <label for="lokasi" class="block text-sm font-semibold text-ocean-900 mb-2">
                         Location
@@ -168,7 +175,7 @@
                     @enderror
                 </div>
 
-                <!-- Volunteer Needed (1 - 10000) -->
+                <!-- Volunteer Needed -->
                 <div>
                     <label for="volunteer_dibutuhkan" class="block text-sm font-semibold text-ocean-900 mb-2">
                         Volunteer Needed
@@ -193,7 +200,7 @@
                     <h2 class="text-sm font-bold text-ocean-500 uppercase tracking-widest">Conservation Details</h2>
                 </div>
 
-                <!-- Conservation Goals (max 500 chars) -->
+                <!-- Conservation Goals -->
                 <div>
                     <label for="tujuan_konservasi" class="block text-sm font-semibold text-ocean-900 mb-2">
                         Conservation Goals
@@ -216,7 +223,7 @@
                     </div>
                 </div>
 
-                <!-- Environmental Issue (max 500 chars) -->
+                <!-- Environmental Issue -->
                 <div>
                     <label for="isu_lingkungan" class="block text-sm font-semibold text-ocean-900 mb-2">
                         Environmental Issue
@@ -239,7 +246,7 @@
                     </div>
                 </div>
 
-                <!-- Action Impact (max 3000 chars) -->
+                <!-- Action Impact -->
                 <div>
                     <label for="dampak_aksi" class="block text-sm font-semibold text-ocean-900 mb-2">
                         Action Impact
@@ -263,8 +270,6 @@
                 </div>
 
                 {{-- ===== SECTION: Image ===== --}}
-
-                <!-- Image Upload -->
                 <div>
                     <label for="gambar" class="block text-sm font-semibold text-ocean-900 mb-2">
                         Image (JPG, PNG - Max 2MB)
@@ -304,9 +309,9 @@
 <script>
 // ===== Character counters =====
 const counters = [
-    { input: 'judul_aksi',          counter: 'judul-counter',   max: 200  },
-    { input: 'deskripsi',           counter: 'deskripsi-counter', max: 5000 },
-    { input: 'manfaat',             counter: 'manfaat-counter', max: 3000 },
+    { input: 'judul_aksi',        counter: 'judul-counter',   max: 200  },
+    { input: 'deskripsi',         counter: 'deskripsi-counter', max: 5000 },
+    { input: 'manfaat',           counter: 'manfaat-counter', max: 3000 },
     { input: 'cara_melakukan',      counter: 'cara-counter',    max: 3000 },
     { input: 'lokasi',              counter: 'lokasi-counter',  max: 255  },
     { input: 'tujuan_konservasi',   counter: 'tujuan-counter',  max: 500  },

@@ -36,15 +36,62 @@
             </div>
         </div>
 
-        <!-- Sort Controls -->
-        <div class="mb-6 flex justify-end">
-            <select onchange="window.location.href='{{ route('aksi.index') }}?sort=' + this.value"
-                    class="select select-bordered select-sm">
-                <option value="newest"  {{ $sort === 'newest'  ? 'selected' : '' }}>Newest First</option>
-                <option value="oldest"  {{ $sort === 'oldest'  ? 'selected' : '' }}>Oldest First</option>
-                <option value="popular" {{ $sort === 'popular' ? 'selected' : '' }}>Most Popular</option>
-            </select>
-        </div>
+        <!-- Filter & Sort Controls -->
+        <form method="GET" action="{{ route('aksi.index') }}" class="mb-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-ocean-100 p-8">
+                <p class="text-xs font-bold text-ocean-500 uppercase tracking-widest mb-8">🔍 Filter & Sort</p>
+                <div class="flex flex-wrap items-end gap-8">
+                    <!-- Sort By -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Sort By</label>
+                        <select name="sort" class="select select-bordered w-52">
+                            <option value="newest" {{ ($sort ?? 'newest') === 'newest' ? 'selected' : '' }}>Newest First</option>
+                            <option value="oldest" {{ ($sort ?? '') === 'oldest' ? 'selected' : '' }}>Oldest First</option>
+                            <option value="popular" {{ ($sort ?? '') === 'popular' ? 'selected' : '' }}>Most Popular</option>
+                            <option value="title_asc" {{ ($sort ?? '') === 'title_asc' ? 'selected' : '' }}>Title A–Z</option>
+                            <option value="title_desc" {{ ($sort ?? '') === 'title_desc' ? 'selected' : '' }}>Title Z–A</option>
+                        </select>
+                    </div>
+                    <!-- Filter Tahun -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Year</label>
+                        <select name="tahun" class="select select-bordered w-52">
+                            <option value="">All Years</option>
+                            @foreach($tahunList as $tahun)
+                                <option value="{{ $tahun }}" {{ ($filterTahun ?? '') == $tahun ? 'selected' : '' }}>{{ $tahun }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- Buttons -->
+                    <div class="ml-10 flex items-end gap-4">
+                        <button type="submit" class="btn h-12 min-h-12 px-6 text-sm font-semibold text-white" style="background:#0e7490;border:none;border-radius:10px;">Apply</button>
+                        <a href="{{ route('aksi.index') }}" class="btn btn-ghost h-12 min-h-12 px-6 text-sm font-semibold text-gray-500">Reset</a>
+                    </div>
+                </div>
+
+                @if(($filterTahun ?? '') || ($sort ?? 'newest') !== 'newest')
+                    <div class="mt-6 flex flex-wrap items-center gap-2">
+                        <span class="text-xs text-gray-400 font-medium">Active Filters:</span>
+                        @if(($sort ?? 'newest') !== 'newest')
+                            <span class="badge badge-sm" style="background:#f0f9ff;color:#0369a1;border:none;">
+                                Sort: {{ match($sort) {
+                                    'oldest'     => 'Oldest First',
+                                    'popular'    => 'Most Popular',
+                                    'title_asc'  => 'Title A–Z',
+                                    'title_desc' => 'Title Z–A',
+                                    default      => 'Newest First'
+                                } }}
+                            </span>
+                        @endif
+                        @if($filterTahun ?? '')
+                            <span class="badge badge-sm" style="background:#e0f2fe;color:#0369a1;border:none;">
+                                Year: {{ $filterTahun }}
+                            </span>
+                        @endif
+                    </div>
+                @endif
+            </div>
+        </form>
 
         @if($aksi->isEmpty())
             <div class="bg-white rounded-2xl shadow-card p-12 text-center">
@@ -130,7 +177,6 @@
                 @endforeach
             </div>
 
-            <!-- Pagination -->
             <div class="mt-8 flex justify-center">
                 {{ $aksi->appends(request()->query())->links() }}
             </div>

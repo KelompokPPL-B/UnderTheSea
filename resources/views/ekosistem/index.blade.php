@@ -3,7 +3,6 @@
 @section('content')
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-7xl mx-auto px-6 py-6">
-        <!-- Header -->
         <div class="flex justify-between items-start mb-10">
             <div>
                 <h1 class="text-4xl font-bold text-ocean-900 mb-3">Marine Ecosystems</h1>
@@ -14,24 +13,128 @@
             @endauth
         </div>
 
-        <!-- Sort Controls -->
-        <div class="mb-6 flex justify-end">
-            <select onchange="window.location.href='{{ route('ekosistem.index') }}?sort=' + this.value" class="select select-bordered select-sm">
-                <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Newest First</option>
-                <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
-            </select>
-        </div>
+        <form method="GET" action="{{ route('ekosistem.index') }}" class="mb-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-ocean-100 p-8">
+
+                <p class="text-xs font-bold text-ocean-500 uppercase tracking-widest mb-8">
+                    🔍 Filter & Sort
+                </p>
+
+                <div class="flex flex-wrap items-end gap-8">
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            Sort By
+                        </label>
+
+                        <select
+                            name="sort"
+                            class="select select-bordered w-52"
+                        >
+                            <option value="newest" {{ ($sort ?? 'newest') === 'newest' ? 'selected' : '' }}>
+                                Newest First
+                            </option>
+
+                            <option value="oldest" {{ ($sort ?? '') === 'oldest' ? 'selected' : '' }}>
+                                Oldest First
+                            </option>
+
+                            <option value="name_asc" {{ ($sort ?? '') === 'name_asc' ? 'selected' : '' }}>
+                                Name A–Z
+                            </option>
+
+                            <option value="name_desc" {{ ($sort ?? '') === 'name_desc' ? 'selected' : '' }}>
+                                Name Z–A
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            Location
+                        </label>
+
+                        <select
+                            name="lokasi"
+                            class="select select-bordered w-80"
+                        >
+                            <option value="">All Locations</option>
+
+                            @foreach($lokasiList as $l)
+                                <option
+                                    value="{{ $l }}"
+                                    {{ ($filterLokasi ?? '') === $l ? 'selected' : '' }}
+                                >
+                                    {{ $l }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="ml-10 flex items-end gap-4">
+                        <button
+                            type="submit"
+                            class="btn h-12 min-h-12 px-6 text-sm font-semibold text-white"
+                            style="background:#0e7490;border:none;border-radius:10px;"
+                        >
+                            Apply
+                        </button>
+
+                        <a
+                            href="{{ route('ekosistem.index') }}"
+                            class="btn btn-ghost h-12 min-h-12 px-6 text-sm font-semibold text-gray-500"
+                        >
+                            Reset
+                        </a>
+                    </div>
+
+                </div>
+
+                @if(($filterLokasi ?? '') || ($sort ?? 'newest') !== 'newest')
+                    <div class="mt-6 flex flex-wrap items-center gap-2">
+
+                        <span class="text-xs text-gray-400 font-medium">
+                            Active Filters:
+                        </span>
+
+                        @if(($sort ?? 'newest') !== 'newest')
+                            <span
+                                class="badge badge-sm"
+                                style="background:#f0f9ff;color:#0369a1;border:none;"
+                            >
+                                Sort:
+                                {{ match($sort) {
+                                    'oldest' => 'Oldest First',
+                                    'name_asc' => 'Name A–Z',
+                                    'name_desc' => 'Name Z–A',
+                                    default => 'Newest First'
+                                } }}
+                            </span>
+                        @endif
+
+                        @if($filterLokasi ?? '')
+                            <span
+                                class="badge badge-sm"
+                                style="background:#e0f2fe;color:#0369a1;border:none;"
+                            >
+                                📍 {{ $filterLokasi }}
+                            </span>
+                        @endif
+
+                    </div>
+                @endif
+
+            </div>
+        </form>
 
         @if($ekosistem->isEmpty())
             <div class="bg-white rounded-2xl shadow-card p-12 text-center">
                 <p class="text-ocean-600 text-lg font-semibold">No ecosystems found yet.</p>
             </div>
         @else
-            <!-- Ecosystems Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($ekosistem as $item)
                     <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] animate-fade overflow-hidden">
-                        <!-- Image -->
                         @if($item->gambar)
                             <div class="overflow-hidden h-48">
                                 <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama_ekosistem }}" class="w-full h-48 object-cover group-hover:scale-105 transition" loading="lazy">
@@ -42,7 +145,6 @@
                             </div>
                         @endif
 
-                        <!-- Content -->
                         <div class="p-6 space-y-4">
                             <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}" class="block group-hover:text-ocean-600 transition">
                                 <h3 class="text-lg font-bold text-ocean-900 line-clamp-2">{{ $item->nama_ekosistem }}</h3>
@@ -59,6 +161,15 @@
                                     <p class="text-xs text-gray-600"><span class="font-semibold">Role:</span> <span class="line-clamp-1">{{ $item->peran }}</span></p>
                                 </div>
                             @endif
+
+                            <div class="pt-2 border-t border-ocean-100">
+                                <p class="text-xs text-gray-600">
+                                    Created by <span class="font-semibold text-ocean-900">{{ $item->createdBy->name ?? 'Unknown' }}</span>
+                                    @if(isset($item->createdBy->badge))
+                                        <span class="badge badge-success text-xs ml-1">{{ $item->createdBy->badge }}</span>
+                                    @endif
+                                </p>
+                            </div>
 
                             @auth
                                 <div class="pt-2">
@@ -86,7 +197,6 @@
                 @endforeach
             </div>
 
-            <!-- Pagination -->
             <div class="mt-8 flex justify-center">
                 {{ $ekosistem->appends(request()->query())->links() }}
             </div>

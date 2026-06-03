@@ -2,6 +2,14 @@
 
 @section('content')
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
+    @if(session('success'))
+        <div class="max-w-4xl mx-auto px-6 mb-4">
+            <div class="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded-lg flex items-center gap-2">
+                <span>✅</span>
+                <span>{{ session('success') }}</span>
+            </div>
+        </div>
+    @endif
 
     {{-- Breadcrumb --}}
     <div class="max-w-4xl mx-auto px-6 pb-4">
@@ -279,7 +287,6 @@
                 </div>
                 @endguest
 
-
                 {{-- Like Module Support --}}
                 @auth
                     <div class="bg-gradient-to-r from-ocean-50 to-eco-50 p-6 rounded-xl border border-ocean-200 animate-fade">
@@ -310,7 +317,6 @@
                         </p>
                     </div>
                 @endauth
-
 
                 {{-- ======================================================================= --}}
                 {{-- SECTION KOMENTAR MEDIA SOSIAL (Perfect Circle Avatar & Center Aligned)   --}}
@@ -373,7 +379,6 @@
                         </div>
                     @endif
                 </div>
-
 
                 {{-- Action Panel Footer --}}
                 <div class="flex flex-wrap gap-3 pt-4 border-t border-ocean-100">
