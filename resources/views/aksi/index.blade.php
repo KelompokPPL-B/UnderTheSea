@@ -144,6 +144,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (trimmed.length > 100) {
                     return 'Kata kunci pencarian tidak boleh melebihi 100 karakter.';
                 }
+                // Hanya izinkan huruf, angka, dan spasi
+                const regex = /^[a-zA-Z0-9\s]+$/;
+                if (!regex.test(trimmed)) {
+                    return 'Kata kunci pencarian tidak boleh mengandung karakter spesial.';
+                }
                 return null;
             }
 
