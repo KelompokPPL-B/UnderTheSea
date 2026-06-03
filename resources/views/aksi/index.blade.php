@@ -104,6 +104,97 @@
                 animation: shimmer 1s ease-out;
             }
         </style>
+<div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
+    <div class="max-w-7xl mx-auto px-6 py-6">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-4xl font-bold text-ocean-900 mb-2">Conservation Actions</h1>
+                <p class="text-gray-500">Join the movement for ocean conservation.</p>
+            </div>
+
+            <div class="flex items-center gap-2">
+                @guest
+                    <a href="{{ route('aksi.riwayat') }}"
+                       class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-ocean-300
+                              bg-white hover:bg-ocean-50 text-ocean-700 text-sm font-semibold
+                              shadow-sm hover:shadow transition whitespace-nowrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-ocean-500" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2
+                                     M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2
+                                     m-6 9l2 2 4-4" />
+                        </svg>
+                        My History
+                    </a>
+                @endguest
+
+                @auth
+                    <a href="{{ route('aksi.create') }}" class="btn btn-primary btn-sm whitespace-nowrap">
+                        + Create Action
+                    </a>
+                @endauth
+            </div>
+        </div>
+
+        <!-- Filter & Sort Controls -->
+        <form method="GET" action="{{ route('aksi.index') }}" class="mb-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-ocean-100 p-8">
+                <p class="text-xs font-bold text-ocean-500 uppercase tracking-widest mb-8">🔍 Filter & Sort</p>
+                <div class="flex flex-wrap items-end gap-8">
+                    <!-- Sort By -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Sort By</label>
+                        <select name="sort" class="select select-bordered w-52">
+                            <option value="newest" {{ ($sort ?? 'newest') === 'newest' ? 'selected' : '' }}>Newest First</option>
+                            <option value="oldest" {{ ($sort ?? '') === 'oldest' ? 'selected' : '' }}>Oldest First</option>
+                            <option value="popular" {{ ($sort ?? '') === 'popular' ? 'selected' : '' }}>Most Popular</option>
+                            <option value="title_asc" {{ ($sort ?? '') === 'title_asc' ? 'selected' : '' }}>Title A–Z</option>
+                            <option value="title_desc" {{ ($sort ?? '') === 'title_desc' ? 'selected' : '' }}>Title Z–A</option>
+                        </select>
+                    </div>
+                    <!-- Filter Tahun -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Year</label>
+                        <select name="tahun" class="select select-bordered w-52">
+                            <option value="">All Years</option>
+                            @foreach($tahunList as $tahun)
+                                <option value="{{ $tahun }}" {{ ($filterTahun ?? '') == $tahun ? 'selected' : '' }}>{{ $tahun }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- Buttons -->
+                    <div class="ml-10 flex items-end gap-4">
+                        <button type="submit" class="btn h-12 min-h-12 px-6 text-sm font-semibold text-white" style="background:#0e7490;border:none;border-radius:10px;">Apply</button>
+                        <a href="{{ route('aksi.index') }}" class="btn btn-ghost h-12 min-h-12 px-6 text-sm font-semibold text-gray-500">Reset</a>
+                    </div>
+                </div>
+
+                @if(($filterTahun ?? '') || ($sort ?? 'newest') !== 'newest')
+                    <div class="mt-6 flex flex-wrap items-center gap-2">
+                        <span class="text-xs text-gray-400 font-medium">Active Filters:</span>
+                        @if(($sort ?? 'newest') !== 'newest')
+                            <span class="badge badge-sm" style="background:#f0f9ff;color:#0369a1;border:none;">
+                                Sort: {{ match($sort) {
+                                    'oldest'     => 'Oldest First',
+                                    'popular'    => 'Most Popular',
+                                    'title_asc'  => 'Title A–Z',
+                                    'title_desc' => 'Title Z–A',
+                                    default      => 'Newest First'
+                                } }}
+                            </span>
+                        @endif
+                        @if($filterTahun ?? '')
+                            <span class="badge badge-sm" style="background:#e0f2fe;color:#0369a1;border:none;">
+                                Year: {{ $filterTahun }}
+                            </span>
+                        @endif
+                    </div>
+                @endif
+            </div>
+        </form>
 
         @if($aksi->isEmpty())
             <div class="bg-white/70 backdrop-blur-xl border border-white/60 rounded-[2.5rem] shadow-2xl p-12 md:p-16 text-center max-w-2xl mx-auto animate-fade-in">
@@ -151,6 +242,81 @@
                         <p class="text-sm text-gray-500 line-clamp-3 mb-3 search-highlightable">
                             {{ $item->deskripsi }}
                         </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($aksi as $item)
+                    <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition group hover:scale-[1.02] animate-fade overflow-hidden flex flex-col">
+
+                        <!-- Image -->
+                        @if($item->gambar)
+                            <div class="overflow-hidden h-48 shrink-0">
+                                <img src="/storage/{{ $item->gambar }}"
+                                     alt="{{ $item->judul_aksi }}"
+                                     class="w-full h-48 object-cover group-hover:scale-105 transition"
+                                     loading="lazy">
+                            </div>
+                        @else
+                            <div class="w-full h-48 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center shrink-0">
+                                <span class="text-ocean-300 text-sm">No image</span>
+                            </div>
+                        @endif
+
+                        <!-- Content -->
+                        <div class="p-5 flex flex-col flex-1">
+
+                            <!-- Title -->
+                            <a href="{{ route('aksi.show', $item->id_aksi) }}"
+                               class="text-base font-bold text-ocean-900 line-clamp-2 mb-1 group-hover:text-ocean-600 transition">
+                                {{ $item->judul_aksi }}
+                            </a>
+
+                            <!-- Description -->
+                            <p class="text-gray-400 text-sm line-clamp-2 mb-4">
+                                {{ $item->deskripsi ?? 'No description available.' }}
+                            </p>
+
+                            <div class="flex-1"></div>
+
+                            <!-- Creator -->
+                            <div class="flex items-center gap-2 mb-4">
+                                <div class="w-6 h-6 rounded-full bg-ocean-200 flex items-center justify-center text-ocean-700 text-xs font-bold shrink-0">
+                                    {{ strtoupper(substr($item->createdBy->name, 0, 1)) }}
+                                </div>
+                                <span class="text-xs font-semibold text-ocean-900">{{ $item->createdBy->name }}</span>
+                                <span class="badge badge-success badge-xs">{{ $item->createdBy->badge }}</span>
+                            </div>
+
+                            <!-- Likes -->
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center gap-1 text-sm text-gray-500">
+                                    <span class="text-red-400">❤️</span>
+                                    <span class="font-semibold text-ocean-900 like-count-{{ $item->id_aksi }}">0</span>
+                                    <span>likes</span>
+                                </div>
+                                @auth
+                                    <button class="like-btn-card text-xs text-gray-400 hover:text-red-500 transition border border-gray-200 rounded-lg px-3 py-1 hover:border-red-300 hover:bg-red-50"
+                                        data-action-id="{{ $item->id_aksi }}">
+                                        ❤️ Like
+                                    </button>
+                                @else
+                                    <a href="{{ route('login') }}" class="text-xs text-ocean-500 hover:underline">Sign in to like</a>
+                                @endauth
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="flex gap-2 pt-3 border-t border-ocean-100">
+                                <a href="{{ route('aksi.show', $item->id_aksi) }}" class="btn btn-primary btn-sm flex-1">View</a>
+                                @if(auth()->check() && (auth()->user()->isAdmin() || auth()->id() === $item->created_by))
+                                    <a href="{{ route('aksi.edit', $item->id_aksi) }}" class="btn btn-outline btn-sm">Edit</a>
+                                    <button class="delete-btn-card btn btn-sm bg-white border border-red-300 hover:bg-red-50 text-red-500 hover:text-red-600 px-3"
+                                        data-action-id="{{ $item->id_aksi }}" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                @endif
+                            </div>
+
+                        </div>
                     </div>
 
                     <div class="mt-auto">
@@ -161,6 +327,8 @@
                     </div>
                 </div>
 
+            <div class="mt-8 flex justify-center">
+                {{ $aksi->appends(request()->query())->links() }}
             </div>
             @endforeach
         </div>
@@ -170,6 +338,7 @@
         </div>
 
         @endif
+
     </div>
 </div>
 
@@ -248,6 +417,98 @@ document.addEventListener('DOMContentLoaded', function() {
                 text.replace(regex, (match, p1, index) => {
                     if (index > lastIndex) {
                         fragment.appendChild(document.createTextNode(text.substring(lastIndex, index)));
+<script type="module">
+    document.addEventListener('DOMContentLoaded', function () {
+        loadLikeCountsCard();
+        initializeLikeButtonsCard();
+        loadLikeStatesCard();
+        initializeDeleteButtons();
+    });
+
+    function initializeDeleteButtons() {
+        document.querySelectorAll('.delete-btn-card').forEach(btn => {
+            btn.addEventListener('click', function () {
+                if (!confirm('Are you sure you want to delete this action?')) return;
+                const actionId = this.dataset.actionId;
+                const card     = this.closest('.bg-white');
+                this.disabled  = true;
+
+                fetch(`/aksi/${actionId}`, {
+                    method: 'DELETE',
+                    headers: { 'X-CSRF-TOKEN': getCsrfToken() }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        card.style.opacity    = '0';
+                        card.style.transition = 'opacity 0.3s';
+                        setTimeout(() => card.remove(), 300);
+                    }
+                })
+                .catch(() => { this.disabled = false; });
+            });
+        });
+    }
+
+    function initializeLikeButtonsCard() {
+        document.querySelectorAll('.like-btn-card').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const actionId = this.dataset.actionId;
+                const isLiked  = this.dataset.liked === 'true';
+                this.disabled  = true;
+
+                fetch('/likes', {
+                    method: isLiked ? 'DELETE' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken(),
+                    },
+                    body: JSON.stringify({ action_id: parseInt(actionId) })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const isNowLiked           = !isLiked;
+                        this.dataset.liked         = isNowLiked;
+                        this.textContent           = isNowLiked ? '❤️ Unlike' : '❤️ Like';
+                        this.style.color           = isNowLiked ? '#ef4444' : '';
+                        this.style.borderColor     = isNowLiked ? '#fca5a5' : '';
+                        this.style.backgroundColor = isNowLiked ? '#fef2f2' : '';
+                        const counter = document.querySelector(`.like-count-${actionId}`);
+                        if (counter) counter.textContent = data.data.like_count;
+                    }
+                })
+                .finally(() => { this.disabled = false; });
+            });
+        });
+    }
+
+    function loadLikeCountsCard() {
+        document.querySelectorAll('.like-btn-card').forEach(btn => {
+            fetch(`/likes/${btn.dataset.actionId}/count`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const counter = document.querySelector(`.like-count-${btn.dataset.actionId}`);
+                        if (counter) counter.textContent = data.data.like_count;
+                    }
+                });
+        });
+    }
+
+    function loadLikeStatesCard() {
+        fetch('/likes', { headers: { 'X-CSRF-TOKEN': getCsrfToken() } })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success' && data.data) {
+                document.querySelectorAll('.like-btn-card').forEach(btn => {
+                    const isLiked = data.data.some(like => like.action_id === parseInt(btn.dataset.actionId));
+                    if (isLiked) {
+                        btn.dataset.liked         = 'true';
+                        btn.textContent           = '❤️ Unlike';
+                        btn.style.color           = '#ef4444';
+                        btn.style.borderColor     = '#fca5a5';
+                        btn.style.backgroundColor = '#fef2f2';
                     }
                     const mark = document.createElement('mark');
                     mark.className = 'bg-cyan-100 text-cyan-900 rounded px-0.5 font-bold';
