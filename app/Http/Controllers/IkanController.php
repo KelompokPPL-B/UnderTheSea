@@ -19,10 +19,27 @@ class IkanController extends Controller
 
     public function index(Request $request)
     {
+        $request->validate([
+            'search' => 'nullable|string|max:100|regex:/^[a-zA-Z0-9\s]*$/',
+        ], [
+            'search.max' => 'Kata kunci pencarian tidak boleh melebihi 100 karakter.',
+            'search.regex' => 'Kata kunci pencarian tidak boleh mengandung karakter spesial.',
+        ]);
+
         $sort = $request->query('sort', 'newest');
+        $search = $request->query('search');
 
         $query = Ikan::query();
 
+        // SEARCH IKAN
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('habitat', 'like', "%{$search}%");
+            });
+        }
+
+        // SORT IKAN
         if ($sort === 'oldest') {
             $query->orderBy('created_at', 'asc');
         } elseif ($sort === 'name_asc') {
@@ -34,9 +51,13 @@ class IkanController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
+        // PAGINATION
         $ikans = $query->paginate(12)->withQueryString();
 
-        return view('ikan.index', compact('ikans', 'sort'));
+        // Alias supaya aman kalau view lama masih pakai variable $ikan
+        $ikan = $ikans;
+
+        return view('ikan.index', compact('ikans', 'ikan', 'sort', 'search'));
     }
 
     public function create()

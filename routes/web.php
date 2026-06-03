@@ -69,15 +69,10 @@ Route::get('/search/aksi', [SearchController::class, 'searchAksi'])->name('searc
 Route::get('/fish', [FishController::class, 'index'])->name('fish.index');
 Route::get('/fish/detail', [FishController::class, 'detail'])->name('fish.detail');
 
-// --- RUTE DASHBOARD ---
-Route::get('/dashboard', function () {
-    $user = auth()->user();
-
-    return view('dashboard', [
-        'bookmarkCount' => $user->favorites()->count(),
-        'likeCount'     => $user->likes()->count(),
-    ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+// --- KELOMPOK RUTE DASHBOARD ---
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // --- KELOMPOK RUTE PROFILE ---
 Route::middleware('auth')->group(function () {

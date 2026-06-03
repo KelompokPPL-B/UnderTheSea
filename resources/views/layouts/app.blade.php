@@ -12,9 +12,11 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-sand">
+    <body class="font-sans antialiased bg-sand overflow-x-hidden">
         <div class="min-h-screen flex flex-col">
-            @include('layouts.navigation')
+            @if((!isset($hideNavbar) || !$hideNavbar) && !request()->routeIs('ekosistem.show', 'ikan.show', 'aksi.show'))
+                @include('layouts.navigation')
+            @endif
 
             {{-- Flash Messages --}}
             @if(session('success'))

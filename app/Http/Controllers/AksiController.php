@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AksiPelestarian;
+use App\Models\AksiTandai;
+use App\Models\AksiFeedback;
 use App\Services\PointsService;
 use App\Services\SanitizationService;
 use Illuminate\Http\Request;
@@ -16,8 +18,45 @@ class AksiController extends Controller
         $this->pointsService = $pointsService;
     }
 
+    // 🔥 INDEX (SEARCH + SORT + OPTIMIZED)
+    public function index(Request $request)
+    {
+        // Validasi input search maksimal 100 karakter dan tidak mengandung karakter spesial
+        $request->validate([
+            'search' => 'nullable|string|max:100|regex:/^[a-zA-Z0-9\s]*$/',
+        ], [
+            'search.max' => 'Kata kunci pencarian tidak boleh melebihi 100 karakter.',
+            'search.regex' => 'Kata kunci pencarian tidak boleh mengandung karakter spesial.',
+        ]);
+
+        $sort = $request->query('sort', 'newest');
+        $search = $request->query('search');
+
+        $query = AksiPelestarian::query()
+            ->select('id_aksi', 'judul_aksi', 'deskripsi', 'gambar', 'created_at');
+
+        // 🔍 SEARCH (Tetap menggunakan prefix search yang optimal)
+        if (!empty($search)) {
+            $query->where('judul_aksi', 'like', "{$search}%");
+        }
+
+        // 🔽 SORT
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } elseif ($sort === 'popular') {
+            $query->withCount('likes')->orderByDesc('likes_count');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        // 📄 PAGINATION
+        $aksi = $query->paginate(10)->appends($request->query());
+
+        return view('aksi.index', compact('aksi', 'sort', 'search'));
+    }
+
     /**
-     * Owner: Arvia
+     * Owner: Arvia / Mutiara
      * PBI-13: Manage Action Content
      * PBI-19: Pagination UI
      * PBI-21: Sort Options
@@ -53,7 +92,7 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Arvia
+     * Owner: Arvia / Mutiara
      * PBI-15: Form Validation UI
      */
     public function create()
@@ -62,12 +101,12 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Arvia
+     * Owner: Arvia / Mutiara / Diperbarui oleh Grace
      * PBI-13: Manage Action Content
      */
     public function show($id)
     {
-        $aksi = AksiPelestarian::findOrFail($id);
+        $aksi = AksiPelestarian::with('feedback')->findOrFail($id);
 
         if (auth()->check()) {
             $this->pointsService->awardPoints(auth()->id(), 'aksi', $id);
@@ -77,7 +116,7 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Arvia
+     * Owner: Arvia / Mutiara
      * PBI-15: Form Validation UI
      */
     public function edit($id)
@@ -92,7 +131,7 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Arvia
+     * Owner: Arvia / Mutiara
      * PBI-13: Manage Action Content
      */
     public function store(Request $request)
@@ -117,7 +156,7 @@ class AksiController extends Controller
         }
 
         $validated['created_by']        = auth()->id();
-        $validated['is_user_generated'] = false;
+        $validated['is_user_generated'] = !auth()->user()->isAdmin();
 
         $aksi = AksiPelestarian::create($validated);
 
@@ -128,7 +167,7 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Arvia
+     * Owner: Arvia / Mutiara
      * PBI-13: Manage Action Content
      */
     public function update(Request $request, $id)
@@ -165,7 +204,7 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Arvia
+     * Owner: Arvia / Mutiara
      * PBI-13: Manage Action Content
      */
     public function destroy($id)
@@ -180,5 +219,145 @@ class AksiController extends Controller
 
         return redirect()->route('aksi.index')
             ->with('success', 'Conservation action deleted successfully!');
+    }
+
+    /**
+     * Owner: Grace Magaretha Sirait
+     * PBI-26: Menandai aksi pelestarian selesai
+     */
+    public function tandai(Request $request, $id)
+    {
+        AksiPelestarian::findOrFail($id);
+
+        $validated = $request->validate([
+            'nama_peserta' => 'required|string|max:100',
+        ], [
+            'nama_peserta.required' => 'Name is required.',
+            'nama_peserta.max'      => 'Name must not exceed 100 characters.',
+        ]);
+
+        $sessionId   = session()->getId();
+        $sudahTandai = AksiTandai::where('aksi_id', $id)
+            ->where('session_id', $sessionId)
+            ->exists();
+
+        if ($sudahTandai) {
+            return redirect()->route('aksi.show', $id);
+        }
+
+        AksiTandai::create([
+            'aksi_id'      => $id,
+            'nama_peserta' => $validated['nama_peserta'],
+            'session_id'   => $sessionId,
+        ]);
+
+        session()->put("tandai_aksi_{$id}", true);
+        session()->put("tandai_aksi_{$id}_nama", $validated['nama_peserta']);
+
+        return redirect()->route('aksi.show', $id);
+    }
+
+    /**
+     * Owner: Grace Magaretha Sirait
+     * PBI-26: Membatalkan penandaan aksi
+     */
+    public function batalTandai($id)
+    {
+        AksiPelestarian::findOrFail($id);
+        $sessionId = session()->getId();
+
+        AksiTandai::where('aksi_id', $id)->where('session_id', $sessionId)->delete();
+        AksiFeedback::where('aksi_id', $id)->where('session_id', $sessionId)->delete();
+
+        session()->forget("tandai_aksi_{$id}");
+        session()->forget("tandai_aksi_{$id}_nama");
+
+        return redirect()->route('aksi.show', $id);
+    }
+
+    /**
+     * Owner: Grace Magaretha Sirait
+     * PBI-26: Menyimpan ulasan feedback dari peserta yang telah menandai aksi
+     */
+    public function storeFeedback(Request $request, $id)
+    {
+        AksiPelestarian::findOrFail($id);
+        $sessionId = session()->getId();
+
+        $sudahTandai = AksiTandai::where('aksi_id', $id)
+            ->where('session_id', $sessionId)
+            ->exists();
+
+        if (!$sudahTandai) {
+            return redirect()->route('aksi.show', $id);
+        }
+
+        $validated = $request->validate([
+            'nama_peserta' => 'required|string|max:100',
+            'komentar'     => 'required|string|max:2000',
+        ]);
+
+        $validated['komentar'] = SanitizationService::sanitize($validated['komentar']);
+
+        $sudahFeedback = AksiFeedback::where('aksi_id', $id)
+            ->where('session_id', $sessionId)
+            ->exists();
+
+        if ($sudahFeedback) {
+            return redirect()->route('aksi.show', $id);
+        }
+
+        AksiFeedback::create([
+            'aksi_id'      => $id,
+            'nama_peserta' => $validated['nama_peserta'],
+            'komentar'     => $validated['komentar'],
+            'session_id'   => $sessionId,
+        ]);
+
+        return redirect()->route('aksi.show', $id);
+    }
+
+    /**
+     * Owner: Grace Magaretha Sirait
+     */
+    public function riwayat(Request $request)
+    {
+        $sessionId = session()->getId();
+        $sort      = $request->query('sort', 'newest_event');
+
+        $query = AksiTandai::with('aksi')
+            ->where('aksi_tandai.session_id', $sessionId)
+            ->join('aksi_pelestarian', 'aksi_tandai.aksi_id', '=', 'aksi_pelestarian.id_aksi')
+            ->select('aksi_tandai.*');
+
+        if ($sort === 'oldest_event') {
+            $query->orderByRaw('COALESCE(aksi_pelestarian.tanggal_kegiatan, "9999-12-31") ASC');
+        } else {
+            $query->orderByRaw('COALESCE(aksi_pelestarian.tanggal_kegiatan, "1000-01-01") DESC');
+        }
+
+        $riwayat = $query->paginate(10);
+
+        return view('aksi.riwayat', compact('riwayat', 'sort'));
+    }
+
+    /**
+     * Owner: Grace Magaretha Sirait
+     */
+    public function clearRiwayat()
+    {
+        $sessionId = session()->getId();
+
+        $aksiIds = AksiTandai::where('session_id', $sessionId)->pluck('aksi_id');
+
+        AksiTandai::where('session_id', $sessionId)->delete();
+        AksiFeedback::where('session_id', $sessionId)->delete();
+
+        foreach ($aksiIds as $aksiId) {
+            session()->forget("tandai_aksi_{$aksiId}");
+            session()->forget("tandai_aksi_{$aksiId}_nama");
+        }
+
+        return redirect()->route('aksi.riwayat');
     }
 }

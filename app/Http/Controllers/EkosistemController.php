@@ -18,21 +18,61 @@ class EkosistemController extends Controller
 
     public function index(Request $request)
     {
-        $sort = $request->get('sort', 'newest');
-        $filterLokasi = $request->get('lokasi', '');
+        $request->validate([
+            'search' => 'nullable|string|max:100|regex:/^[a-zA-Z0-9\s]*$/',
+        ], [
+            'search.max' => 'Kata kunci pencarian tidak boleh melebihi 100 karakter.',
+            'search.regex' => 'Kata kunci pencarian tidak boleh mengandung karakter spesial.',
+        ]);
+
+        $sort = $request->query('sort', 'newest');
+        $search = $request->query('search');
+        $filterLikes = $request->query('filter_likes');
+        $filterBookmarks = $request->query('filter_bookmarks');
+        $filterLokasi = $request->query('lokasi', '');
 
         $query = Ekosistem::query();
 
-        if ($filterLokasi) {
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_ekosistem', 'like', "%{$search}%")
+                    ->orWhere('lokasi', 'like', "%{$search}%")
+                    ->orWhere('deskripsi', 'like', "%{$search}%");
+            });
+        }
+
+        if (!empty($filterLokasi)) {
             $query->where('lokasi', $filterLokasi);
         }
 
-        match ($sort) {
-            'oldest' => $query->orderBy('created_at', 'asc'),
-            'name_asc' => $query->orderBy('nama_ekosistem', 'asc'),
-            'name_desc' => $query->orderBy('nama_ekosistem', 'desc'),
-            default => $query->orderBy('created_at', 'desc'),
-        };
+        if ($filterLikes !== null) {
+            if (empty(trim($filterLikes))) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $ids = array_filter(explode(',', $filterLikes));
+                $query->whereIn('id_ekosistem', $ids);
+            }
+        }
+
+        if ($filterBookmarks !== null) {
+            if (empty(trim($filterBookmarks))) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $ids = array_filter(explode(',', $filterBookmarks));
+                $query->whereIn('id_ekosistem', $ids);
+            }
+        }
+
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } elseif ($sort === 'name_asc') {
+            $query->orderBy('nama_ekosistem', 'asc');
+        } elseif ($sort === 'name_desc') {
+            $query->orderBy('nama_ekosistem', 'desc');
+        } else {
+            $sort = 'newest';
+            $query->orderBy('created_at', 'desc');
+        }
 
         $ekosistem = $query->paginate(10)->withQueryString();
 
@@ -43,7 +83,13 @@ class EkosistemController extends Controller
             ->orderBy('lokasi')
             ->pluck('lokasi');
 
-        return view('ekosistem.index', compact('ekosistem', 'sort', 'filterLokasi', 'lokasiList'));
+        return view('ekosistem.index', compact(
+            'ekosistem',
+            'sort',
+            'search',
+            'filterLokasi',
+            'lokasiList'
+        ));
     }
 
     public function create()
@@ -55,11 +101,15 @@ class EkosistemController extends Controller
     {
         $ekosistem = Ekosistem::findOrFail($id);
 
+        $relatedEkosistems = Ekosistem::where('id_ekosistem', '!=', $id)
+            ->inRandomOrder()
+            ->get();
+
         if (auth()->check()) {
             $this->pointsService->awardPoints(auth()->id(), 'ekosistem', $id);
         }
 
-        return view('ekosistem.show', compact('ekosistem'));
+        return view('ekosistem.show', compact('ekosistem', 'relatedEkosistems'));
     }
 
     public function edit($id)
@@ -151,6 +201,14 @@ class EkosistemController extends Controller
         }
 
         $ekosistem->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Ecosystem deleted successfully',
+                'data'    => null,
+            ]);
+        }
 
         return redirect()->route('ekosistem.index')
             ->with('success', 'Ecosystem deleted successfully!');

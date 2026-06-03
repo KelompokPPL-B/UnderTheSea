@@ -100,7 +100,6 @@ select:focus-visible {
 
 /* Mobile responsiveness */
 @media (max-width: 640px) {
-
     button,
     a[class*="px-"],
     input,
@@ -114,19 +113,18 @@ select:focus-visible {
         min-width: 44px;
     }
 
-    button+button,
-    a+a,
-    button+a,
-    a+button {
+    button + button,
+    a + a,
+    button + a,
+    a + button {
         margin-left: 0.5rem;
     }
 }
 
 /* Print-friendly styles */
 @media print {
-
     nav,
-    .mb-8>button,
+    .mb-8 > button,
     .share-btn,
     .delete-btn,
     .like-btn,
@@ -180,7 +178,7 @@ select:focus-visible {
         padding: 0;
     }
 
-    body>* {
+    body > * {
         margin-bottom: 0.25in;
     }
 
