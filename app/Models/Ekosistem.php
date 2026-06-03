@@ -21,6 +21,9 @@ class Ekosistem extends Model
         'larangan',
         'dampak_kerusakan',
         'gambar',
+        'karakteristik',
+        'manfaat',
+        'cara_pelestarian',
         'created_by',
     ];
 

@@ -29,21 +29,24 @@ class EkosistemController extends Controller
         $search = $request->query('search');
         $filterLikes = $request->query('filter_likes');
         $filterBookmarks = $request->query('filter_bookmarks');
+        $filterLokasi = $request->query('lokasi', '');
 
         $query = Ekosistem::query();
 
-        if ($search) {
-            $query->where(function($q) use ($search) {
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
                 $q->where('nama_ekosistem', 'like', "%{$search}%")
-                  ->orWhere('lokasi', 'like', "%{$search}%")
-                  ->orWhere('deskripsi', 'like', "%{$search}%");
+                    ->orWhere('lokasi', 'like', "%{$search}%")
+                    ->orWhere('deskripsi', 'like', "%{$search}%");
             });
         }
 
-        // Jika URL mempunyai ?filter_likes=...
+        if (!empty($filterLokasi)) {
+            $query->where('lokasi', $filterLokasi);
+        }
+
         if ($filterLikes !== null) {
             if (empty(trim($filterLikes))) {
-                // User klik "Tampilkan Likes" tapi belum punya like sama sekali
                 $query->whereRaw('1 = 0');
             } else {
                 $ids = array_filter(explode(',', $filterLikes));
@@ -51,10 +54,8 @@ class EkosistemController extends Controller
             }
         }
 
-        // Jika URL mempunyai ?filter_bookmarks=...
         if ($filterBookmarks !== null) {
             if (empty(trim($filterBookmarks))) {
-                // User klik "Tampilkan Bookmarks" tapi belum punya bookmark sama sekali
                 $query->whereRaw('1 = 0');
             } else {
                 $ids = array_filter(explode(',', $filterBookmarks));
@@ -64,23 +65,14 @@ class EkosistemController extends Controller
 
         if ($sort === 'oldest') {
             $query->orderBy('created_at', 'asc');
+        } elseif ($sort === 'name_asc') {
+            $query->orderBy('nama_ekosistem', 'asc');
+        } elseif ($sort === 'name_desc') {
+            $query->orderBy('nama_ekosistem', 'desc');
         } else {
+            $sort = 'newest';
             $query->orderBy('created_at', 'desc');
-        $sort         = $request->get('sort', 'newest');
-        $filterLokasi = $request->get('lokasi', '');
-
-        $query = Ekosistem::query();
-
-        if ($filterLokasi) {
-            $query->where('lokasi', $filterLokasi);
         }
-
-        match ($sort) {
-            'oldest'    => $query->orderBy('created_at', 'asc'),
-            'name_asc'  => $query->orderBy('nama_ekosistem', 'asc'),
-            'name_desc' => $query->orderBy('nama_ekosistem', 'desc'),
-            default     => $query->orderBy('created_at', 'desc'),
-        };
 
         $ekosistem = $query->paginate(10)->withQueryString();
 
@@ -91,7 +83,13 @@ class EkosistemController extends Controller
             ->orderBy('lokasi')
             ->pluck('lokasi');
 
-        return view('ekosistem.index', compact('ekosistem', 'sort', 'filterLokasi', 'lokasiList'));
+        return view('ekosistem.index', compact(
+            'ekosistem',
+            'sort',
+            'search',
+            'filterLokasi',
+            'lokasiList'
+        ));
     }
 
     public function create()
@@ -117,6 +115,7 @@ class EkosistemController extends Controller
     public function edit($id)
     {
         $ekosistem = Ekosistem::findOrFail($id);
+
         return view('ekosistem.edit', compact('ekosistem'));
     }
 
@@ -125,12 +124,6 @@ class EkosistemController extends Controller
         abort_unless(auth()->user()?->isAdmin(), 403);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|min:5|unique:ekosistem,nama_ekosistem',
-            'deskripsi' =>'required|string|min:10',
-            'lokasi' => 'required|string|min:5',
-            'peran' => 'required|string|min:5',
-            'ancaman' => 'required|string|min:10',
-            'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
             'nama_ekosistem'   => 'required|string|min:5|max:50|unique:ekosistem,nama_ekosistem',
             'deskripsi'        => 'required|string|min:10|max:255',
             'lokasi'           => 'required|string|min:5|max:50',
@@ -152,6 +145,7 @@ class EkosistemController extends Controller
         }
 
         $validated['created_by'] = auth()->id();
+
         Ekosistem::create($validated);
 
         return redirect()->route('ekosistem.index')
@@ -165,13 +159,7 @@ class EkosistemController extends Controller
         $ekosistem = Ekosistem::findOrFail($id);
 
         $validated = $request->validate([
-            'nama_ekosistem' => 'required|string|min:5|unique:ekosistem,nama_ekosistem,'.$id.',id_ekosistem',
-            'deskripsi' =>'required|string|min:10',
-            'lokasi' => 'required|string|min:5',
-            'peran' => 'required|string|min:5',
-            'ancaman' => 'required|string|min:10',
-            'gambar' => 'required|image|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png|max:2048',
-            'nama_ekosistem'   => 'required|string|min:5|max:50|unique:ekosistem,nama_ekosistem,'.$id.',id_ekosistem',
+            'nama_ekosistem'   => 'required|string|min:5|max:50|unique:ekosistem,nama_ekosistem,' . $id . ',id_ekosistem',
             'deskripsi'        => 'required|string|min:10|max:255',
             'lokasi'           => 'required|string|min:5|max:50',
             'peran'            => 'required|string|min:5|max:50',
@@ -190,6 +178,7 @@ class EkosistemController extends Controller
             if ($ekosistem->gambar) {
                 Storage::disk('public')->delete($ekosistem->gambar);
             }
+
             $validated['gambar'] = $request->file('gambar')->store('ecosystem', 'public');
         } else {
             unset($validated['gambar']);
@@ -205,7 +194,6 @@ class EkosistemController extends Controller
     {
         abort_unless(auth()->user()?->isAdmin(), 403);
 
-        
         $ekosistem = Ekosistem::findOrFail($id);
 
         if ($ekosistem->gambar) {
@@ -215,15 +203,14 @@ class EkosistemController extends Controller
         $ekosistem->delete();
 
         if (request()->wantsJson()) {
-            return response()->json(['status' => 'success']);
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Ecosystem deleted successfully',
+                'data'    => null,
+            ]);
         }
 
         return redirect()->route('ekosistem.index')
             ->with('success', 'Ecosystem deleted successfully!');
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Ecosystem deleted successfully',
-            'data'    => null,
-        ]);
     }
 }

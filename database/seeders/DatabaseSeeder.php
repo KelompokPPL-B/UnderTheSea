@@ -47,6 +47,9 @@ class DatabaseSeeder extends Seeder
             ['nama' => 'Jellyfish', 'deskripsi' => 'Ancient gelatinous creature', 'habitat' => 'Oceans worldwide', 'karakteristik' => 'Translucent body with tentacles', 'status_konservasi' => 'Not Evaluated', 'fakta_unik' => 'Has existed for 500 million years', 'gambar' => 'fish/jellyfish.jpg', 'created_by' => $admin->id],
             ['nama' => 'Blue Whale', 'deskripsi' => 'Largest animal ever', 'habitat' => 'All oceans', 'karakteristik' => 'Massive size, filter feeder', 'status_konservasi' => 'Endangered', 'fakta_unik' => 'Heart weighs as much as a car', 'gambar' => 'fish/whale.jpg', 'created_by' => $admin->id],
             ['nama' => 'Starfish', 'deskripsi' => 'Radial symmetry sea creature', 'habitat' => 'Ocean floor', 'karakteristik' => 'Five or more arms', 'status_konservasi' => 'Varies by species', 'fakta_unik' => 'Can regenerate lost arms', 'gambar' => 'fish/starfish.jpg', 'created_by' => $admin->id],
+            // Added dummy entries: Nemo and Paus Biru
+            ['nama' => 'Nemo', 'deskripsi' => 'Small orange clownfish that lives among sea anemones.', 'habitat' => 'Coral reefs', 'karakteristik' => 'Amphiprioninae', 'status_konservasi' => 'Least Concern', 'fakta_unik' => 'Diet: Small plankton, algae, and tiny sea creatures; Size: Around 7–11 cm', 'gambar' => 'fish/nemo.jpg', 'created_by' => $admin->id],
+            ['nama' => 'Paus Biru', 'deskripsi' => 'The largest animal on Earth, known for its massive body and deep ocean calls.', 'habitat' => 'Open oceans worldwide', 'karakteristik' => 'Balaenoptera musculus', 'status_konservasi' => 'Endangered', 'fakta_unik' => 'Diet: Krill and small marine organisms; Size: Up to 30 meters', 'gambar' => 'fish/blue_whale.jpg', 'created_by' => $admin->id],
         ])->map(fn($data) => Ikan::create($data));
 
         $ekosistems = collect([

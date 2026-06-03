@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ikan;
 use App\Services\PointsService;
+use App\Services\SanitizationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -30,22 +31,33 @@ class IkanController extends Controller
 
         $query = Ikan::query();
 
-        // 🔍 SEARCH (optimized)
+        // SEARCH IKAN
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('habitat', 'like', "%{$search}%");
-                  // ❌ deskripsi gak dipakai karena TEXT (biar cepat)
+                    ->orWhere('habitat', 'like', "%{$search}%");
             });
         }
 
-        // 🔽 SORT
-        $query->orderBy('created_at', $sort === 'oldest' ? 'asc' : 'desc');
+        // SORT IKAN
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } elseif ($sort === 'name_asc') {
+            $query->orderBy('nama', 'asc');
+        } elseif ($sort === 'name_desc') {
+            $query->orderBy('nama', 'desc');
+        } else {
+            $sort = 'newest';
+            $query->orderBy('created_at', 'desc');
+        }
 
-        // 📄 PAGINATION
-        $ikan = $query->paginate(10)->appends($request->query());
+        // PAGINATION
+        $ikans = $query->paginate(12)->withQueryString();
 
-        return view('ikan.index', compact('ikan', 'sort', 'search'));
+        // Alias supaya aman kalau view lama masih pakai variable $ikan
+        $ikan = $ikans;
+
+        return view('ikan.index', compact('ikans', 'ikan', 'sort', 'search'));
     }
 
     public function create()
@@ -67,6 +79,11 @@ class IkanController extends Controller
     public function edit($id)
     {
         $ikan = Ikan::findOrFail($id);
+
+        if (!auth()->user()->isAdmin() && auth()->id() !== $ikan->created_by) {
+            abort(403);
+        }
+
         return view('ikan.edit', compact('ikan'));
     }
 
@@ -88,13 +105,14 @@ class IkanController extends Controller
             'gambar.max'   => 'Ukuran gambar maksimal 2MB.',
         ]);
 
+        $validated = SanitizationService::sanitizeArray($validated);
+
         if ($request->hasFile('gambar')) {
             $validated['gambar'] = $request->file('gambar')->store('fish', 'public');
         }
 
         $validated['created_by'] = auth()->id();
 
-        $ikan = Ikan::create($validated);
         Ikan::create($validated);
 
         return redirect()->route('ikan.index')
@@ -106,6 +124,10 @@ class IkanController extends Controller
         abort_unless(auth()->user()?->isAdmin(), 403);
 
         $ikan = Ikan::findOrFail($id);
+
+        if (!auth()->user()->isAdmin() && auth()->id() !== $ikan->created_by) {
+            abort(403);
+        }
 
         $validated = $request->validate([
             'nama'              => 'required|string|max:255',
@@ -121,11 +143,16 @@ class IkanController extends Controller
             'gambar.max'   => 'Ukuran gambar maksimal 2MB.',
         ]);
 
+        $validated = SanitizationService::sanitizeArray($validated);
+
         if ($request->hasFile('gambar')) {
             if ($ikan->gambar) {
                 Storage::disk('public')->delete($ikan->gambar);
             }
+
             $validated['gambar'] = $request->file('gambar')->store('fish', 'public');
+        } else {
+            unset($validated['gambar']);
         }
 
         $ikan->update($validated);

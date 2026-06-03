@@ -9,6 +9,7 @@ use App\Http\Controllers\AksiController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\FishController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -30,6 +31,7 @@ Route::get('/ekosistem/{id}', [EkosistemController::class, 'show'])->name('ekosi
 Route::get('/ekosistem/{id}/edit', [EkosistemController::class, 'edit'])->middleware('auth')->name('ekosistem.edit');
 Route::post('/ekosistem', [EkosistemController::class, 'store'])->middleware('auth')->name('ekosistem.store');
 Route::put('/ekosistem/{id}', [EkosistemController::class, 'update'])->middleware('auth')->name('ekosistem.update');
+Route::delete('/ekosistem/{id}', [EkosistemController::class, 'destroy'])->middleware('auth')->name('ekosistem.destroy');
 
 // --- KELOMPOK RUTE AKSI PELESTARIAN & FEEDBACK ---
 Route::get('/aksi', [AksiController::class, 'index'])->name('aksi.index');
@@ -63,22 +65,21 @@ Route::get('/search/ikan', [SearchController::class, 'searchIkan'])->name('searc
 Route::get('/search/ekosistem', [SearchController::class, 'searchEkosistem'])->name('search.ekosistem');
 Route::get('/search/aksi', [SearchController::class, 'searchAksi'])->name('search.aksi');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-// --- RUTE DASHBOARD ---
-Route::get('/dashboard', function () {
-    $user = auth()->user();
-    return view('dashboard', [
-        'bookmarkCount' => $user->favorites()->count(),
-        'likeCount'     => $user->likes()->count(),
-    ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+// --- KELOMPOK RUTE FISH ---
+Route::get('/fish', [FishController::class, 'index'])->name('fish.index');
+Route::get('/fish/detail', [FishController::class, 'detail'])->name('fish.detail');
+
+// --- KELOMPOK RUTE DASHBOARD ---
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // --- KELOMPOK RUTE PROFILE ---
 Route::middleware('auth')->group(function () {
     Route::get('/profile', function () {
         return view('profile');
     })->name('profile.show');
+
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -1,3 +1,7 @@
+{{--
+#PBI-18
+#OWNER-Mutiara
+--}}
 @extends('layouts.app')
 
 @section('content')
@@ -141,47 +145,50 @@
                 <!-- Description -->
                 <div>
                     <label for="deskripsi" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Description
+                        Description *
                     </label>
                     <textarea
                         id="deskripsi"
                         name="deskripsi"
                         rows="4"
+                        required
                         class="textarea textarea-bordered w-full @error('deskripsi') textarea-error @enderror"
                         placeholder="Describe the ecosystem"
                     >{{ old('deskripsi', $ekosistem->deskripsi) }}</textarea>
                     @error('deskripsi')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Location -->
                 <div>
                     <label for="lokasi" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Location
+                        Location *
                     </label>
                     <input
                         type="text"
                         id="lokasi"
                         name="lokasi"
                         value="{{ old('lokasi', $ekosistem->lokasi) }}"
+                        required
                         class="input input-bordered w-full @error('lokasi') input-error @enderror"
                         placeholder="Geographic location"
                     >
                     @error('lokasi')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Role in Marine Life -->
                 <div>
                     <label for="peran" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Role in Marine Life
+                        Role in Marine Life *
                     </label>
                     <textarea
                         id="peran"
                         name="peran"
                         rows="3"
+                        required
                         class="textarea textarea-bordered w-full @error('peran') textarea-error @enderror"
                         placeholder="Role in marine life"
                     >{{ old('peran', $ekosistem->peran) }}</textarea>
@@ -193,12 +200,13 @@
                 <!-- Threats -->
                 <div>
                     <label for="ancaman" class="block text-sm font-semibold text-ocean-900 mb-2">
-                        Threats
+                        Threats *
                     </label>
                     <textarea
                         id="ancaman"
                         name="ancaman"
                         rows="3"
+                        required
                         class="textarea textarea-bordered w-full @error('ancaman') textarea-error @enderror"
                         placeholder="Threats to this ecosystem"
                     >{{ old('ancaman', $ekosistem->ancaman) }}</textarea>
@@ -270,6 +278,22 @@
                         <img src="/storage/{{ $ekosistem->gambar }}" alt="{{ $ekosistem->nama_ekosistem }}" class="h-40 rounded-lg object-cover">
                     </div>
 
+<<<<<<< HEAD
+                <!-- Image -->
+                <div>
+                    <label for="gambar" class="block text-sm font-semibold text-ocean-900 mb-2"></label>
+                    <input
+                        type="file"
+                        id="gambar"
+                        name="gambar"
+                        accept=".jpg,.jpeg,.png,.jfif,image/jpeg,image/png"
+                        class="file-input file-input-bordered w-full @error('gambar') file-input-error @enderror"
+                    >
+                    <p class="text-sm text-ocean-600 mt-1">Format: JPG, JPEG, PNG, JFIF | Maksimal: 2MB</p>
+                    @error('gambar')
+                        <small style="color:red">{{ $message }}</small>
+                    @enderror
+=======
                     <!-- Current Image Preview -->
                     @if($ekosistem->gambar)
                         <div class="md:col-span-2 group p-5 bg-ocean-50/50 border-2 border-ocean-100 rounded-2xl">
@@ -277,6 +301,7 @@
                             <img src="/storage/{{ $ekosistem->gambar }}" alt="{{ $ekosistem->nama_ekosistem }}" class="h-48 w-full md:w-auto rounded-xl object-cover shadow-sm border border-ocean-200">
                         </div>
                     @endif
+>>>>>>> origin/main
                 </div>
 
                 <!-- Buttons -->
