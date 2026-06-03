@@ -412,6 +412,12 @@
                 .animate-fade-in {
                     animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
                 }
+                @keyframes shimmer {
+                    100% { transform: translateX(350%) skewX(-12deg); }
+                }
+                .shimmer-btn:hover .shimmer-bar {
+                    animation: shimmer 1s ease-out;
+                }
             </style>
             <div class="bg-white/70 backdrop-blur-xl border border-white/60 rounded-[2.5rem] shadow-2xl p-12 md:p-16 text-center max-w-2xl mx-auto animate-fade-in">
                 <div class="w-24 h-24 bg-gradient-to-br from-blue-50 to-cyan-100 rounded-full flex items-center justify-center mx-auto mb-6 text-5xl shadow-inner animate-bounce">
@@ -422,11 +428,14 @@
                     {{ request('search') ? 'Pencarian Anda tidak menghasilkan data yang sesuai. Coba gunakan kata kunci lain.' : 'Belum ada data ekosistem yang terdaftar di sistem.' }}
                 </p>
                 @if(request('search'))
-                    <a href="{{ route('ekosistem.index') }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-ocean-600 to-blue-500 hover:from-ocean-700 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-ocean-500/30 hover:scale-105 active:scale-95 transition-all duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <a href="{{ route('ekosistem.index') }}" class="shimmer-btn relative group overflow-hidden inline-flex items-center gap-2.5 bg-gradient-to-r from-teal-500 via-ocean-600 to-blue-600 text-white font-black text-sm uppercase tracking-wider py-4 px-10 rounded-full shadow-[0_10px_30px_-10px_rgba(8,145,178,0.5)] hover:shadow-[0_20px_40px_-10px_rgba(8,145,178,0.7)] hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300">
+                        <!-- Shimmer bar -->
+                        <div class="absolute inset-y-0 left-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full shimmer-bar pointer-events-none"></div>
+                        
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:rotate-180 transition-transform duration-700 ease-out" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18" />
                         </svg>
-                        Reset Pencarian
+                        <span>Reset Pencarian</span>
                     </a>
                 @endif
             </div>
