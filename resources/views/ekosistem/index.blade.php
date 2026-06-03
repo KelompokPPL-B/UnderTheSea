@@ -52,6 +52,7 @@
             </div>
         </div>
 
+        @if(!$ekosistem->isEmpty() || !request('search'))
         <!-- Dynamic & Interactive Statistics Section (Compact Horizontal) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-14 relative z-20">
             
@@ -389,6 +390,7 @@
                 </button>
             </div>
         </div>
+        @endif
 
         @auth
             @if(auth()->user()->isAdmin())
