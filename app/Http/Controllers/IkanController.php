@@ -17,6 +17,13 @@ class IkanController extends Controller
 
     public function index(Request $request)
     {
+        $request->validate([
+            'search' => 'nullable|string|max:100|regex:/^[a-zA-Z0-9\s]*$/',
+        ], [
+            'search.max' => 'Kata kunci pencarian tidak boleh melebihi 100 karakter.',
+            'search.regex' => 'Kata kunci pencarian tidak boleh mengandung karakter spesial.',
+        ]);
+
         $sort = $request->query('sort', 'newest');
         $search = $request->query('search');
 

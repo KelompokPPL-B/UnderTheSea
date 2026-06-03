@@ -19,11 +19,12 @@ class AksiController extends Controller
     // 🔥 INDEX (SEARCH + SORT + OPTIMIZED)
     public function index(Request $request)
     {
-        // Validasi input search maksimal 100 karakter agar aman dari input berlebih
+        // Validasi input search maksimal 100 karakter dan tidak mengandung karakter spesial
         $request->validate([
-            'search' => 'nullable|string|max:100',
+            'search' => 'nullable|string|max:100|regex:/^[a-zA-Z0-9\s]*$/',
         ], [
             'search.max' => 'Kata kunci pencarian tidak boleh melebihi 100 karakter.',
+            'search.regex' => 'Kata kunci pencarian tidak boleh mengandung karakter spesial.',
         ]);
 
         $sort = $request->query('sort', 'newest');
