@@ -1,194 +1,442 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- PBI-Dashboard: Admin Upload Image -->
-<div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
+
+<div class="py-10 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
     <div class="max-w-7xl mx-auto px-6">
-        <h1 class="text-3xl md:text-4xl font-bold text-ocean-900 mb-8">Dashboard</h1>
 
-        {{-- Success/Error Flash Message --}}
-        @if(session('success'))
-            <div class="mb-6 p-4 bg-green-100 border border-green-300 text-green-800 rounded-xl">
-                {{ session('success') }}
-            </div>
-        @endif
+    <h1 class="text-3xl font-bold text-ocean-900 mb-8">Dashboard</h1>
 
-        {{-- ADMIN SECTION: Upload Konten (dipindah ke atas biar langsung keliatan) --}}
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
         @if(auth()->user()->isAdmin())
-        <div class="bg-white rounded-2xl shadow-card p-6 md:p-8 mb-8">
-            <h2 class="text-xl font-bold text-ocean-900 mb-1">Upload Konten</h2>
-            <p class="text-sm text-gray-500 mb-2">Tambah konten baru dengan gambar ke dalam kategori yang tersedia.</p>
-            <p class="text-xs text-gray-400 mb-6">Format gambar yang diterima: <span class="font-medium">JPG, JPEG, PNG</span> — Maks. <span class="font-medium">2MB</span></p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <!-- Upload Ikan -->
-                <a href="{{ route('ikan.create') }}"
-                   class="flex flex-col items-center justify-center gap-3 border-2 border-dashed border-ocean-200 hover:border-ocean-400 hover:bg-ocean-50 rounded-xl p-6 transition group">
-                    <div class="text-4xl">🐟</div>
-                    <div class="text-center">
-                        <p class="font-semibold text-ocean-800 group-hover:text-ocean-600">Tambah Ikan</p>
-                        <p class="text-xs text-gray-400 mt-1">Upload data & gambar ikan baru</p>
+            <!-- Registered Users -->
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase text-gray-400">Registered Users</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ $usersCount }}</p>
                     </div>
-                </a>
-
-                <!-- Upload Ekosistem -->
-                <a href="{{ route('ekosistem.create') }}"
-                   class="flex flex-col items-center justify-center gap-3 border-2 border-dashed border-ocean-200 hover:border-ocean-400 hover:bg-ocean-50 rounded-xl p-6 transition group">
-                    <div class="text-4xl">🌊</div>
-                    <div class="text-center">
-                        <p class="font-semibold text-ocean-800 group-hover:text-ocean-600">Tambah Ekosistem</p>
-                        <p class="text-xs text-gray-400 mt-1">Upload data & gambar ekosistem</p>
+                    <div class="p-3 bg-blue-50 text-blue-500 rounded-full text-xl">
+                        👥
                     </div>
-                </a>
+                </div>
+            </div>
 
-                <!-- Upload Aksi -->
-                <a href="{{ route('aksi.create') }}"
-                   class="flex flex-col items-center justify-center gap-3 border-2 border-dashed border-ocean-200 hover:border-ocean-400 hover:bg-ocean-50 rounded-xl p-6 transition group">
-                    <div class="text-4xl">🌿</div>
-                    <div class="text-center">
-                        <p class="font-semibold text-ocean-800 group-hover:text-ocean-600">Tambah Aksi</p>
-                        <p class="text-xs text-gray-400 mt-1">Upload data & gambar aksi pelestarian</p>
+            <!-- Total Fish -->
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-teal-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase text-gray-400">Total Fish</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ $totalFishCount }}</p>
                     </div>
-                </a>
+                    <div class="p-3 bg-teal-50 text-teal-500 rounded-full text-xl">
+                        🐟
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Ecosystems -->
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-indigo-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase text-gray-400">Total Ecosystems</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ $totalEcosystemsCount }}</p>
+                    </div>
+                    <div class="p-3 bg-indigo-50 text-indigo-500 rounded-full text-xl">
+                        🌊
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Actions -->
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-emerald-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase text-gray-400">Total Actions</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ $totalActionsCount }}</p>
+                    </div>
+                    <div class="p-3 bg-emerald-50 text-emerald-500 rounded-full text-xl">
+                        🌱
+                    </div>
+                </div>
+            </div>
+        @else
+            <!-- My Bookmarks -->
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-amber-500 col-span-2 md:col-span-2">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase text-gray-400">My Bookmarks</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ $bookmarkCount }}</p>
+                    </div>
+                    <div class="p-3 bg-amber-50 text-amber-500 rounded-full text-xl">
+                        🔖
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Likes -->
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-rose-500 col-span-2 md:col-span-2">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase text-gray-400">My Likes</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ $likeCount }}</p>
+                    </div>
+                    <div class="p-3 bg-rose-50 text-rose-500 rounded-full text-xl">
+                        ❤️
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
+
+    @if(auth()->user()->isAdmin())
+    <!-- Data Distribution Dashboard -->
+    <h2 class="text-xl font-semibold text-ocean-800 mb-4">Data Distribution Monitoring</h2>
+    <div class="grid md:grid-cols-3 gap-6 mb-10">
+        <!-- Conservation Status Distribution -->
+        <div class="bg-white p-5 rounded-xl shadow-md">
+            <h3 class="font-semibold text-ocean-700 mb-4">📊 Fish by Conservation Status</h3>
+            @php $totalFish = $totalFishCount ?: 1; @endphp
+            @if($fishStatusDistribution->count())
+                @foreach($fishStatusDistribution as $dist)
+                    @php
+                        $percentage = round(($dist->count / $totalFish) * 100);
+                        $color = match(strtolower($dist->status_konservasi)) {
+                            'endangered' => 'bg-red-500',
+                            'vulnerable' => 'bg-amber-500',
+                            'least concern' => 'bg-green-500',
+                            default => 'bg-blue-500'
+                        };
+                    @endphp
+                    <div class="mb-4 last:mb-0">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>{{ $dist->status_konservasi }}</span>
+                            <span>{{ $dist->count }} items ({{ $percentage }}%)</span>
+                        </div>
+                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                            <div class="{{ $color }} h-full" style="width: {{ $percentage }}%"></div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <p class="text-gray-400 text-sm italic">No data available</p>
+            @endif
+        </div>
+
+        <!-- Habitat Distribution -->
+        <div class="bg-white p-5 rounded-xl shadow-md">
+            <h3 class="font-semibold text-ocean-700 mb-4">🏠 Top Fish Habitats</h3>
+            @if($fishHabitatDistribution->count())
+                @foreach($fishHabitatDistribution as $dist)
+                    @php
+                        $percentage = round(($dist->count / $totalFish) * 100);
+                    @endphp
+                    <div class="mb-4 last:mb-0">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>{{ $dist->habitat }}</span>
+                            <span>{{ $dist->count }} items ({{ $percentage }}%)</span>
+                        </div>
+                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                            <div class="bg-teal-500 h-full" style="width: {{ $percentage }}%"></div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <p class="text-gray-400 text-sm italic">No data available</p>
+            @endif
+        </div>
+
+        <!-- Action Origin Distribution -->
+        <div class="bg-white p-5 rounded-xl shadow-md">
+            <h3 class="font-semibold text-ocean-700 mb-4">🌱 Conservation Actions Origin</h3>
+            @php $totalActions = $totalActionsCount ?: 1; @endphp
+            @if(count($actionTypeDistribution))
+                @foreach($actionTypeDistribution as $dist)
+                    @php
+                        $percentage = round(($dist['count'] / $totalActions) * 100);
+                        $color = $dist['label'] === 'Official Action' ? 'bg-indigo-600' : 'bg-emerald-500';
+                    @endphp
+                    <div class="mb-4 last:mb-0">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>{{ $dist['label'] }}</span>
+                            <span>{{ $dist['count'] }} items ({{ $percentage }}%)</span>
+                        </div>
+                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                            <div class="{{ $color }} h-full" style="width: {{ $percentage }}%"></div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <p class="text-gray-400 text-sm italic">No data available</p>
+            @endif
+        </div>
+    </div>
+    @endif
+
+    @if(auth()->user()->isAdmin())
+    <!-- User Activity Charts -->
+    <h2 class="text-xl font-semibold text-ocean-800 mb-4">User Activity & Engagement Charts</h2>
+    <div class="grid md:grid-cols-2 gap-6 mb-10">
+        <!-- Doughnut Chart: Engagement Breakdown -->
+        <div class="bg-white p-6 rounded-xl shadow-md flex flex-col justify-between">
+            <h3 class="font-semibold text-ocean-700 mb-4">📈 User Engagement Breakdown</h3>
+            <div class="relative flex-1 flex justify-center items-center h-64">
+                <canvas id="engagementChart"></canvas>
             </div>
         </div>
 
-        {{-- Recent Uploads --}}
-        @if($recentUploads)
-        <div class="bg-white rounded-2xl shadow-card p-6 md:p-8 mb-8">
-            <h2 class="text-xl font-bold text-ocean-900 mb-5">Upload Terbaru</h2>
-
-            {{-- Ikan --}}
-            @if($recentUploads['ikan']->count())
-            <div class="mb-5">
-                <p class="text-sm font-semibold text-gray-500 mb-3">🐟 Ikan</p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    @foreach($recentUploads['ikan'] as $item)
-                    <a href="{{ route('ikan.show', $item->id_ikan) }}"
-                       class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:bg-ocean-50 transition">
-                        @if($item->gambar)
-                            <img src="{{ Storage::url($item->gambar) }}"
-                                 class="w-12 h-12 rounded-lg object-cover flex-shrink-0"
-                                 alt="{{ $item->nama }}">
-                        @else
-                            <div class="w-12 h-12 rounded-lg bg-ocean-100 flex items-center justify-center flex-shrink-0 text-xl">🐟</div>
-                        @endif
-                        <div class="min-w-0">
-                            <p class="text-sm font-semibold text-ocean-900 truncate">{{ $item->nama }}</p>
-                            <p class="text-xs text-gray-400">{{ $item->created_at->diffForHumans() }}</p>
-                        </div>
-                    </a>
-                    @endforeach
-                </div>
+        <!-- Bar Chart: Views by Category -->
+        <div class="bg-white p-6 rounded-xl shadow-md flex flex-col justify-between">
+            <h3 class="font-semibold text-ocean-700 mb-4">👁️ Content Views by Category</h3>
+            <div class="relative flex-1 flex justify-center items-center h-64">
+                <canvas id="viewsChart"></canvas>
             </div>
-            @endif
+        </div>
+    </div>
 
-            {{-- Ekosistem --}}
-            @if($recentUploads['ekosistem']->count())
-            <div class="mb-5">
-                <p class="text-sm font-semibold text-gray-500 mb-3">🌊 Ekosistem</p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    @foreach($recentUploads['ekosistem'] as $item)
-                    <a href="{{ route('ekosistem.show', $item->id_ekosistem) }}"
-                       class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:bg-ocean-50 transition">
-                        @if($item->gambar)
-                            <img src="{{ Storage::url($item->gambar) }}"
-                                 class="w-12 h-12 rounded-lg object-cover flex-shrink-0"
-                                 alt="{{ $item->nama_ekosistem }}">
-                        @else
-                            <div class="w-12 h-12 rounded-lg bg-ocean-100 flex items-center justify-center flex-shrink-0 text-xl">🌊</div>
-                        @endif
-                        <div class="min-w-0">
-                            <p class="text-sm font-semibold text-ocean-900 truncate">{{ $item->nama_ekosistem }}</p>
-                            <p class="text-xs text-gray-400">{{ $item->created_at->diffForHumans() }}</p>
-                        </div>
-                    </a>
-                    @endforeach
-                </div>
-            </div>
-            @endif
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Engagement Chart
+            const engagementCtx = document.getElementById('engagementChart').getContext('2d');
+            new Chart(engagementCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Bookmarks', 'Likes', 'Content Views'],
+                    datasets: [{
+                        data: [{{ $totalBookmarks }}, {{ $totalLikes }}, {{ $totalViews }}],
+                        backgroundColor: [
+                            'rgba(245, 158, 11, 0.8)', // Amber
+                            'rgba(244, 63, 94, 0.8)',  // Rose
+                            'rgba(14, 165, 233, 0.8)'  // Sky Blue
+                        ],
+                        borderColor: [
+                            'rgb(245, 158, 11)',
+                            'rgb(244, 63, 94)',
+                            'rgb(14, 165, 233)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
 
-            {{-- Aksi --}}
-            @if($recentUploads['aksi']->count())
+            // Views Chart
+            const viewsCtx = document.getElementById('viewsChart').getContext('2d');
+            const viewsLabels = {!! json_encode($viewsByContentType->pluck('label')) !!};
+            const viewsData = {!! json_encode($viewsByContentType->pluck('count')) !!};
+
+            new Chart(viewsCtx, {
+                type: 'bar',
+                data: {
+                    labels: viewsLabels,
+                    datasets: [{
+                        label: 'Total Views',
+                        data: viewsData,
+                        backgroundColor: 'rgba(20, 184, 166, 0.8)', // Teal
+                        borderColor: 'rgb(20, 184, 166)',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    @endif
+
+    <!-- Recommended Content -->
+    <h2 class="text-xl font-semibold text-ocean-800 mb-4">Recommended Content</h2>
+
+    <div class="grid md:grid-cols-3 gap-6 mb-10">
+
+        <!-- Fish -->
+        <div class="bg-white p-5 rounded-xl shadow-md flex flex-col justify-between">
             <div>
-                <p class="text-sm font-semibold text-gray-500 mb-3">🌿 Aksi Pelestarian</p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    @foreach($recentUploads['aksi'] as $item)
-                    <a href="{{ route('aksi.show', $item->id_aksi) }}"
-                       class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:bg-ocean-50 transition">
-                        @if($item->gambar)
-                            <img src="{{ Storage::url($item->gambar) }}"
-                                 class="w-12 h-12 rounded-lg object-cover flex-shrink-0"
-                                 alt="{{ $item->judul_aksi }}">
-                        @else
-                            <div class="w-12 h-12 rounded-lg bg-ocean-100 flex items-center justify-center flex-shrink-0 text-xl">🌿</div>
-                        @endif
-                        <div class="min-w-0">
-                            <p class="text-sm font-semibold text-ocean-900 truncate">{{ $item->judul_aksi }}</p>
-                            <p class="text-xs text-gray-400">{{ $item->created_at->diffForHumans() }}</p>
-                        </div>
-                    </a>
-                    @endforeach
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-semibold text-ocean-700">🐟 Fish</h3>
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('ikan.create') }}" class="text-xs bg-ocean-600 hover:bg-ocean-700 text-white px-2 py-1 rounded transition">+ Add Fish</a>
+                    @endif
                 </div>
-            </div>
-            @endif
-        </div>
-        @endif
-        @endif
-        {{-- END ADMIN SECTION --}}
 
-        {{-- Stats Cards --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <!-- Points Card -->
-            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
-                <div class="text-eco-500 text-xs font-semibold mb-1">POINTS</div>
-                <div class="text-3xl font-bold text-ocean-600">{{ auth()->user()->points }}</div>
-                <p class="text-xs text-gray-500 mt-1">Earned from activities</p>
+                @if($fish->count())
+                    <div class="space-y-2">
+                        @foreach($fish as $item)
+                            <div class="flex justify-between items-center border-b pb-2 last:border-b-0">
+                                <span class="text-sm text-gray-700 font-medium">{{ $item->nama }}</span>
+                                <div class="flex space-x-1">
+                                    <a href="{{ route('ikan.show', $item->id_ikan) }}" class="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-0.5 rounded transition">View</a>
+                                    @if(auth()->user()->isAdmin())
+                                        <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="text-xs text-amber-600 hover:text-amber-800 bg-amber-50 px-2 py-0.5 rounded transition">Edit</a>
+                                        <form action="{{ route('ikan.destroy', $item->id_ikan) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this fish?')" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-xs text-red-600 hover:text-red-800 bg-red-50 px-2 py-0.5 rounded transition">Delete</button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-gray-400 text-sm italic">No fish available</p>
+                @endif
             </div>
-
-            <!-- Badge Card -->
-            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
-                <div class="text-eco-500 text-xs font-semibold mb-1">BADGE</div>
-                <div class="text-xl font-bold text-ocean-700">{{ auth()->user()->badge }}</div>
-                <p class="text-xs text-gray-500 mt-1">Your achievement</p>
-            </div>
-
-            <!-- Bookmarks Card -->
-            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
-                <div class="text-eco-500 text-xs font-semibold mb-1">BOOKMARKS</div>
-                <div class="text-3xl font-bold text-ocean-600">{{ $bookmarkCount ?? 0 }}</div>
-                <p class="text-xs text-gray-500 mt-1">Saved items</p>
-            </div>
-
-            <!-- Likes Card -->
-            <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-5">
-                <div class="text-eco-500 text-xs font-semibold mb-1">LIKES</div>
-                <div class="text-3xl font-bold text-ocean-600">{{ $likeCount ?? 0 }}</div>
-                <p class="text-xs text-gray-500 mt-1">Contributions</p>
+            <div class="mt-4 pt-2 border-t text-center">
+                <a href="{{ route('ikan.index') }}" class="text-xs text-ocean-600 hover:text-ocean-700 font-medium">View All Fish →</a>
             </div>
         </div>
 
-        <!-- Profile Card -->
-        <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition p-6 md:p-8 max-w-3xl">
-            <h2 class="text-xl md:text-2xl font-bold text-ocean-900 mb-5">Profile Information</h2>
+        <!-- Ecosystem -->
+        <div class="bg-white p-5 rounded-xl shadow-md flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-semibold text-ocean-700">🌊 Ecosystems</h3>
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('ekosistem.create') }}" class="text-xs bg-ocean-600 hover:bg-ocean-700 text-white px-2 py-1 rounded transition">+ Add Eco</a>
+                    @endif
+                </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                    <p class="text-xs text-gray-500 mb-1">Name</p>
-                    <p class="text-base font-semibold text-ocean-900">{{ auth()->user()->name }}</p>
-                </div>
-                <div>
-                    <p class="text-xs text-gray-500 mb-1">Email</p>
-                    <p class="text-base font-semibold text-ocean-900">{{ auth()->user()->email }}</p>
-                </div>
+                @if($ecosystems->count())
+                    <div class="space-y-2">
+                        @foreach($ecosystems as $eco)
+                            <div class="flex justify-between items-center border-b pb-2 last:border-b-0">
+                                <span class="text-sm text-gray-700 font-medium">{{ $eco->nama_ekosistem }}</span>
+                                <div class="flex space-x-1">
+                                    <a href="{{ route('ekosistem.show', $eco->id_ekosistem) }}" class="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-0.5 rounded transition">View</a>
+                                    @if(auth()->user()->isAdmin())
+                                        <a href="{{ route('ekosistem.edit', $eco->id_ekosistem) }}" class="text-xs text-amber-600 hover:text-amber-800 bg-amber-50 px-2 py-0.5 rounded transition">Edit</a>
+                                        <form action="{{ route('ekosistem.destroy', $eco->id_ekosistem) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this ecosystem?')" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-xs text-red-600 hover:text-red-800 bg-red-50 px-2 py-0.5 rounded transition">Delete</button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-gray-400 text-sm italic">No ecosystems available</p>
+                @endif
             </div>
+            <div class="mt-4 pt-2 border-t text-center">
+                <a href="{{ route('ekosistem.index') }}" class="text-xs text-ocean-600 hover:text-ocean-700 font-medium">View All Ecosystems →</a>
+            </div>
+        </div>
 
-            <div class="mt-6 flex flex-wrap gap-2">
-                <a href="{{ route('profile.show') }}" class="btn btn-outline btn-sm">View Profile</a>
-                <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-sm">Edit Profile</a>
+        <!-- Actions -->
+        <div class="bg-white p-5 rounded-xl shadow-md flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-semibold text-ocean-700">🌱 Actions</h3>
+                    <a href="{{ route('aksi.create') }}" class="text-xs bg-ocean-600 hover:bg-ocean-700 text-white px-2 py-1 rounded transition">+ Add Action</a>
+                </div>
+
+                @if($actions->count())
+                    <div class="space-y-2">
+                        @foreach($actions as $act)
+                            <div class="flex justify-between items-center border-b pb-2 last:border-b-0">
+                                <span class="text-sm text-gray-700 font-medium">{{ $act->judul_aksi }}</span>
+                                <div class="flex space-x-1">
+                                    <a href="{{ route('aksi.show', $act->id_aksi) }}" class="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-0.5 rounded transition">View</a>
+                                    @if(auth()->user()->isAdmin() || auth()->id() === $act->created_by)
+                                        <a href="{{ route('aksi.edit', $act->id_aksi) }}" class="text-xs text-amber-600 hover:text-amber-800 bg-amber-50 px-2 py-0.5 rounded transition">Edit</a>
+                                        <form action="{{ route('aksi.destroy', $act->id_aksi) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this action?')" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-xs text-red-600 hover:text-red-800 bg-red-50 px-2 py-0.5 rounded transition">Delete</button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-gray-400 text-sm italic">No actions available</p>
+                @endif
+            </div>
+            <div class="mt-4 pt-2 border-t text-center">
+                <a href="{{ route('aksi.index') }}" class="text-xs text-ocean-600 hover:text-ocean-700 font-medium">View All Actions →</a>
             </div>
         </div>
 
     </div>
+
+    <!-- Popular Actions -->
+    <h2 class="text-xl font-semibold text-ocean-800 mb-4">Popular Actions</h2>
+
+    <div class="bg-white rounded-xl shadow-md p-5 mb-10">
+        @if($popularActions->count())
+            @foreach($popularActions as $action)
+                <div class="flex justify-between items-center border-b py-2 last:border-b-0 text-sm">
+                    <a href="{{ route('aksi.show', $action->id_aksi) }}" class="text-ocean-600 hover:text-ocean-800 font-medium">{{ $action->judul_aksi }}</a>
+                    <span class="text-ocean-600 font-semibold bg-ocean-50 px-2 py-0.5 rounded">{{ $action->likes_count }} likes</span>
+                </div>
+            @endforeach
+        @else
+            <p class="text-gray-400 italic text-sm">No popular actions yet</p>
+        @endif
+    </div>
+
+    <!-- Leaderboard -->
+    <h2 class="text-xl font-semibold text-ocean-800 mb-4">Leaderboard</h2>
+
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-ocean-100 text-ocean-800">
+                <tr>
+                    <th class="p-3 text-left">Rank</th>
+                    <th class="p-3 text-left">Name</th>
+                    <th class="p-3 text-left">Points</th>
+                    <th class="p-3 text-left">Badge</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($leaderboard as $index => $user)
+                <tr class="border-t hover:bg-gray-50">
+                    <td class="p-3">{{ $index + 1 }}</td>
+                    <td class="p-3">{{ $user->name }}</td>
+                    <td class="p-3 font-semibold text-ocean-600">{{ $user->points }}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">
+                            {{ $user->badge }}
+                        </span>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
 </div>
+
+</div>
+
 @endsection

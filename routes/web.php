@@ -63,6 +63,7 @@ Route::get('/search/ikan', [SearchController::class, 'searchIkan'])->name('searc
 Route::get('/search/ekosistem', [SearchController::class, 'searchEkosistem'])->name('search.ekosistem');
 Route::get('/search/aksi', [SearchController::class, 'searchAksi'])->name('search.aksi');
 
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 // --- RUTE DASHBOARD ---
 Route::get('/dashboard', function () {
     $user = auth()->user();
