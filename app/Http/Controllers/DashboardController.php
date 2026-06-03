@@ -59,6 +59,28 @@ class DashboardController extends Controller
                 ];
             });
 
+        // User Activity & Engagement Metrics for Charting
+        $totalBookmarks = \App\Models\Favorite::count();
+        $totalLikes = \App\Models\Like::count();
+        $totalViews = DB::table('user_views')->count();
+
+        $viewsByContentType = DB::table('user_views')
+            ->select('content_type', DB::raw('count(*) as count'))
+            ->groupBy('content_type')
+            ->get()
+            ->map(function ($item) {
+                $label = match($item->content_type) {
+                    'ikan' => 'Fish',
+                    'ekosistem' => 'Ecosystems',
+                    'aksi' => 'Actions',
+                    default => ucfirst($item->content_type)
+                };
+                return [
+                    'label' => $label,
+                    'count' => $item->count
+                ];
+            });
+
         return view('dashboard', [
             'user' => $user,
             'bookmarkCount' => $bookmarkCount,
@@ -75,6 +97,10 @@ class DashboardController extends Controller
             'fishStatusDistribution' => $fishStatusDistribution,
             'fishHabitatDistribution' => $fishHabitatDistribution,
             'actionTypeDistribution' => $actionTypeDistribution,
+            'totalBookmarks' => $totalBookmarks,
+            'totalLikes' => $totalLikes,
+            'totalViews' => $totalViews,
+            'viewsByContentType' => $viewsByContentType,
         ]);
     }
 }
