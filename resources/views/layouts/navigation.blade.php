@@ -6,7 +6,7 @@
             <div class="flex items-center space-x-8">
                 <!-- Branding -->
                 <div class="shrink-0">
-                    <a href="{{ auth()->check() && auth()->user()->isAdmin() ? route('dashboard') : '/' }}" class="text-2xl font-bold text-ocean-600 hover:text-ocean-700 transition">
+                    <a href="{{ route('dashboard') }}" class="text-2xl font-bold text-ocean-600 hover:text-ocean-700 transition">
                         🌊 Under The Sea
                     </a>
                 </div>

@@ -23,12 +23,12 @@ class DashboardController extends Controller
     public function index(): View
     {
         $user = auth()->user();
-        $bookmarkCount = $user->favorites()->count();
-        $likeCount = $user->likes()->count();
+        $bookmarkCount = $user ? $user->favorites()->count() : 0;
+        $likeCount = $user ? $user->likes()->count() : 0;
 
         $fish = Ikan::take(3)->get();
         $ecosystems = Ekosistem::take(3)->get();
-        $actions = AksiPelestarian::take(3)->get();
+        $actions = AksiPelestarian::withCount('likes')->with('createdBy')->take(3)->get();
         $popularActions = AksiPelestarian::withCount('likes')->orderByDesc('likes_count')->take(5)->get();
         $leaderboard = User::orderByDesc('points')->take(10)->get();
 
@@ -86,6 +86,17 @@ class DashboardController extends Controller
                 ];
             });
 
+        // Featured content for user dashboard Insight section (2 fish, 2 ecosystems)
+        $featuredFish = Ikan::inRandomOrder()->take(2)->get()->map(function ($item) {
+            $item->type = 'fish';
+            return $item;
+        });
+        $featuredEco = Ekosistem::inRandomOrder()->take(2)->get()->map(function ($item) {
+            $item->type = 'ecosystem';
+            return $item;
+        });
+        $featuredContent = $featuredFish->concat($featuredEco)->shuffle();
+
         return view('dashboard', [
             'user'          => $user,
             'bookmarkCount' => $bookmarkCount,
@@ -106,6 +117,7 @@ class DashboardController extends Controller
             'totalLikes' => $totalLikes,
             'totalViews' => $totalViews,
             'viewsByContentType' => $viewsByContentType,
+            'featuredContent' => $featuredContent,
         ]);
     }
 }
