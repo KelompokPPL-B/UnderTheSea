@@ -91,7 +91,7 @@ class IkanController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate according to spec
+        abort_unless(auth()->user()?->isAdmin(), 403);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'scientific_name' => 'nullable|string|max:255',
@@ -123,7 +123,7 @@ class IkanController extends Controller
 
         $ikan = Ikan::create($data);
 
-        return redirect()->route('ikan.index')->with('success', 'Fish created successfully.');
+        return redirect()->route('ikan.index')->with('success', 'Fish created successfully!');
     }
 
     /**
@@ -132,6 +132,7 @@ class IkanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        abort_unless(auth()->user()?->isAdmin(), 403);
         $ikan = Ikan::findOrFail($id);
 
         if (!auth()->user()->isAdmin() && auth()->id() !== $ikan->created_by) {
@@ -169,11 +170,8 @@ class IkanController extends Controller
         $ikan->conservation_status = $validated['conservation_status'] ?? null;
         $ikan->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Fish updated successfully',
-            'data' => $ikan,
-        ]);
+        return redirect()->route('ikan.show', $id)
+            ->with('success', 'Fish updated successfully!');
     }
 
     /**
@@ -182,6 +180,7 @@ class IkanController extends Controller
      */
     public function destroy($id)
     {
+        abort_unless(auth()->user()?->isAdmin(), 403);
         $ikan = Ikan::findOrFail($id);
 
         if (!auth()->user()->isAdmin() && auth()->id() !== $ikan->created_by) {
@@ -194,10 +193,7 @@ class IkanController extends Controller
 
         $ikan->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Fish deleted successfully',
-            'data' => null,
-        ]);
+        return redirect()->route('ikan.index')
+            ->with('success', 'Fish deleted successfully!');
     }
 }

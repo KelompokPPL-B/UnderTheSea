@@ -17,30 +17,43 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Mutiara
+     * Owner: Arvia
      * PBI-13: Manage Action Content
      * PBI-19: Pagination UI
      * PBI-21: Sort Options
+     * PBI-22: Filter Options
      */
     public function index(Request $request)
     {
-        $sort = $request->query('sort', 'newest');
+        $sort        = $request->get('sort', 'newest');
+        $filterTahun = $request->get('tahun', '');
+
         $query = AksiPelestarian::query();
 
-        if ($sort === 'oldest') {
-            $query->orderBy('created_at', 'asc');
-        } elseif ($sort === 'popular') {
-            $query->withCount('likes')->orderByDesc('likes_count');
-        } else {
-            $query->orderBy('created_at', 'desc');
+        if ($filterTahun) {
+            $query->whereYear('created_at', $filterTahun);
         }
 
-        $aksi = $query->paginate(10);
-        return view('aksi.index', compact('aksi', 'sort'));
+        match ($sort) {
+            'oldest'     => $query->orderBy('created_at', 'asc'),
+            'title_asc'  => $query->orderBy('judul_aksi', 'asc'),
+            'title_desc' => $query->orderBy('judul_aksi', 'desc'),
+            default      => $query->orderBy('created_at', 'desc'),
+        };
+
+        $aksi = $query->paginate(10)->withQueryString();
+
+        $tahunList = AksiPelestarian::selectRaw('YEAR(created_at) as tahun')
+            ->whereNotNull('created_at')
+            ->distinct()
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        return view('aksi.index', compact('aksi', 'sort', 'filterTahun', 'tahunList'));
     }
 
     /**
-     * Owner: Mutiara
+     * Owner: Arvia
      * PBI-15: Form Validation UI
      */
     public function create()
@@ -49,7 +62,7 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Mutiara
+     * Owner: Arvia
      * PBI-13: Manage Action Content
      */
     public function show($id)
@@ -64,7 +77,7 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Mutiara
+     * Owner: Arvia
      * PBI-15: Form Validation UI
      */
     public function edit($id)
@@ -79,47 +92,44 @@ class AksiController extends Controller
     }
 
     /**
-     * Owner: Mutiara
-     * PBI-14: User Contribution + Award Points
-     * PBI-18: Input Sanitization & Escaping
+     * Owner: Arvia
+     * PBI-13: Manage Action Content
      */
     public function store(Request $request)
     {
+        abort_unless(auth()->user()?->isAdmin(), 403);
+
         $validated = $request->validate([
-            'judul_aksi' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'manfaat' => 'nullable|string',
-            'cara_melakukan' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'judul_aksi'     => 'required|string|min:5|max:50|unique:aksi_pelestarian,judul_aksi',
+            'deskripsi'      => 'required|string|min:10|max:255',
+            'manfaat'        => 'required|string|min:10|max:100',
+            'cara_melakukan' => 'required|string|min:10|max:255',
+            'gambar'         => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $validated['judul_aksi'] = SanitizationService::sanitize($validated['judul_aksi']);
-        $validated['deskripsi'] = SanitizationService::sanitize($validated['deskripsi']);
-        $validated['manfaat'] = SanitizationService::sanitize($validated['manfaat']);
+        $validated['judul_aksi']     = SanitizationService::sanitize($validated['judul_aksi']);
+        $validated['deskripsi']      = SanitizationService::sanitize($validated['deskripsi']);
+        $validated['manfaat']        = SanitizationService::sanitize($validated['manfaat']);
         $validated['cara_melakukan'] = SanitizationService::sanitize($validated['cara_melakukan']);
 
         if ($request->hasFile('gambar')) {
             $validated['gambar'] = $request->file('gambar')->store('action', 'public');
         }
 
-        $validated['created_by'] = auth()->id();
-        $validated['is_user_generated'] = !auth()->user()->isAdmin();
+        $validated['created_by']        = auth()->id();
+        $validated['is_user_generated'] = false;
 
         $aksi = AksiPelestarian::create($validated);
 
         $this->pointsService->awardPointsForAction(auth()->id(), $aksi->id_aksi);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Action created successfully',
-            'data' => $aksi,
-        ], 201);
+        return redirect()->route('aksi.show', $aksi->id_aksi)
+            ->with('success', 'Conservation action created successfully!');
     }
 
     /**
-     * Owner: Mutiara
+     * Owner: Arvia
      * PBI-13: Manage Action Content
-     * PBI-18: Input Sanitization & Escaping
      */
     public function update(Request $request, $id)
     {
@@ -130,33 +140,32 @@ class AksiController extends Controller
         }
 
         $validated = $request->validate([
-            'judul_aksi' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'manfaat' => 'nullable|string',
-            'cara_melakukan' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'judul_aksi'     => 'required|string|min:5|max:50|unique:aksi_pelestarian,judul_aksi,'.$id.',id_aksi',
+            'deskripsi'      => 'required|string|min:10|max:255',
+            'manfaat'        => 'required|string|min:10|max:100',
+            'cara_melakukan' => 'required|string|min:10|max:255',
+            'gambar'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $validated['judul_aksi'] = SanitizationService::sanitize($validated['judul_aksi']);
-        $validated['deskripsi'] = SanitizationService::sanitize($validated['deskripsi']);
-        $validated['manfaat'] = SanitizationService::sanitize($validated['manfaat']);
+        $validated['judul_aksi']     = SanitizationService::sanitize($validated['judul_aksi']);
+        $validated['deskripsi']      = SanitizationService::sanitize($validated['deskripsi']);
+        $validated['manfaat']        = SanitizationService::sanitize($validated['manfaat']);
         $validated['cara_melakukan'] = SanitizationService::sanitize($validated['cara_melakukan']);
 
         if ($request->hasFile('gambar')) {
             $validated['gambar'] = $request->file('gambar')->store('action', 'public');
+        } else {
+            unset($validated['gambar']);
         }
 
         $aksi->update($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Action updated successfully',
-            'data' => $aksi,
-        ]);
+        return redirect()->route('aksi.show', $id)
+            ->with('success', 'Conservation action updated successfully!');
     }
 
     /**
-     * Owner: Mutiara
+     * Owner: Arvia
      * PBI-13: Manage Action Content
      */
     public function destroy($id)
@@ -169,10 +178,7 @@ class AksiController extends Controller
 
         $aksi->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Action deleted successfully',
-            'data' => null,
-        ]);
+        return redirect()->route('aksi.index')
+            ->with('success', 'Conservation action deleted successfully!');
     }
 }
