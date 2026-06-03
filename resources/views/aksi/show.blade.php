@@ -3,13 +3,13 @@
 @section('content')
 <!-- PBI-AksiShow -->
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
-    <div class="max-w-4xl mx-auto px-6 py-6 mb-6">
+    <div class="max-w-6xl mx-auto px-6 py-6 mb-6">
         @include('layouts.breadcrumb', ['breadcrumbs' => [
             ['label' => 'Conservation Actions', 'url' => route('aksi.index')],
             ['label' => $aksi->judul_aksi]
         ]])
     </div>
-    <div class="max-w-4xl mx-auto px-6 py-6">
+    <div class="max-w-6xl mx-auto px-6 py-6">
         <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition overflow-hidden">
             <!-- Hero Image -->
             @if($aksi->gambar)

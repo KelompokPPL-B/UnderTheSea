@@ -20,7 +20,7 @@
         <div class="absolute inset-0 bg-gradient-to-t from-slate-50 via-ocean-900/40 to-ocean-900/10"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-ocean-900/80 via-ocean-900/40 to-transparent"></div>
 
-        <div class="absolute bottom-0 left-0 w-full px-4 sm:px-6 lg:px-8 pb-16 max-w-7xl mx-auto z-10 flex flex-col justify-end h-full">
+        <div class="absolute bottom-0 left-0 w-full px-4 sm:px-6 lg:px-8 pb-16 max-w-[92rem] mx-auto z-10 flex flex-col justify-end h-full">
             <div class="mb-8">
                 <a href="{{ route('ekosistem.index') }}" class="inline-flex items-center text-sm font-bold text-white hover:text-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-md px-6 py-2.5 rounded-full border border-white/20 hover:border-white/40 shadow-lg hover:-translate-x-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -58,7 +58,7 @@
     </div>
 
     <!-- Content Section -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-8">
+    <div class="max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-8">
         
         <!-- Quick Information Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -186,7 +186,7 @@
     @if($relatedEkosistems->count() > 0)
     <div class="w-full bg-gradient-to-b from-slate-50 to-white pt-24 pb-28 mt-12 relative overflow-hidden">
         
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
+        <div class="max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
             <!-- Header -->
             <div class="text-center mb-14 max-w-3xl mx-auto flex flex-col items-center">
                 <div class="inline-flex items-center justify-center w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-ocean-500 to-blue-600 text-white mb-6 shadow-xl shadow-ocean-500/20 transform hover:scale-105 transition-transform duration-300">

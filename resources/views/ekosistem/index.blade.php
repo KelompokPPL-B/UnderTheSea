@@ -21,8 +21,8 @@
             <p class="text-lg text-gray-600 font-medium mb-6">
                 Temukan keanekaragaman hayati dan pelajari pentingnya menjaga keseimbangan ekosistem laut kita.
             </p>
-            <div class="flex justify-center w-full mt-6">
-                <form method="GET" action="{{ route('ekosistem.index') }}" class="w-full max-w-2xl relative group search-form animate-fade-in" novalidate>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 w-full mt-6 max-w-4xl mx-auto px-4 z-30 relative">
+                <form method="GET" action="{{ route('ekosistem.index') }}" class="w-full md:flex-1 max-w-2xl relative group search-form animate-fade-in" novalidate>
                     <div class="absolute -inset-1 bg-gradient-to-r from-ocean-300 to-cyan-300 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
                     
                     <div class="relative bg-white/80 backdrop-blur-md rounded-full p-1.5 flex items-center shadow-xl border border-white/50">
@@ -49,6 +49,19 @@
                     <!-- Validation message container -->
                     <div class="search-error-msg text-red-500 text-sm font-semibold mt-2 pl-6 hidden text-left"></div>
                 </form>
+
+                <div class="relative w-full md:w-auto min-w-[160px] animate-fade-in">
+                    <select 
+                        onchange="window.location.href='{{ route('ekosistem.index') }}?sort=' + this.value + '&search={{ request('search') }}' + '{{ request()->has('filter_likes') ? '&filter_likes=' . request('filter_likes') : '' }}' + '{{ request()->has('filter_bookmarks') ? '&filter_bookmarks=' . request('filter_bookmarks') : '' }}'" 
+                        class="appearance-none w-full bg-white/80 backdrop-blur-md border border-white/50 text-ocean-700 font-semibold py-3.5 pl-6 pr-10 rounded-full shadow-lg hover:bg-white transition-all cursor-pointer outline-none focus:ring-2 focus:ring-ocean-300">
+                        
+                        <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>✨ Terbaru</option>
+                        <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>⏳ Terlama</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-ocean-500">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -356,39 +369,21 @@
             </div>
         </div>
 
-        <!-- Search & Filter Controls -->
-        <div class="flex flex-col gap-4 mb-12 relative z-20">
-            <!-- Top Row: Sort Select Centered -->
-            <div class="relative flex justify-center items-center">
-                    <select 
-                        onchange="window.location.href='{{ route('ekosistem.index') }}?sort=' + this.value + '&search={{ request('search') }}'" 
-                        class="appearance-none bg-white/80 backdrop-blur-md border border-white/50 text-ocean-700 font-semibold py-3 pl-6 pr-10 rounded-full shadow-lg hover:bg-white transition-all cursor-pointer outline-none focus:ring-2 focus:ring-ocean-300">
-                        
-                        <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>✨ Terbaru</option>
-                        <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>⏳ Terlama</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-ocean-500">
-                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                    </div>
-                </div>
-            </div>
+        <!-- Favorites Filters -->
+        <div class="flex flex-wrap items-center justify-center gap-3 mb-12 relative z-20">
+            <button id="filter-likes-btn" class="px-5 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all duration-300 {{ request()->has('filter_likes') ? 'bg-red-500 text-white shadow-lg shadow-red-500/30 border-red-500' : 'bg-white/80 text-gray-600 hover:bg-white hover:text-red-500 border-gray-200 border shadow-sm' }}">
+                <svg class="w-4 h-4 {{ request()->has('filter_likes') ? 'fill-current text-white' : 'fill-none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+                Likes Saya
+            </button>
 
-            <!-- Bottom Row: Favorites Filters -->
-            <div class="flex flex-wrap items-center justify-center gap-3">
-                <button id="filter-likes-btn" class="px-5 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all duration-300 {{ request()->has('filter_likes') ? 'bg-red-500 text-white shadow-lg shadow-red-500/30 border-red-500' : 'bg-white/80 text-gray-600 hover:bg-white hover:text-red-500 border-gray-200 border shadow-sm' }}">
-                    <svg class="w-4 h-4 {{ request()->has('filter_likes') ? 'fill-current text-white' : 'fill-none' }}" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                    </svg>
-                    Likes Saya
-                </button>
-
-                <button id="filter-bookmarks-btn" class="px-5 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all duration-300 {{ request()->has('filter_bookmarks') ? 'bg-ocean-500 text-white shadow-lg shadow-ocean-500/30 border-ocean-500' : 'bg-white/80 text-gray-600 hover:bg-white hover:text-ocean-500 border-gray-200 border shadow-sm' }}">
-                    <svg class="w-4 h-4 {{ request()->has('filter_bookmarks') ? 'fill-current text-white' : 'fill-none' }}" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
-                    </svg>
-                    Bookmarks Saya
-                </button>
-            </div>
+            <button id="filter-bookmarks-btn" class="px-5 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all duration-300 {{ request()->has('filter_bookmarks') ? 'bg-ocean-500 text-white shadow-lg shadow-ocean-500/30 border-ocean-500' : 'bg-white/80 text-gray-600 hover:bg-white hover:text-ocean-500 border-gray-200 border shadow-sm' }}">
+                <svg class="w-4 h-4 {{ request()->has('filter_bookmarks') ? 'fill-current text-white' : 'fill-none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                </svg>
+                Bookmarks Saya
+            </button>
         </div>
         @endif
 
