@@ -81,6 +81,9 @@ class DashboardController extends Controller
                 ];
             });
 
+        // Featured content for user dashboard Insight section (4 cards)
+        $featuredContent = Ikan::inRandomOrder()->take(4)->get();
+
         return view('dashboard', [
             'user' => $user,
             'bookmarkCount' => $bookmarkCount,
@@ -101,6 +104,7 @@ class DashboardController extends Controller
             'totalLikes' => $totalLikes,
             'totalViews' => $totalViews,
             'viewsByContentType' => $viewsByContentType,
+            'featuredContent' => $featuredContent,
         ]);
     }
 }
