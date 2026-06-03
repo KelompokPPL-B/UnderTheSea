@@ -52,13 +52,7 @@ Route::get('/search/ikan', [SearchController::class, 'searchIkan'])->name('searc
 Route::get('/search/ekosistem', [SearchController::class, 'searchEkosistem'])->name('search.ekosistem');
 Route::get('/search/aksi', [SearchController::class, 'searchAksi'])->name('search.aksi');
 
-Route::get('/dashboard', function () {
-    $user = auth()->user();
-    return view('dashboard', [
-        'bookmarkCount' => $user->favorites()->count(),
-        'likeCount' => $user->likes()->count(),
-    ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', function () {
