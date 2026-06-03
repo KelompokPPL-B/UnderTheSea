@@ -2,11 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force override DaisyUI primary color ke biru ocean */
+[data-theme="oceanTheme"] .btn-primary {
+    background-color: #0EA5E9 !important;
+    border-color: #0284C7 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="oceanTheme"] .btn-primary:hover {
+    background-color: #0284C7 !important;
+    border-color: #0369A1 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="oceanTheme"] .btn-outline {
+    border-color: #0EA5E9 !important;
+    color: #0EA5E9 !important;
+    background-color: transparent !important;
+}
+
+[data-theme="oceanTheme"] .btn-outline:hover {
+    background-color: #0EA5E9 !important;
+    border-color: #0EA5E9 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="oceanTheme"] .btn-error {
+    background-color: #EF4444 !important;
+    border-color: #EF4444 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="oceanTheme"] .btn-error:hover {
+    background-color: #DC2626 !important;
+    border-color: #DC2626 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="oceanTheme"] .btn-success {
+    background-color: #22C55E !important;
+    border-color: #22C55E !important;
+    color: #ffffff !important;
+}
+
+[data-theme="oceanTheme"] .btn-success:hover {
+    background-color: #16A34A !important;
+    border-color: #16A34A !important;
+    color: #ffffff !important;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -23,11 +73,11 @@ a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-    outline: 2px solid #2563eb;
+    outline: 2px solid #0EA5E9;
     outline-offset: 2px;
 }
 
-/* Alert and notification styling - Consistent messaging */
+/* Alert and notification styling */
 .alert-success,
 .notification-success {
     @apply bg-green-100 text-green-800 px-6 py-3 rounded-lg shadow-lg;
@@ -48,30 +98,35 @@ select:focus-visible {
     @apply bg-blue-100 text-blue-800 px-6 py-3 rounded-lg shadow-lg;
 }
 
-/* Mobile responsiveness - Touch-friendly targets (44px minimum) */
+/* Mobile responsiveness */
 @media (max-width: 640px) {
-    button, a[class*="px-"], input, textarea, select {
+
+    button,
+    a[class*="px-"],
+    input,
+    textarea,
+    select {
         min-height: 44px;
     }
 
-    button, a[class*="px-"] {
+    button,
+    a[class*="px-"] {
         min-width: 44px;
     }
 
-    /* Ensure adequate touch spacing */
-    button + button,
-    a + a,
-    button + a,
-    a + button {
+    button+button,
+    a+a,
+    button+a,
+    a+button {
         margin-left: 0.5rem;
     }
 }
 
 /* Print-friendly styles */
 @media print {
-    /* Hide navigation and non-essential elements */
+
     nav,
-    .mb-8 > button,
+    .mb-8>button,
     .share-btn,
     .delete-btn,
     .like-btn,
@@ -86,14 +141,12 @@ select:focus-visible {
         display: none;
     }
 
-    /* Adjust page background and text */
     body {
         background: white;
         color: #000;
         font-size: 12pt;
     }
 
-    /* Adjust heading sizes for print */
     h1 {
         font-size: 24pt;
         margin-bottom: 0.5in;
@@ -104,19 +157,16 @@ select:focus-visible {
         margin-top: 0.3in;
     }
 
-    /* Show page breaks after main sections */
     article,
     .bg-white {
         page-break-inside: avoid;
     }
 
-    /* Optimize link display */
     a {
         color: #000;
         text-decoration: underline;
     }
 
-    /* Remove shadows and backgrounds for print */
     .shadow,
     .shadow-lg,
     .bg-gradient-to-r,
@@ -125,17 +175,15 @@ select:focus-visible {
         background: white;
     }
 
-    /* Adjust spacing for print */
     * {
         margin: 0;
         padding: 0;
     }
 
-    body > * {
+    body>* {
         margin-bottom: 0.25in;
     }
 
-    /* Preserve image aspect ratio */
     img {
         max-width: 100%;
         height: auto;
@@ -145,11 +193,11 @@ select:focus-visible {
 /* Search pill - glassmorphism / liquid ocean styling */
 .search-pill {
     position: relative;
-    border-radius: 9999px; /* pill */
-    background: linear-gradient(135deg, rgba(255,255,255,0.55), rgba(220,246,255,0.45));
-    box-shadow: 0 8px 24px rgba(6, 78, 59, 0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(220, 246, 255, 0.45));
+    box-shadow: 0 8px 24px rgba(6, 78, 59, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(8px) saturate(120%);
-    border: 1px solid rgba(255,255,255,0.35);
+    border: 1px solid rgba(255, 255, 255, 0.35);
     padding: 4px;
     overflow: visible;
 }
@@ -177,8 +225,8 @@ select:focus-visible {
     width: 36px;
     height: 36px;
     border-radius: 9999px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.4), rgba(255,255,255,0.15));
-    border: 1px solid rgba(255,255,255,0.2);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.15));
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Decorative bubbles */
@@ -188,6 +236,7 @@ select:focus-visible {
     filter: blur(6px);
     opacity: 0.65;
 }
+
 .search-bubble.bubble-1 {
     width: 56px;
     height: 56px;
@@ -195,23 +244,31 @@ select:focus-visible {
     top: -18px;
     background: radial-gradient(circle at 30% 30%, rgba(173, 216, 230, 0.6), rgba(158, 208, 225, 0.25));
 }
+
 .search-bubble.bubble-2 {
     width: 32px;
     height: 32px;
     left: -12px;
     bottom: -12px;
-    background: radial-gradient(circle at 30% 30%, rgba(135,206,250,0.55), rgba(135,206,250,0.12));
+    background: radial-gradient(circle at 30% 30%, rgba(135, 206, 250, 0.55), rgba(135, 206, 250, 0.12));
 }
+
 .search-bubble.bubble-3 {
     width: 20px;
     height: 20px;
     right: 24px;
     bottom: -8px;
-    background: radial-gradient(circle at 30% 30%, rgba(176, 224, 230,0.5), rgba(176, 224, 230,0.08));
+    background: radial-gradient(circle at 30% 30%, rgba(176, 224, 230, 0.5), rgba(176, 224, 230, 0.08));
 }
 
 /* Responsive tweaks */
 @media (max-width: 640px) {
-    .search-pill { padding: 6px; }
-    .search-icon { width: 40px; height: 40px; }
+    .search-pill {
+        padding: 6px;
+    }
+
+    .search-icon {
+        width: 40px;
+        height: 40px;
+    }
 }
