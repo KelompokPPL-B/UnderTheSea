@@ -89,7 +89,6 @@ class EkosistemController extends Controller
 
         $relatedEkosistems = Ekosistem::where('id_ekosistem', '!=', $id)
             ->inRandomOrder()
-            ->take(3)
             ->get();
 
         if (auth()->check()) {
