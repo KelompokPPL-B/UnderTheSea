@@ -19,10 +19,17 @@ class AksiPelestarian extends Model
         'gambar',
         'created_by',
         'is_user_generated',
+        'lokasi',
+        'tanggal_kegiatan',
+        'tujuan_konservasi',
+        'isu_lingkungan',
+        'volunteer_dibutuhkan',
+        'dampak_aksi'
     ];
 
     protected $casts = [
-        'is_user_generated' => 'boolean',
+        'tanggal_kegiatan' => 'date',
+        'is_user_generated' => 'boolean'
     ];
 
     // Relasi ke User (creator)
@@ -35,6 +42,20 @@ class AksiPelestarian extends Model
     public function likes(): HasMany
     {
         return $this->hasMany(Like::class, 'action_id', 'id_aksi');
+    }
+
+    // Relasi ke AksiTandai
+    public function tandai(): HasMany
+    {
+        return $this->hasMany(AksiTandai::class, 'aksi_id', 'id_aksi');
+    }
+
+    /**
+     * Relasi ke feedback ulasan aksi pelestarian
+     */
+    public function feedback(): HasMany
+    {
+        return $this->hasMany(AksiFeedback::class, 'aksi_id', 'id_aksi')->orderBy('created_at', 'desc');
     }
 
     // Relasi ke Favorite

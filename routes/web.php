@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/leaderboard', [HomeController::class, 'leaderboard'])->name('leaderboard');
 
+// --- KELOMPOK RUTE IKAN ---
 Route::get('/ikan', [IkanController::class, 'index'])->name('ikan.index');
 Route::get('/ikan/create', [IkanController::class, 'create'])->middleware('auth')->name('ikan.create');
 Route::get('/ikan/{id}', [IkanController::class, 'show'])->name('ikan.show');
@@ -22,6 +23,7 @@ Route::post('/ikan', [IkanController::class, 'store'])->middleware('auth')->name
 Route::put('/ikan/{id}', [IkanController::class, 'update'])->middleware('auth')->name('ikan.update');
 Route::delete('/ikan/{id}', [IkanController::class, 'destroy'])->middleware('auth')->name('ikan.destroy');
 
+// --- KELOMPOK RUTE EKOSISTEM ---
 Route::get('/ekosistem', [EkosistemController::class, 'index'])->name('ekosistem.index');
 Route::get('/ekosistem/create', [EkosistemController::class, 'create'])->middleware('auth')->name('ekosistem.create');
 Route::get('/ekosistem/{id}', [EkosistemController::class, 'show'])->name('ekosistem.show');
@@ -29,27 +31,48 @@ Route::get('/ekosistem/{id}/edit', [EkosistemController::class, 'edit'])->middle
 Route::post('/ekosistem', [EkosistemController::class, 'store'])->middleware('auth')->name('ekosistem.store');
 Route::put('/ekosistem/{id}', [EkosistemController::class, 'update'])->middleware('auth')->name('ekosistem.update');
 
+// --- KELOMPOK RUTE AKSI PELESTARIAN & FEEDBACK ---
 Route::get('/aksi', [AksiController::class, 'index'])->name('aksi.index');
 Route::get('/aksi/create', [AksiController::class, 'create'])->middleware('auth')->name('aksi.create');
+Route::get('/aksi/riwayat/saya', [AksiController::class, 'riwayat'])->name('aksi.riwayat');
+Route::delete('/aksi/riwayat/saya/clear', [AksiController::class, 'clearRiwayat'])->name('aksi.riwayat.clear');
 Route::get('/aksi/{id}', [AksiController::class, 'show'])->name('aksi.show');
 Route::get('/aksi/{id}/edit', [AksiController::class, 'edit'])->middleware('auth')->name('aksi.edit');
 Route::post('/aksi', [AksiController::class, 'store'])->middleware('auth')->name('aksi.store');
 Route::put('/aksi/{id}', [AksiController::class, 'update'])->middleware('auth')->name('aksi.update');
 Route::delete('/aksi/{id}', [AksiController::class, 'destroy'])->middleware('auth')->name('aksi.destroy');
 
+// Route Penandaan Aksi & Ulasan Feedback (PBI-26)
+Route::post('/aksi/{id}/tandai', [AksiController::class, 'tandai'])->name('aksi.tandai');
+Route::delete('/aksi/{id}/tandai', [AksiController::class, 'batalTandai'])->name('aksi.tandai.destroy');
+Route::post('/aksi/{id}/feedback', [AksiController::class, 'storeFeedback'])->name('aksi.feedback.store');
+
+// --- KELOMPOK RUTE FAVORITE / BOOKMARK ---
+Route::get('/favorites', [FavoriteController::class, 'index'])->middleware('auth')->name('favorites.index');
+Route::post('/favorites', [FavoriteController::class, 'store'])->middleware('auth')->name('favorites.store');
+Route::delete('/favorites', [FavoriteController::class, 'destroy'])->middleware('auth')->name('favorites.destroy');
+
+// --- KELOMPOK RUTE LIKES ---
 Route::get('/likes', [LikeController::class, 'index'])->middleware('auth')->name('likes.index');
 Route::post('/likes', [LikeController::class, 'store'])->middleware('auth')->name('likes.store');
 Route::delete('/likes', [LikeController::class, 'destroy'])->middleware('auth')->name('likes.destroy');
 Route::get('/likes/{actionId}/count', [LikeController::class, 'count'])->name('likes.count');
 
+// --- KELOMPOK RUTE GLOBAL SEARCH ---
+Route::get('/search/ikan', [SearchController::class, 'searchIkan'])->name('search.ikan');
+Route::get('/search/ekosistem', [SearchController::class, 'searchEkosistem'])->name('search.ekosistem');
+Route::get('/search/aksi', [SearchController::class, 'searchAksi'])->name('search.aksi');
+
+// --- RUTE DASHBOARD ---
 Route::get('/dashboard', function () {
     $user = auth()->user();
     return view('dashboard', [
         'bookmarkCount' => $user->favorites()->count(),
-        'likeCount' => $user->likes()->count(),
+        'likeCount'     => $user->likes()->count(),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// --- KELOMPOK RUTE PROFILE ---
 Route::middleware('auth')->group(function () {
     Route::get('/profile', function () {
         return view('profile');
