@@ -1,7 +1,7 @@
 <!-- PBI-Navigation -->
-<nav x-data="{ open: false }" class="bg-white border-b border-ocean-100 shadow-soft">
+<nav x-data="{ open: false }" class="sticky top-0 z-50 bg-white border-b border-ocean-100 shadow-soft">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div class="flex justify-between h-16">
             <div class="flex items-center space-x-8">
                 <!-- Branding -->

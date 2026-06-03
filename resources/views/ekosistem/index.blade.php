@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-16 bg-gradient-to-br from-slate-50 via-blue-50 to-emerald-50 min-h-screen relative">
+<div class="py-16 bg-gradient-to-br from-slate-50 via-blue-50 to-emerald-50 min-h-screen relative overflow-x-hidden">
     
     <!-- Decorative background elements -->
     <div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-ocean-600/5 to-transparent pointer-events-none"></div>
     <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl mix-blend-multiply pointer-events-none"></div>
     <div class="absolute top-48 -left-24 w-72 h-72 bg-emerald-400/10 rounded-full blur-3xl mix-blend-multiply pointer-events-none"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 relative z-10">
 
         <!-- Header Section -->
         <div class="text-center max-w-3xl mx-auto mb-14">
@@ -330,7 +330,7 @@
         <div class="flex flex-col gap-4 mb-12 relative z-20">
             <!-- Top Row: Search and Sort -->
             <div class="relative flex flex-col md:flex-row items-center justify-center gap-4">
-                <form method="GET" action="{{ route('ekosistem.index') }}" class="w-full max-w-2xl relative group">
+                <form method="GET" action="{{ route('ekosistem.index') }}" class="w-full max-w-2xl relative group search-form" novalidate>
                     <div class="absolute -inset-1 bg-gradient-to-r from-ocean-300 to-cyan-300 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
                     
                     <div class="relative bg-white/80 backdrop-blur-md rounded-full p-1.5 flex items-center shadow-xl border border-white/50">
@@ -341,7 +341,7 @@
                             name="search" 
                             value="{{ request('search') }}"
                             placeholder="Cari ekosistem, lokasi, atau deskripsi..." 
-                            class="w-full bg-transparent border-none focus:ring-0 px-2 py-3 text-ocean-900 placeholder-ocean-400 font-medium outline-none"
+                            class="w-full bg-transparent border-none focus:ring-0 px-2 py-3 text-ocean-900 placeholder-ocean-400 font-medium outline-none search-input"
                         >
 
                         <button 
@@ -354,6 +354,8 @@
                             </svg>
                         </button>
                     </div>
+                    <!-- Validation message container -->
+                    <div class="search-error-msg text-red-500 text-sm font-semibold mt-2 pl-6 hidden"></div>
                 </form>
 
                 <div class="relative w-full md:w-auto">
@@ -730,6 +732,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = currentUrl.toString();
             }
         });
+    }
+
+    // === SEARCH VALIDATION LOGIC ===
+    const searchForm = document.querySelector('.search-form');
+    if (searchForm) {
+        const searchInput = searchForm.querySelector('.search-input');
+        const errorMsg = searchForm.querySelector('.search-error-msg');
+
+        if (searchInput && errorMsg) {
+            function validateSearch(val) {
+                const trimmed = val.trim();
+                if (trimmed === '') {
+                    return 'Silakan masukkan kata kunci pencarian.';
+                }
+                if (trimmed.length > 100) {
+                    return 'Kata kunci pencarian tidak boleh melebihi 100 karakter.';
+                }
+                return null;
+            }
+
+            function showError(msg) {
+                errorMsg.textContent = msg;
+                errorMsg.classList.remove('hidden');
+            }
+
+            function clearError() {
+                errorMsg.textContent = '';
+                errorMsg.classList.add('hidden');
+            }
+
+            searchForm.addEventListener('submit', function(e) {
+                const error = validateSearch(searchInput.value);
+                if (error) {
+                    e.preventDefault();
+                    showError(error);
+                }
+            });
+
+            searchInput.addEventListener('input', function() {
+                const error = validateSearch(this.value);
+                if (!error) {
+                    clearError();
+                } else if (!errorMsg.classList.contains('hidden')) {
+                    showError(error);
+                }
+            });
+        }
     }
 });
 </script>

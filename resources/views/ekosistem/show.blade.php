@@ -179,78 +179,135 @@
                 </div>
                 @endif
             </div>
-        </d    </div>
+        </div>
+    </div>
     
     <!-- Related Ecosystems Section -->
     @if($relatedEkosistems->count() > 0)
-    <div class="w-full bg-gradient-to-b from-slate-50 via-teal-50/40 to-ocean-100/60 pt-20 pb-24 mt-8 relative overflow-hidden border-t border-teal-100/50">
-        <!-- Background decorative elements -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div class="absolute -top-32 -right-32 w-[30rem] h-[30rem] bg-teal-400/5 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-0 -left-24 w-80 h-80 bg-blue-400/5 rounded-full blur-3xl"></div>
-        </div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="w-full bg-gradient-to-b from-slate-50 to-white pt-24 pb-28 mt-12 relative overflow-hidden">
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
             <!-- Header -->
-            <div class="text-center mb-16 max-w-2xl mx-auto">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br from-teal-400 to-blue-500 text-white shadow-xl shadow-teal-500/20 mb-6 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="text-center mb-14 max-w-3xl mx-auto flex flex-col items-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-ocean-500 to-blue-600 text-white mb-6 shadow-xl shadow-ocean-500/20 transform hover:scale-105 transition-transform duration-300">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
                 </div>
-                <h3 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-blue-800 tracking-tight mb-5">Ekosistem Terkait</h3>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">Ekosistem <span class="text-transparent bg-clip-text bg-gradient-to-r from-ocean-500 to-emerald-500">Terkait</span></h2>
                 <p class="text-slate-500 text-lg md:text-xl font-medium">Jelajahi ekosistem laut lainnya yang saling terhubung.</p>
-                <div class="w-24 h-1.5 bg-gradient-to-r from-teal-400 to-blue-500 mx-auto mt-6 rounded-full opacity-70"></div>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-ocean-400 to-emerald-400 mx-auto mt-7 rounded-full opacity-80"></div>
             </div>
             
-            <!-- Cards Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-8 xl:gap-10">
-                @foreach($relatedEkosistems as $related)
-                <a href="{{ route('ekosistem.show', $related->id_ekosistem) }}" class="group flex flex-col h-full bg-white/80 backdrop-blur-sm rounded-[2.5rem] overflow-hidden shadow-[0_8px_30px_rgb(13,148,136,0.06)] hover:shadow-[0_20px_40px_rgb(13,148,136,0.15)] border border-white transform hover:-translate-y-3 transition-all duration-500 relative">
-                    <!-- Top Accent Border -->
-                    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-teal-400 to-blue-500 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    <!-- Image Area (Landscape Ratio) -->
-                    <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 shrink-0">
-                        @if($related->gambar)
-                            <img src="/storage/{{ $related->gambar }}" alt="{{ $related->nama_ekosistem }}" class="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700 ease-out">
-                        @else
-                            <div class="w-full h-full bg-gradient-to-br from-teal-800 to-blue-900 flex items-center justify-center">
-                                <span class="text-6xl opacity-30">🌊</span>
-                            </div>
-                        @endif
-                        <!-- Gradient Overlay -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/40 to-transparent"></div>
-                        
-                        <!-- Content Inside Image -->
-                        <div class="absolute bottom-5 left-6 right-6">
-                            <span class="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm mb-3">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
-                                {{ $related->lokasi }}
-                            </span>
-                            <h4 class="text-xl lg:text-2xl font-black text-white group-hover:text-teal-300 transition-colors leading-tight line-clamp-2">{{ $related->nama_ekosistem }}</h4>
-                        </div>
-                    </div>
-                    
-                    <!-- Text Area -->
-                    <div class="p-6 lg:p-8 flex flex-col flex-grow">
-                        <p class="text-slate-600 text-sm md:text-base line-clamp-3 mb-6 leading-relaxed flex-grow">{{ $related->deskripsi }}</p>
-                        
-                        <!-- Footer Action -->
-                        <div class="flex items-center justify-between w-full mt-auto pt-4 border-t border-slate-100">
-                            <span class="text-teal-600 font-extrabold text-xs md:text-sm uppercase tracking-widest group-hover:text-teal-800 transition-colors">
-                                Lihat Detail
-                            </span>
-                            <div class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-500 group-hover:text-white group-hover:shadow-md group-hover:shadow-teal-500/30 transition-all duration-300 transform group-hover:translate-x-1">
-                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-                @endforeach
+            <!-- Carousel Container -->
+            <style>
+                .ecosystem-carousel-container {
+                    position: relative;
+                    width: 100%;
+                }
+                .ecosystem-carousel-viewport {
+                    overflow: hidden;
+                    width: 100%;
+                    padding: 1rem 0.25rem 2rem 0.25rem;
+                }
+                .ecosystem-carousel-track {
+                    display: flex;
+                    gap: 2rem;
+                    transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+                    will-change: transform;
+                }
+                .ecosystem-carousel-item {
+                    flex-shrink: 0;
+                    width: 100%;
+                }
+                @media (min-width: 768px) {
+                    .ecosystem-carousel-item {
+                        width: calc(50% - 1rem);
+                    }
+                }
+                @media (min-width: 1024px) {
+                    .ecosystem-carousel-item {
+                        width: calc(33.333% - 1.333rem);
+                    }
+                }
+            </style>
 
+            <div class="ecosystem-carousel-container">
+                <!-- Navigation Buttons -->
+                <div class="absolute inset-y-0 left-0 right-0 flex items-center justify-between pointer-events-none z-20">
+                    <button id="carousel-prev" class="w-14 h-14 rounded-full bg-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),_0_8px_16px_-6px_rgba(0,0,0,0.05)] border border-gray-100/80 flex items-center justify-center text-teal-600 hover:text-teal-700 hover:scale-105 active:scale-95 transition-all duration-300 pointer-events-auto disabled:opacity-0 disabled:pointer-events-none -ml-4 md:-ml-8 lg:-ml-12" aria-label="Previous Ecosystem">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <button id="carousel-next" class="w-14 h-14 rounded-full bg-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),_0_8px_16px_-6px_rgba(0,0,0,0.05)] border border-gray-100/80 flex items-center justify-center text-teal-600 hover:text-teal-700 hover:scale-105 active:scale-95 transition-all duration-300 pointer-events-auto disabled:opacity-0 disabled:pointer-events-none -mr-4 md:-mr-8 lg:-mr-12" aria-label="Next Ecosystem">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Viewport -->
+                <div class="ecosystem-carousel-viewport">
+                    <div id="carousel-track" class="ecosystem-carousel-track">
+                        @foreach($relatedEkosistems as $related)
+                        <div class="ecosystem-carousel-item">
+                            <a href="{{ route('ekosistem.show', $related->id_ekosistem) }}" class="group bg-white rounded-[1.5rem] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.15)] border border-gray-100/80 overflow-hidden flex flex-col transition-all duration-300 transform hover:-translate-y-1.5 cursor-pointer h-full">
+                                
+                                <!-- Image Area -->
+                                <div class="relative h-60 w-full overflow-hidden bg-gray-100">
+                                    @if($related->gambar)
+                                        <img src="/storage/{{ $related->gambar }}" alt="{{ $related->nama_ekosistem }}" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center bg-ocean-50 text-6xl">🌊</div>
+                                    @endif
+                                    
+                                    <!-- Dark Gradient Overlay -->
+                                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none"></div>
+
+                                    <!-- Location Badge -->
+                                    @if($related->lokasi)
+                                    <div class="absolute top-5 left-5 z-10">
+                                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-ocean-500/35 backdrop-blur-md text-sky-100 text-[11px] font-bold uppercase tracking-wider rounded-full border border-sky-400/30 shadow-md">
+                                            <svg class="w-3.5 h-3.5 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                            {{ $related->lokasi }}
+                                        </span>
+                                    </div>
+                                    @endif
+                                </div>
+
+                                <!-- Card Body -->
+                                <div class="p-6 md:p-7 flex flex-col flex-grow bg-white relative">
+                                    <div class="flex-grow">
+                                        <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-ocean-600 transition-colors">{{ $related->nama_ekosistem }}</h3>
+                                        
+                                        <p class="text-gray-500 text-sm font-medium leading-relaxed mb-6" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                            {{ $related->deskripsi ?? 'Tidak ada deskripsi yang tersedia.' }}
+                                        </p>
+                                    </div>
+
+                                    <!-- Divider Line and Footer Button -->
+                                    <div class="pt-5 border-t border-gray-100/80 mt-auto flex items-center justify-between">
+                                        <span class="text-ocean-600 font-bold text-xs uppercase tracking-wider group-hover:text-ocean-700 transition-colors">
+                                            LIHAT DETAIL
+                                        </span>
+                                        <div class="w-8 h-8 rounded-full bg-ocean-50 text-ocean-600 flex items-center justify-center group-hover:bg-ocean-500 group-hover:text-white transition-all duration-300 transform group-hover:translate-x-1 shadow-sm">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     @endif
-</div>
 </div>
 
 @push('scripts')
@@ -290,6 +347,79 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        // Carousel Slider
+        const track = document.getElementById('carousel-track');
+        const prevBtn = document.getElementById('carousel-prev');
+        const nextBtn = document.getElementById('carousel-next');
+
+        if (track && prevBtn && nextBtn) {
+            const items = track.querySelectorAll('.ecosystem-carousel-item');
+            const totalItems = items.length;
+            let currentIndex = 0;
+
+            function getVisibleItemsCount() {
+                if (window.innerWidth >= 1024) return 3;
+                if (window.innerWidth >= 768) return 2;
+                return 1;
+            }
+
+            function updateCarousel() {
+                const visibleItems = getVisibleItemsCount();
+                const maxIndex = Math.max(0, totalItems - visibleItems);
+
+                if (currentIndex > maxIndex) {
+                    currentIndex = maxIndex;
+                }
+
+                if (totalItems > 0) {
+                    const firstItem = items[0];
+                    const itemWidth = firstItem.getBoundingClientRect().width;
+
+                    // Calculate the gap dynamically from computed layout
+                    let gap = 32;
+                    if (items.length > 1) {
+                        const secondItem = items[1];
+                        gap = secondItem.getBoundingClientRect().left - firstItem.getBoundingClientRect().right;
+                    }
+
+                    const offset = currentIndex * (itemWidth + gap);
+                    track.style.transform = `translateX(-${offset}px)`;
+                }
+
+                // Enable/disable buttons based on limits
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex >= maxIndex;
+            }
+
+            prevBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateCarousel();
+                }
+            });
+
+            nextBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const visibleItems = getVisibleItemsCount();
+                const maxIndex = totalItems - visibleItems;
+                if (currentIndex < maxIndex) {
+                    currentIndex++;
+                    updateCarousel();
+                }
+            });
+
+            // Update on resize
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(updateCarousel, 100);
+            });
+
+            // Initial calculation
+            setTimeout(updateCarousel, 100);
+        }
+
         // Share button
         const shareBtn = document.querySelector('.share-btn');
         if (shareBtn) {
@@ -418,7 +548,3 @@ document.addEventListener('DOMContentLoaded', function() {
         const icon = btn.querySelector('.bookmark-icon');
         if (icon) icon.setAttribute('fill', 'none');
     }
-});
-</script>
-@endpush
-@endsection

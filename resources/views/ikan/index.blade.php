@@ -17,7 +17,7 @@
 
         <div class="relative mb-16 flex flex-col md:flex-row items-center justify-center gap-4 z-20">
 
-            <form method="GET" action="{{ route('ikan.index') }}" class="w-full max-w-2xl relative group">
+            <form method="GET" action="{{ route('ikan.index') }}" class="w-full max-w-2xl relative group search-form" novalidate>
                 <div class="absolute -inset-1 bg-gradient-to-r from-ocean-300 to-cyan-300 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
                 
                 <div class="relative bg-white/80 backdrop-blur-md rounded-full p-1.5 flex items-center shadow-xl border border-white/50">
@@ -28,7 +28,7 @@
                         name="search" 
                         value="{{ request('search') }}"
                         placeholder="Cari ikan, habitat, atau spesies..." 
-                        class="w-full bg-transparent border-none focus:ring-0 px-2 py-3 text-ocean-900 placeholder-ocean-400 font-medium outline-none"
+                        class="w-full bg-transparent border-none focus:ring-0 px-2 py-3 text-ocean-900 placeholder-ocean-400 font-medium outline-none search-input"
                     >
 
                     <button 
@@ -41,6 +41,8 @@
                         </svg>
                     </button>
                 </div>
+                <!-- Validation message container -->
+                <div class="search-error-msg text-red-500 text-sm font-semibold mt-2 pl-6 hidden"></div>
             </form>
 
             <div class="relative w-full md:w-auto">
@@ -119,4 +121,57 @@
         @endif
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // === SEARCH VALIDATION LOGIC ===
+    const searchForm = document.querySelector('.search-form');
+    if (searchForm) {
+        const searchInput = searchForm.querySelector('.search-input');
+        const errorMsg = searchForm.querySelector('.search-error-msg');
+
+        if (searchInput && errorMsg) {
+            function validateSearch(val) {
+                const trimmed = val.trim();
+                if (trimmed === '') {
+                    return 'Silakan masukkan kata kunci pencarian.';
+                }
+                if (trimmed.length > 100) {
+                    return 'Kata kunci pencarian tidak boleh melebihi 100 karakter.';
+                }
+                return null;
+            }
+
+            function showError(msg) {
+                errorMsg.textContent = msg;
+                errorMsg.classList.remove('hidden');
+            }
+
+            function clearError() {
+                errorMsg.textContent = '';
+                errorMsg.classList.add('hidden');
+            }
+
+            searchForm.addEventListener('submit', function(e) {
+                const error = validateSearch(searchInput.value);
+                if (error) {
+                    e.preventDefault();
+                    showError(error);
+                }
+            });
+
+            searchInput.addEventListener('input', function() {
+                const error = validateSearch(this.value);
+                if (!error) {
+                    clearError();
+                } else if (!errorMsg.classList.contains('hidden')) {
+                    showError(error);
+                }
+            });
+        }
+    }
+});
+</script>
+@endpush
 @endsection
