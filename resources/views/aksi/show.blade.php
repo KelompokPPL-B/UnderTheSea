@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand min-h-screen">
+    <div class="max-w-6xl mx-auto px-6 py-6 mb-6">
     @if(session('success'))
         <div class="max-w-4xl mx-auto px-6 mb-4">
             <div class="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded-lg flex items-center gap-2">
@@ -18,6 +19,9 @@
             ['label' => $aksi->judul_aksi]
         ]])
     </div>
+    <div class="max-w-6xl mx-auto px-6 py-6">
+        <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition overflow-hidden">
+            <!-- Hero Image -->
 
     <div class="max-w-4xl mx-auto px-6">
         <div class="bg-white rounded-2xl shadow-card overflow-hidden">

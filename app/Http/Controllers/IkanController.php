@@ -18,17 +18,34 @@ class IkanController extends Controller
 
     public function index(Request $request)
     {
+        $request->validate([
+            'search' => 'nullable|string|max:100|regex:/^[a-zA-Z0-9\s]*$/',
+        ], [
+            'search.max' => 'Kata kunci pencarian tidak boleh melebihi 100 karakter.',
+            'search.regex' => 'Kata kunci pencarian tidak boleh mengandung karakter spesial.',
+        ]);
+
         $sort = $request->query('sort', 'newest');
+        $search = $request->query('search');
+
         $query = Ikan::query();
 
-        if ($sort === 'oldest') {
-            $query->orderBy('created_at', 'asc');
-        } else {
-            $query->orderBy('created_at', 'desc');
+        // 🔍 SEARCH (optimized)
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('habitat', 'like', "%{$search}%");
+                  // ❌ deskripsi gak dipakai karena TEXT (biar cepat)
+            });
         }
 
-        $ikan = $query->paginate(10);
-        return view('ikan.index', compact('ikan', 'sort'));
+        // 🔽 SORT
+        $query->orderBy('created_at', $sort === 'oldest' ? 'asc' : 'desc');
+
+        // 📄 PAGINATION
+        $ikan = $query->paginate(10)->appends($request->query());
+
+        return view('ikan.index', compact('ikan', 'sort', 'search'));
     }
 
     public function create()
@@ -76,6 +93,8 @@ class IkanController extends Controller
         }
 
         $validated['created_by'] = auth()->id();
+
+        $ikan = Ikan::create($validated);
         Ikan::create($validated);
 
         return redirect()->route('ikan.index')

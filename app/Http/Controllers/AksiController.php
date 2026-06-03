@@ -18,6 +18,43 @@ class AksiController extends Controller
         $this->pointsService = $pointsService;
     }
 
+    // 🔥 INDEX (SEARCH + SORT + OPTIMIZED)
+    public function index(Request $request)
+    {
+        // Validasi input search maksimal 100 karakter dan tidak mengandung karakter spesial
+        $request->validate([
+            'search' => 'nullable|string|max:100|regex:/^[a-zA-Z0-9\s]*$/',
+        ], [
+            'search.max' => 'Kata kunci pencarian tidak boleh melebihi 100 karakter.',
+            'search.regex' => 'Kata kunci pencarian tidak boleh mengandung karakter spesial.',
+        ]);
+
+        $sort = $request->query('sort', 'newest');
+        $search = $request->query('search');
+
+        $query = AksiPelestarian::query()
+            ->select('id_aksi', 'judul_aksi', 'deskripsi', 'gambar', 'created_at');
+
+        // 🔍 SEARCH (Tetap menggunakan prefix search yang optimal)
+        if (!empty($search)) {
+            $query->where('judul_aksi', 'like', "{$search}%");
+        }
+
+        // 🔽 SORT
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } elseif ($sort === 'popular') {
+            $query->withCount('likes')->orderByDesc('likes_count');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        // 📄 PAGINATION
+        $aksi = $query->paginate(10)->appends($request->query());
+
+        return view('aksi.index', compact('aksi', 'sort', 'search'));
+    }
+
     /**
      * Owner: Arvia / Mutiara
      * PBI-13: Manage Action Content

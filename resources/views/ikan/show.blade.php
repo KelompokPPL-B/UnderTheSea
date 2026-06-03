@@ -2,13 +2,13 @@
 
 @section('content')
 <div class="py-12 bg-gradient-to-br from-ocean-50 to-sand">
-    <div class="max-w-4xl mx-auto px-6 py-6 mb-6">
+    <div class="max-w-6xl mx-auto px-6 py-6 mb-6">
         @include('layouts.breadcrumb', ['breadcrumbs' => [
             ['label' => 'Fish Species', 'url' => route('ikan.index')],
             ['label' => $ikan->nama]
         ]])
     </div>
-    <div class="max-w-4xl mx-auto px-6 py-6">
+    <div class="max-w-6xl mx-auto px-6 py-6">
         <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition overflow-hidden">
             @if($ikan->gambar)
                 <img src="{{ asset('storage/' . $ikan->gambar) }}" alt="{{ $ikan->nama }}" class="w-full h-96 object-cover" loading="lazy">
