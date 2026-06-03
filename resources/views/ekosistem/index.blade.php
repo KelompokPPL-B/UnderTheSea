@@ -18,9 +18,38 @@
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-5 leading-tight tracking-tight">
                 Katalog <span class="text-transparent bg-clip-text bg-gradient-to-r from-ocean-600 to-emerald-500">Ekosistem</span>
             </h1>
-            <p class="text-lg text-gray-600 font-medium">
+            <p class="text-lg text-gray-600 font-medium mb-6">
                 Temukan keanekaragaman hayati dan pelajari pentingnya menjaga keseimbangan ekosistem laut kita.
             </p>
+            <div class="flex justify-center w-full mt-6">
+                <form method="GET" action="{{ route('ekosistem.index') }}" class="w-full max-w-2xl relative group search-form animate-fade-in" novalidate>
+                    <div class="absolute -inset-1 bg-gradient-to-r from-ocean-300 to-cyan-300 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
+                    
+                    <div class="relative bg-white/80 backdrop-blur-md rounded-full p-1.5 flex items-center shadow-xl border border-white/50">
+                        <span class="pl-5 pr-2 text-2xl">🫧</span>
+                        
+                        <input 
+                            type="text" 
+                            name="search" 
+                            value="{{ request('search') }}"
+                            placeholder="Cari ekosistem, lokasi, atau deskripsi..." 
+                            class="w-full bg-transparent border-none focus:ring-0 px-2 py-3 text-ocean-900 placeholder-ocean-400 font-medium outline-none search-input"
+                        >
+
+                        <button 
+                            type="submit" 
+                            class="bg-gradient-to-r from-ocean-600 to-blue-500 hover:from-ocean-700 hover:to-blue-600 text-white px-8 py-3 rounded-full font-bold tracking-wide shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center gap-2 animate-shimmer"
+                        >
+                            <span>Search</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Validation message container -->
+                    <div class="search-error-msg text-red-500 text-sm font-semibold mt-2 pl-6 hidden text-left"></div>
+                </form>
+            </div>
         </div>
 
         <!-- Dynamic & Interactive Statistics Section (Compact Horizontal) -->
@@ -328,37 +357,8 @@
 
         <!-- Search & Filter Controls -->
         <div class="flex flex-col gap-4 mb-12 relative z-20">
-            <!-- Top Row: Search and Sort -->
-            <div class="relative flex flex-col md:flex-row items-center justify-center gap-4">
-                <form method="GET" action="{{ route('ekosistem.index') }}" class="w-full max-w-2xl relative group search-form" novalidate>
-                    <div class="absolute -inset-1 bg-gradient-to-r from-ocean-300 to-cyan-300 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
-                    
-                    <div class="relative bg-white/80 backdrop-blur-md rounded-full p-1.5 flex items-center shadow-xl border border-white/50">
-                        <span class="pl-5 pr-2 text-2xl">🫧</span>
-                        
-                        <input 
-                            type="text" 
-                            name="search" 
-                            value="{{ request('search') }}"
-                            placeholder="Cari ekosistem, lokasi, atau deskripsi..." 
-                            class="w-full bg-transparent border-none focus:ring-0 px-2 py-3 text-ocean-900 placeholder-ocean-400 font-medium outline-none search-input"
-                        >
-
-                        <button 
-                            type="submit" 
-                            class="bg-gradient-to-r from-ocean-600 to-blue-500 hover:from-ocean-700 hover:to-blue-600 text-white px-8 py-3 rounded-full font-bold tracking-wide shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
-                        >
-                            <span>Search</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </button>
-                    </div>
-                    <!-- Validation message container -->
-                    <div class="search-error-msg text-red-500 text-sm font-semibold mt-2 pl-6 hidden"></div>
-                </form>
-
-                <div class="relative w-full md:w-auto">
+            <!-- Top Row: Sort Select Centered -->
+            <div class="relative flex justify-center items-center">
                     <select 
                         onchange="window.location.href='{{ route('ekosistem.index') }}?sort=' + this.value + '&search={{ request('search') }}'" 
                         class="appearance-none bg-white/80 backdrop-blur-md border border-white/50 text-ocean-700 font-semibold py-3 pl-6 pr-10 rounded-full shadow-lg hover:bg-white transition-all cursor-pointer outline-none focus:ring-2 focus:ring-ocean-300">
@@ -403,22 +403,41 @@
             @endif
         @endauth
 
+        <!-- Search Result Info -->
+        @if(request('search'))
+            <div class="mb-8 flex items-center justify-between bg-white/60 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/50 shadow-sm animate-fade-in">
+                <div class="flex items-center gap-3">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+                    </span>
+                    <span class="text-sm font-semibold text-slate-700">
+                        Menampilkan hasil untuk: <span class="text-cyan-600 font-bold">"{{ request('search') }}"</span>
+                    </span>
+                </div>
+                <a href="{{ route('ekosistem.index') }}" class="text-xs font-bold text-cyan-600 hover:text-cyan-700 transition-all flex items-center gap-1.5 hover:scale-105 active:scale-95">
+                    Reset Pencarian 🔄
+                </a>
+            </div>
+        @endif
+
+        <style>
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(16px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+            @keyframes shimmer {
+                100% { transform: translateX(350%) skewX(-12deg); }
+            }
+            .shimmer-btn:hover .shimmer-bar {
+                animation: shimmer 1s ease-out;
+            }
+        </style>
+
         @if($ekosistem->isEmpty())
-            <style>
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(16px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .animate-fade-in {
-                    animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                }
-                @keyframes shimmer {
-                    100% { transform: translateX(350%) skewX(-12deg); }
-                }
-                .shimmer-btn:hover .shimmer-bar {
-                    animation: shimmer 1s ease-out;
-                }
-            </style>
             <div class="bg-white/70 backdrop-blur-xl border border-white/60 rounded-[2.5rem] shadow-2xl p-12 md:p-16 text-center max-w-2xl mx-auto animate-fade-in">
                 <div class="w-24 h-24 bg-gradient-to-br from-blue-50 to-cyan-100 rounded-full flex items-center justify-center mx-auto mb-6 text-5xl shadow-inner animate-bounce">
                     🐠
@@ -442,7 +461,7 @@
         @else
 
         <!-- Grid Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in">
             @foreach($ekosistem as $item)
             <div class="group bg-white rounded-[1.5rem] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.15)] border border-gray-100/80 overflow-hidden flex flex-col transition-all duration-300 transform hover:-translate-y-1.5">
                 
@@ -479,7 +498,7 @@
                     <!-- Location Tag -->
                     @if($item->lokasi)
                     <div class="absolute bottom-5 left-5 z-10">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-lg border border-white/30">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-lg border border-white/30 search-highlightable">
                             <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
                             {{ $item->lokasi }}
                         </span>
@@ -490,7 +509,7 @@
                 <!-- Card Body -->
                 <div class="p-6 flex flex-col flex-grow bg-white relative">
                     <div class="flex-grow">
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-1 group-hover:text-ocean-600 transition-colors">{{ $item->nama_ekosistem }}</h3>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-1 group-hover:text-ocean-600 transition-colors search-highlightable">{{ $item->nama_ekosistem }}</h3>
                         
                         @if($item->peran)
                             <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-md text-xs font-bold mb-4">
@@ -499,7 +518,7 @@
                             </div>
                         @endif
 
-                        <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3 mb-6">
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3 mb-6 search-highlightable">
                             {{ $item->deskripsi ?? 'Tidak ada deskripsi yang tersedia.' }}
                         </p>
                     </div>
@@ -810,6 +829,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
+    }
+
+    // Highlight search keywords
+    function highlightText(element, query) {
+        if (!query) return;
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+        const nodes = [];
+        let node;
+        while (node = walker.nextNode()) {
+            nodes.push(node);
+        }
+        
+        const regex = new RegExp(`(${query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')})`, 'gi');
+        
+        nodes.forEach(textNode => {
+            const text = textNode.nodeValue;
+            if (regex.test(text)) {
+                const fragment = document.createDocumentFragment();
+                let lastIndex = 0;
+                text.replace(regex, (match, p1, index) => {
+                    if (index > lastIndex) {
+                        fragment.appendChild(document.createTextNode(text.substring(lastIndex, index)));
+                    }
+                    const mark = document.createElement('mark');
+                    mark.className = 'bg-cyan-100 text-cyan-900 rounded px-0.5 font-bold';
+                    mark.textContent = match;
+                    fragment.appendChild(mark);
+                    lastIndex = index + match.length;
+                });
+                if (lastIndex < text.length) {
+                    fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+                }
+                textNode.parentNode.replaceChild(fragment, textNode);
+            }
+        });
+    }
+
+    const searchQuery = new URLSearchParams(window.location.search).get('search');
+    if (searchQuery) {
+        document.querySelectorAll('.search-highlightable').forEach(el => {
+            highlightText(el, searchQuery);
+        });
     }
 });
 </script>

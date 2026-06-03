@@ -70,22 +70,41 @@
             @endif
         @endauth
 
+        <!-- Search Result Info -->
+        @if(request('search'))
+            <div class="mb-8 flex items-center justify-between bg-white/60 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/50 shadow-sm animate-fade-in">
+                <div class="flex items-center gap-3">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+                    </span>
+                    <span class="text-sm font-semibold text-slate-700">
+                        Menampilkan hasil untuk: <span class="text-cyan-600 font-bold">"{{ request('search') }}"</span>
+                    </span>
+                </div>
+                <a href="{{ route('ikan.index') }}" class="text-xs font-bold text-cyan-600 hover:text-cyan-700 transition-all flex items-center gap-1.5 hover:scale-105 active:scale-95">
+                    Reset Pencarian 🔄
+                </a>
+            </div>
+        @endif
+
+        <style>
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(16px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+            @keyframes shimmer {
+                100% { transform: translateX(350%) skewX(-12deg); }
+            }
+            .shimmer-btn:hover .shimmer-bar {
+                animation: shimmer 1s ease-out;
+            }
+        </style>
+
         @if($ikan->isEmpty())
-            <style>
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(16px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .animate-fade-in {
-                    animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                }
-                @keyframes shimmer {
-                    100% { transform: translateX(350%) skewX(-12deg); }
-                }
-                .shimmer-btn:hover .shimmer-bar {
-                    animation: shimmer 1s ease-out;
-                }
-            </style>
             <div class="bg-white/70 backdrop-blur-xl border border-white/60 rounded-[2.5rem] shadow-2xl p-12 md:p-16 text-center max-w-2xl mx-auto animate-fade-in">
                 <div class="w-24 h-24 bg-gradient-to-br from-blue-50 to-cyan-100 rounded-full flex items-center justify-center mx-auto mb-6 text-5xl shadow-inner animate-bounce">
                     🐠
@@ -108,7 +127,7 @@
             </div>
         @else
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in">
             @foreach($ikan as $item)
             <div class="group bg-white rounded-3xl shadow-lg hover:shadow-2xl hover:shadow-ocean-500/20 border border-ocean-50/50 transform hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col">
 
@@ -119,7 +138,7 @@
                         <div class="w-full h-full flex items-center justify-center text-4xl">🐟</div>
                     @endif
                     <div class="absolute top-4 left-4">
-                        <span class="bg-white/90 backdrop-blur text-ocean-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                        <span class="bg-white/90 backdrop-blur text-ocean-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm search-highlightable">
                             🌊 {{ $item->habitat ?? 'Laut Lepas' }}
                         </span>
                     </div>
@@ -127,8 +146,8 @@
 
                 <div class="p-6 flex-grow flex flex-col justify-between bg-gradient-to-b from-white to-ocean-50/30">
                     <div>
-                        <h3 class="text-2xl font-extrabold text-ocean-900 mb-2 group-hover:text-blue-600 transition-colors">{{ $item->nama }}</h3>
-                        <p class="text-sm text-gray-500 line-clamp-2 mb-4">
+                        <h3 class="text-2xl font-extrabold text-ocean-900 mb-2 group-hover:text-blue-600 transition-colors search-highlightable">{{ $item->nama }}</h3>
+                        <p class="text-sm text-gray-500 line-clamp-2 mb-4 search-highlightable">
                             {{ $item->deskripsi ?? 'Spesies menakjubkan dari kedalaman laut.' }}
                         </p>
                     </div>
@@ -203,6 +222,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
+    }
+
+    // Highlight search keywords
+    function highlightText(element, query) {
+        if (!query) return;
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+        const nodes = [];
+        let node;
+        while (node = walker.nextNode()) {
+            nodes.push(node);
+        }
+        
+        const regex = new RegExp(`(${query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')})`, 'gi');
+        
+        nodes.forEach(textNode => {
+            const text = textNode.nodeValue;
+            if (regex.test(text)) {
+                const fragment = document.createDocumentFragment();
+                let lastIndex = 0;
+                text.replace(regex, (match, p1, index) => {
+                    if (index > lastIndex) {
+                        fragment.appendChild(document.createTextNode(text.substring(lastIndex, index)));
+                    }
+                    const mark = document.createElement('mark');
+                    mark.className = 'bg-cyan-100 text-cyan-900 rounded px-0.5 font-bold';
+                    mark.textContent = match;
+                    fragment.appendChild(mark);
+                    lastIndex = index + match.length;
+                });
+                if (lastIndex < text.length) {
+                    fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+                }
+                textNode.parentNode.replaceChild(fragment, textNode);
+            }
+        });
+    }
+
+    const searchQuery = new URLSearchParams(window.location.search).get('search');
+    if (searchQuery) {
+        document.querySelectorAll('.search-highlightable').forEach(el => {
+            highlightText(el, searchQuery);
+        });
     }
 });
 </script>
