@@ -174,6 +174,102 @@
     </div>
     @endif
 
+    @if(auth()->user()->isAdmin())
+    <!-- User Activity Charts -->
+    <h2 class="text-xl font-semibold text-ocean-800 mb-4">User Activity & Engagement Charts</h2>
+    <div class="grid md:grid-cols-2 gap-6 mb-10">
+        <!-- Doughnut Chart: Engagement Breakdown -->
+        <div class="bg-white p-6 rounded-xl shadow-md flex flex-col justify-between">
+            <h3 class="font-semibold text-ocean-700 mb-4">📈 User Engagement Breakdown</h3>
+            <div class="relative flex-1 flex justify-center items-center h-64">
+                <canvas id="engagementChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Bar Chart: Views by Category -->
+        <div class="bg-white p-6 rounded-xl shadow-md flex flex-col justify-between">
+            <h3 class="font-semibold text-ocean-700 mb-4">👁️ Content Views by Category</h3>
+            <div class="relative flex-1 flex justify-center items-center h-64">
+                <canvas id="viewsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Engagement Chart
+            const engagementCtx = document.getElementById('engagementChart').getContext('2d');
+            new Chart(engagementCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Bookmarks', 'Likes', 'Content Views'],
+                    datasets: [{
+                        data: [{{ $totalBookmarks }}, {{ $totalLikes }}, {{ $totalViews }}],
+                        backgroundColor: [
+                            'rgba(245, 158, 11, 0.8)', // Amber
+                            'rgba(244, 63, 94, 0.8)',  // Rose
+                            'rgba(14, 165, 233, 0.8)'  // Sky Blue
+                        ],
+                        borderColor: [
+                            'rgb(245, 158, 11)',
+                            'rgb(244, 63, 94)',
+                            'rgb(14, 165, 233)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Views Chart
+            const viewsCtx = document.getElementById('viewsChart').getContext('2d');
+            const viewsLabels = {!! json_encode($viewsByContentType->pluck('label')) !!};
+            const viewsData = {!! json_encode($viewsByContentType->pluck('count')) !!};
+
+            new Chart(viewsCtx, {
+                type: 'bar',
+                data: {
+                    labels: viewsLabels,
+                    datasets: [{
+                        label: 'Total Views',
+                        data: viewsData,
+                        backgroundColor: 'rgba(20, 184, 166, 0.8)', // Teal
+                        borderColor: 'rgb(20, 184, 166)',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    @endif
+
     <!-- Recommended Content -->
     <h2 class="text-xl font-semibold text-ocean-800 mb-4">Recommended Content</h2>
 
