@@ -155,7 +155,12 @@
 
                     @auth
                         @if(auth()->user()->isAdmin())
-                            <a href="{{ route('ekosistem.create') }}" class="btn btn-primary btn-sm">+ Add New Ecosystem</a>
+                            <a href="{{ route('ekosistem.create') }}" class="bg-gradient-to-r from-ocean-600 to-emerald-500 hover:from-ocean-700 hover:to-emerald-600 text-white font-bold py-2.5 px-5 rounded-xl shadow-md hover:shadow-emerald-500/20 transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                Tambah Ekosistem
+                            </a>
                         @endif
                     @endauth
                 </div>
@@ -334,19 +339,6 @@
                         </div>
                     </div>
                 </div>
-
-                @auth
-                    @if(auth()->user()->isAdmin())
-                        <div class="mb-8 flex justify-end z-20 relative">
-                            <a href="{{ route('ekosistem.create') }}" class="bg-gradient-to-r from-ocean-600 to-emerald-500 hover:from-ocean-700 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-emerald-500/40 transform hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                                </svg>
-                                Tambah Ekosistem
-                            </a>
-                        </div>
-                    @endif
-                @endauth
 
                 <!-- Search Result Info -->
                 @if(request('search'))

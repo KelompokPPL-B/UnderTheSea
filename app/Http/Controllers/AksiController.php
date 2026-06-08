@@ -66,7 +66,10 @@ class AksiController extends Controller
         $aksi = $query->paginate(10)->withQueryString();
 
         // List tahun untuk filter
-        $tahunList = AksiPelestarian::selectRaw('YEAR(created_at) as tahun')
+        $driver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
+        $selectRaw = $driver === 'sqlite' ? "strftime('%Y', created_at) as tahun" : 'YEAR(created_at) as tahun';
+
+        $tahunList = AksiPelestarian::selectRaw($selectRaw)
             ->whereNotNull('created_at')
             ->distinct()
             ->orderBy('tahun', 'desc')
