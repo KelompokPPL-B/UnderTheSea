@@ -17,15 +17,23 @@ class Ikan extends Model
      * to map `name` -> `nama`, `description` -> `deskripsi`, `image` -> `gambar`.
      */
     protected $fillable = [
+        'nama',
+        'deskripsi',
+        'habitat',
+        'karakteristik',
+        'status_konservasi',
+        'fakta_unik',
+        'gambar',
+        'created_by',
+
+        // English aliases/attributes
         'name',
         'scientific_name',
-        'habitat',
         'description',
         'diet',
         'size',
         'conservation_status',
         'image',
-        'created_by',
     ];
 
     // Accessors and mutators to map English attributes to DB columns

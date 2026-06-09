@@ -40,6 +40,8 @@ class AksiController extends Controller
         $sort = $request->get('sort', 'newest');
         $search = $request->get('search', '');
         $filterTahun = $request->get('tahun', '');
+        $filterLikes = $request->get('filter_likes');
+        $filterBookmarks = $request->get('filter_bookmarks');
 
         $query = AksiPelestarian::query();
 
@@ -51,6 +53,24 @@ class AksiController extends Controller
         // Filter berdasarkan tahun created_at
         if (!empty($filterTahun)) {
             $query->whereYear('created_at', $filterTahun);
+        }
+
+        if ($filterLikes !== null) {
+            if (empty(trim($filterLikes))) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $ids = array_filter(explode(',', $filterLikes));
+                $query->whereIn('id_aksi', $ids);
+            }
+        }
+
+        if ($filterBookmarks !== null) {
+            if (empty(trim($filterBookmarks))) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $ids = array_filter(explode(',', $filterBookmarks));
+                $query->whereIn('id_aksi', $ids);
+            }
         }
 
         // Sort

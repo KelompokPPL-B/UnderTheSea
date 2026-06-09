@@ -505,10 +505,27 @@
         #ikan-page .uts-title {
             font-size: 32px;
         }
+    }
 
-        #ikan-page .uts-grid {
-            grid-template-columns: 1fr;
-        }
+    @keyframes heartBeat {
+        0% { transform: scale(1); }
+        14% { transform: scale(1.18); }
+        28% { transform: scale(1); }
+        42% { transform: scale(1.18); }
+        70% { transform: scale(1); }
+    }
+    .animate-heart-beat {
+        animation: heartBeat 0.45s ease-in-out;
+    }
+    #ikan-page .filter-pills-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        position: relative;
+        z-index: 30;
     }
 </style>
 
@@ -582,6 +599,47 @@
             </div>
         </div>
 
+        <!-- Likes & Bookmarks Filter Pills -->
+        <div class="filter-pills-wrap">
+            <!-- Likes Filter Button -->
+            @if(request('filter_likes') !== null)
+                <a href="{{ request()->fullUrlWithQuery(['filter_likes' => null]) }}" 
+                   class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#009ee2] hover:bg-[#0089c4] text-white font-bold text-sm shadow-md transform hover:-translate-y-0.5 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current text-white" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                    <span>Like Saya</span>
+                </a>
+            @else
+                <button type="button" id="btn-filter-likes"
+                   class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-gray-200 text-gray-700 font-bold text-sm shadow-sm hover:bg-gray-50 transform hover:-translate-y-0.5 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <span>Like Saya</span>
+                </button>
+            @endif
+
+            <!-- Bookmarks Filter Button -->
+            @if(request('filter_bookmarks') !== null)
+                <a href="{{ request()->fullUrlWithQuery(['filter_bookmarks' => null]) }}" 
+                   class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#009ee2] hover:bg-[#0089c4] text-white font-bold text-sm shadow-md transform hover:-translate-y-0.5 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current text-white" viewBox="0 0 24 24">
+                        <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    <span>Bookmark Saya</span>
+                </a>
+            @else
+                <button type="button" id="btn-filter-bookmarks"
+                   class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-gray-200 text-gray-700 font-bold text-sm shadow-sm hover:bg-gray-50 transform hover:-translate-y-0.5 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                        </svg>
+                        <span>Bookmark Saya</span>
+                </button>
+            @endif
+        </div>
+
         @if($fishList->isEmpty())
             <div class="fish-empty-state">
                 No fish species found yet.
@@ -590,7 +648,7 @@
             <div class="uts-grid fish-grid" id="fish-grid">
                 @foreach($fishList as $item)
                     <div class="fish-card" data-fish-name="{{ strtolower($item->nama) }}">
-                        <div class="fish-card-media">
+                        <div class="fish-card-media relative">
                             @if($item->gambar)
                                 <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->nama }}" class="fish-image" loading="lazy">
                             @else
@@ -599,6 +657,27 @@
                                     <div class="fish-placeholder-text">{{ $item->nama }}</div>
                                 </div>
                             @endif
+
+                            <!-- Floating Like & Bookmark Buttons -->
+                            <div class="absolute top-3 right-3 z-20 flex gap-1.5">
+                                <!-- Like Button -->
+                                <button type="button" 
+                                    class="w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 btn-like focus:outline-none" 
+                                    data-id="{{ $item->id_ikan }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                </button>
+
+                                <!-- Bookmark Button -->
+                                <button type="button" 
+                                    class="w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 btn-bookmark focus:outline-none" 
+                                    data-id="{{ $item->id_ikan }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="fish-card-body">
@@ -619,16 +698,6 @@
                                     <strong>Status:</strong> {{ $item->status_konservasi }}
                                 </div>
                             @endif
-
-                            @auth
-                                <button class="bookmark-btn-card fish-bookmark" data-type="ikan" data-item-id="{{ $item->id_ikan }}">
-                                    <span class="bookmark-text">Bookmark</span>
-                                </button>
-                            @else
-                                <a href="{{ route('login') }}" class="fish-bookmark">
-                                    Sign in to bookmark
-                                </a>
-                            @endauth
 
                             <a href="{{ route('ikan.show', $item->id_ikan) }}" class="view-btn">
                                 View <span>›</span>
@@ -660,6 +729,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch(e) {}
 
     initializeFishSortDropdown();
+    initializeLikesAndBookmarks();
     initializeBookmarkButtonsCard();
     loadBookmarkStatesCard();
     setupLiveSearch();
@@ -761,50 +831,124 @@ function loadBookmarkStatesCard() {
     .catch(err => console.error('Error loading bookmark state:', err));
 }
 
-function setupLiveSearch() {
-    const input = document.getElementById('fish-search');
-    const button = document.getElementById('fish-search-btn');
-    const grid = document.getElementById('fish-grid');
-    const emptyState = document.getElementById('fish-empty-state');
+function initializeLikesAndBookmarks() {
+    const SVG_HEART_EMPTY = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`;
+    const SVG_HEART_FILLED = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#ef4444] fill-current animate-heart-beat" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
 
-    if (!input || !grid) return;
+    const SVG_BOOKMARK_EMPTY = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>`;
+    const SVG_BOOKMARK_FILLED = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#009ee2] fill-current" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>`;
 
-    const cards = Array.from(grid.querySelectorAll('.fish-card'));
-
-    function filterCards() {
-        const q = input.value.trim().toLowerCase();
-        let visibleCount = 0;
-
-        cards.forEach(card => {
-            const name = (card.dataset.fishName || '').toLowerCase();
-
-            if (!q || name.includes(q)) {
-                card.style.display = '';
-                visibleCount++;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        if (emptyState) {
-            emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    function getLikedIkans() {
+        try {
+            return JSON.parse(localStorage.getItem('liked_ikans')) || [];
+        } catch (e) {
+            return [];
         }
     }
 
-    input.addEventListener('input', filterCards);
+    function setLikedIkans(ids) {
+        localStorage.setItem('liked_ikans', JSON.stringify(ids));
+    }
 
-    input.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            filterCards();
+    function getBookmarkedIkans() {
+        try {
+            return JSON.parse(localStorage.getItem('bookmarked_ikans')) || [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function setBookmarkedIkans(ids) {
+        localStorage.setItem('bookmarked_ikans', JSON.stringify(ids));
+    }
+
+    const likedIds = getLikedIkans();
+    document.querySelectorAll('.btn-like').forEach(btn => {
+        const id = parseInt(btn.dataset.id);
+        if (likedIds.includes(id)) {
+            btn.classList.add('liked');
+            btn.innerHTML = SVG_HEART_FILLED;
+        } else {
+            btn.innerHTML = SVG_HEART_EMPTY;
         }
     });
 
-    if (button) {
-        button.addEventListener('click', function(e) {
+    const bookmarkedIds = getBookmarkedIkans();
+    document.querySelectorAll('.btn-bookmark').forEach(btn => {
+        const id = parseInt(btn.dataset.id);
+        if (bookmarkedIds.includes(id)) {
+            btn.classList.add('bookmarked');
+            btn.innerHTML = SVG_BOOKMARK_FILLED;
+        } else {
+            btn.innerHTML = SVG_BOOKMARK_EMPTY;
+        }
+    });
+
+    document.querySelectorAll('.btn-like').forEach(btn => {
+        btn.addEventListener('click', function(e) {
             e.preventDefault();
-            input.focus();
-            filterCards();
+            e.stopPropagation();
+            const id = parseInt(this.dataset.id);
+            let currentLikes = getLikedIkans();
+            
+            if (currentLikes.includes(id)) {
+                currentLikes = currentLikes.filter(item => item !== id);
+                this.classList.remove('liked');
+                this.innerHTML = SVG_HEART_EMPTY;
+            } else {
+                currentLikes.push(id);
+                this.classList.add('liked');
+                this.innerHTML = SVG_HEART_FILLED;
+            }
+            setLikedIkans(currentLikes);
+        });
+    });
+
+    document.querySelectorAll('.btn-bookmark').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = parseInt(this.dataset.id);
+            let currentBookmarks = getBookmarkedIkans();
+            
+            if (currentBookmarks.includes(id)) {
+                currentBookmarks = currentBookmarks.filter(item => item !== id);
+                this.classList.remove('bookmarked');
+                this.innerHTML = SVG_BOOKMARK_EMPTY;
+            } else {
+                currentBookmarks.push(id);
+                this.classList.add('bookmarked');
+                this.innerHTML = SVG_BOOKMARK_FILLED;
+            }
+            setBookmarkedIkans(currentBookmarks);
+        });
+    });
+
+    const btnFilterLikes = document.getElementById('btn-filter-likes');
+    if (btnFilterLikes) {
+        btnFilterLikes.addEventListener('click', function() {
+            const liked = getLikedIkans();
+            const likedQuery = liked.join(',');
+            
+            const url = new URL(window.location.href);
+            url.searchParams.set('filter_likes', likedQuery);
+            url.searchParams.delete('filter_bookmarks');
+            url.searchParams.delete('page');
+            window.location.href = url.toString();
+        });
+    }
+
+    const btnFilterBookmarks = document.getElementById('btn-filter-bookmarks');
+    if (btnFilterBookmarks) {
+        btnFilterBookmarks.addEventListener('click', function() {
+            const bookmarked = getBookmarkedIkans();
+            const bookmarkedQuery = bookmarked.join(',');
+            
+            const url = new URL(window.location.href);
+            url.searchParams.set('filter_bookmarks', bookmarkedQuery);
+            url.searchParams.delete('filter_likes');
+            url.searchParams.delete('page');
+            window.location.href = url.toString();
         });
     }
 }
