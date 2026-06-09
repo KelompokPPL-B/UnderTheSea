@@ -413,20 +413,6 @@
         color: #004b83;
     }
 
-    #ikan-page .fish-bookmark {
-        color: #0077c8;
-        font-size: 14px;
-        font-weight: 700;
-        margin-bottom: 12px;
-        display: inline-block;
-        text-decoration: none;
-        background: transparent;
-        border: none;
-        text-align: left;
-        cursor: pointer;
-        padding: 0;
-    }
-
     #ikan-page .view-btn {
         margin-top: auto;
         display: block;
@@ -620,16 +606,6 @@
                                 </div>
                             @endif
 
-                            @auth
-                                <button class="bookmark-btn-card fish-bookmark" data-type="ikan" data-item-id="{{ $item->id_ikan }}">
-                                    <span class="bookmark-text">Bookmark</span>
-                                </button>
-                            @else
-                                <a href="{{ route('login') }}" class="fish-bookmark">
-                                    Sign in to bookmark
-                                </a>
-                            @endauth
-
                             <a href="{{ route('ikan.show', $item->id_ikan) }}" class="view-btn">
                                 View <span>›</span>
                             </a>
@@ -660,8 +636,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch(e) {}
 
     initializeFishSortDropdown();
-    initializeBookmarkButtonsCard();
-    loadBookmarkStatesCard();
     setupLiveSearch();
 });
 
@@ -688,77 +662,6 @@ function initializeFishSortDropdown() {
             sortBox.classList.remove('open');
         }
     });
-}
-
-function initializeBookmarkButtonsCard() {
-    document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-        btn.addEventListener('click', toggleBookmarkCard);
-    });
-}
-
-function toggleBookmarkCard(e) {
-    e.preventDefault();
-
-    const btn = e.currentTarget;
-    const type = btn.dataset.type;
-    const itemId = btn.dataset.itemId;
-    const isBookmarked = btn.classList.contains('bookmarked');
-    const method = isBookmarked ? 'DELETE' : 'POST';
-
-    fetch('/favorites', {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': getCsrfToken(),
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-            type: type,
-            item_id: parseInt(itemId)
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'success') {
-            btn.classList.toggle('bookmarked');
-
-            const text = btn.querySelector('.bookmark-text');
-            if (text) {
-                text.textContent = btn.classList.contains('bookmarked') ? 'Bookmarked' : 'Bookmark';
-            }
-        } else {
-            alert(data.message || 'Failed to update bookmark');
-        }
-    })
-    .catch(err => console.error('Error:', err));
-}
-
-function loadBookmarkStatesCard() {
-    fetch('/favorites', {
-        method: 'GET',
-        headers: {
-            'X-CSRF-TOKEN': getCsrfToken(),
-            'Accept': 'application/json'
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'success' && Array.isArray(data.data)) {
-            document.querySelectorAll('.bookmark-btn-card').forEach(btn => {
-                const type = btn.dataset.type;
-                const itemId = parseInt(btn.dataset.itemId);
-                const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
-
-                if (isBookmarked) {
-                    btn.classList.add('bookmarked');
-
-                    const text = btn.querySelector('.bookmark-text');
-                    if (text) text.textContent = 'Bookmarked';
-                }
-            });
-        }
-    })
-    .catch(err => console.error('Error loading bookmark state:', err));
 }
 
 function setupLiveSearch() {
