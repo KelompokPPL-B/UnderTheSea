@@ -52,29 +52,6 @@
                             </svg>
                         </button>
                     @endauth
-<div class="py-12 bg-gradient-to-br from-ocean-50 to-sand">
-    <div class="max-w-4xl mx-auto px-6 py-6 mb-6">
-        @include('layouts.breadcrumb', ['breadcrumbs' => [
-            ['label' => 'Marine Ecosystems', 'url' => route('ekosistem.index')],
-            ['label' => $ekosistem->nama_ekosistem]
-        ]])
-    </div>
-    <div class="max-w-4xl mx-auto px-6 py-6">
-        <div class="bg-white rounded-2xl shadow-card hover:shadow-hover transition overflow-hidden">
-            @if($ekosistem->gambar)
-                <img src="/storage/{{ $ekosistem->gambar }}" alt="{{ $ekosistem->nama_ekosistem }}" class="w-full h-96 object-cover" loading="lazy">
-            @else
-                <div class="w-full h-96 bg-gradient-to-br from-ocean-100 to-ocean-50 flex items-center justify-center">
-                    <span class="text-ocean-400">No image</span>
-                </div>
-            @endif
-
-            <div class="p-8 space-y-8">
-                <div class="flex justify-between items-start pb-6 border-b border-ocean-100 animate-fade">
-                    <div>
-                        <h1 class="text-4xl font-bold text-ocean-900">{{ $ekosistem->nama_ekosistem }}</h1>
-                        <p class="text-ocean-600 text-lg mt-2 font-semibold">Marine Ecosystem</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -126,7 +103,7 @@
             <!-- Main Content Area -->
             <div class="lg:col-span-2 space-y-8">
                 <!-- Description Card -->
-                <div class="bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_8px_30px_rgb(8,145,178,0.1)] hover:shadow-[0_20px_40px_rgb(8,145,178,0.15)] border border-cyan-100 overflow-hidden relative group transform hover:-translate-y-2 transition-all duration-500">
+                <div class="bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_8px_30px_rgb(8,145,178,0.1)] hover:shadow-[0_20px_40px_rgb(8,145_178,0.15)] border border-cyan-100 overflow-hidden relative group transform hover:-translate-y-2 transition-all duration-500">
                     <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500"></div>
                     <div class="flex flex-col xl:flex-row xl:items-center gap-5 mb-8">
                         <div class="w-16 h-16 rounded-2xl bg-cyan-50 flex items-center justify-center text-cyan-600 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-500 shadow-sm shrink-0">
@@ -159,17 +136,45 @@
                         <div class="bg-gradient-to-br from-blue-50 to-indigo-50/50 rounded-2xl p-6 md:p-8 border border-blue-100/60 shadow-inner">
                             <p class="text-blue-900/90 leading-relaxed text-lg font-medium whitespace-pre-line">{{ $ekosistem->peran }}</p>
                         </div>
-                <div class="p-4 bg-ocean-50 rounded-xl border border-ocean-200 animate-fade">
-                    <h3 class="text-sm font-bold text-ocean-700 mb-2 uppercase">Location</h3>
-                    <p class="text-gray-700">{{ $ekosistem->lokasi ?? 'Not specified' }}</p>
-                </div>
-
-                <div class="prose prose-sm max-w-none space-y-6">
-                    <div class="animate-fade">
-                        <h3 class="text-2xl font-bold text-ocean-900 mb-3">Description</h3>
-                        <p class="text-gray-700 leading-relaxed">{{ $ekosistem->deskripsi ?? 'No description available' }}</p>
                     </div>
                 </div>
+
+                <!-- Conservation Guide Card -->
+                @if($ekosistem->cara_menjaga || $ekosistem->larangan || $ekosistem->dampak_kerusakan)
+                <div class="bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_8px_30px_rgb(16,185,129,0.1)] hover:shadow-[0_20px_40px_rgb(16,185,129,0.15)] border border-emerald-100 overflow-hidden relative group transform hover:-translate-y-2 transition-all duration-500">
+                    <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-emerald-500 via-teal-500 to-green-500"></div>
+                    <div class="flex flex-col xl:flex-row xl:items-center gap-5 mb-8">
+                        <div class="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500 shadow-sm shrink-0">
+                            <svg class="w-9 h-9 animate-[pulse_3s_ease-in-out_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight group-hover:text-emerald-700 transition-colors">Panduan Pelestarian</h2>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        @if($ekosistem->cara_menjaga)
+                            <div class="p-6 bg-gradient-to-br from-green-50 to-emerald-50/30 rounded-2xl border border-green-100 shadow-inner">
+                                <h3 class="text-xl font-bold text-green-800 mb-3 flex items-center gap-2">🛡️ Cara Menjaga</h3>
+                                <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ $ekosistem->cara_menjaga }}</p>
+                            </div>
+                        @endif
+
+                        @if($ekosistem->larangan)
+                            <div class="p-6 bg-gradient-to-br from-red-50 to-rose-50/35 rounded-2xl border border-red-100 shadow-inner">
+                                <h3 class="text-xl font-bold text-red-800 mb-3 flex items-center gap-2">🚫 Larangan</h3>
+                                <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ $ekosistem->larangan }}</p>
+                            </div>
+                        @endif
+
+                        @if($ekosistem->dampak_kerusakan)
+                            <div class="p-6 bg-gradient-to-br from-amber-50 to-yellow-50/35 rounded-2xl border border-amber-100 shadow-inner">
+                                <h3 class="text-xl font-bold text-amber-800 mb-3 flex items-center gap-2">⚠️ Dampak Kerusakan</h3>
+                                <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ $ekosistem->dampak_kerusakan }}</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                @endif
             </div>
 
             <!-- Sidebar -->
@@ -203,10 +208,6 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                             Edit Data
                         </a>
-                        <button class="delete-btn flex items-center justify-center gap-2 bg-gradient-to-r from-red-50 to-rose-50 hover:from-red-500 hover:to-rose-600 text-red-600 hover:text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 text-center w-full border border-red-200 hover:border-transparent shadow-sm hover:shadow-md" data-ekosistem-id="{{ $ekosistem->id_ekosistem }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                            Hapus
-                        </button>
                     </div>
                 </div>
                 @endif
@@ -335,53 +336,6 @@
                         </div>
                         @endforeach
                     </div>
-                @if($ekosistem->cara_menjaga || $ekosistem->larangan || $ekosistem->dampak_kerusakan)
-                    <div class="border-t border-ocean-100 pt-8 space-y-6">
-                        <h2 class="text-2xl font-bold text-ocean-900">Conservation Guide</h2>
-
-                        @if($ekosistem->cara_menjaga)
-                            <div class="p-5 bg-green-50 rounded-xl border border-green-200 animate-fade">
-                                <h3 class="text-lg font-bold text-green-800 mb-3">Protection Tips</h3>
-                                <p class="text-green-900 leading-relaxed whitespace-pre-line">{{ $ekosistem->cara_menjaga }}</p>
-                            </div>
-                        @endif
-
-                        @if($ekosistem->larangan)
-                            <div class="p-5 bg-red-50 rounded-xl border border-red-200 animate-fade">
-                                <h3 class="text-lg font-bold text-red-800 mb-3">Warnings</h3>
-                                <p class="text-red-900 leading-relaxed whitespace-pre-line">{{ $ekosistem->larangan }}</p>
-                            </div>
-                        @endif
-
-                        @if($ekosistem->dampak_kerusakan)
-                            <div class="p-5 bg-yellow-50 rounded-xl border border-yellow-200 animate-fade">
-                                <h3 class="text-lg font-bold text-yellow-800 mb-3">Impact</h3>
-                                <p class="text-yellow-900 leading-relaxed whitespace-pre-line">{{ $ekosistem->dampak_kerusakan }}</p>
-                            </div>
-                        @endif
-                    </div>
-                @endif
-
-                <div class="flex flex-wrap gap-3 pt-4 border-t border-ocean-100">
-                    <a href="{{ route('ekosistem.index') }}" class="btn btn-outline btn-sm">Back to Ecosystems</a>
-
-                    <button class="share-btn btn btn-outline btn-sm px-3" data-url="{{ request()->url() }}" title="Share">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                        </svg>
-                    </button>
-
-                    @auth
-                        @if(auth()->user()->isAdmin())
-                            <a href="{{ route('ekosistem.edit', $ekosistem->id_ekosistem) }}" class="btn btn-outline btn-sm">Edit</a>
-                            <button class="delete-btn btn btn-sm bg-white border border-red-300 hover:bg-red-50 text-red-500 hover:text-red-600 px-3"
-                                data-ekosistem-id="{{ $ekosistem->id_ekosistem }}" title="Delete">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </button>
-                        @endif
-                    @endauth
                 </div>
             </div>
         </div>
@@ -409,9 +363,6 @@
         
         const icon = type === 'success' ? '✅' : (type === 'error' ? '⚠️' : 'ℹ️');
         notification.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-
-        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg ${colors[type]} shadow-lg z-50 animate-fade-in`;
-        notification.textContent = message;
         document.body.appendChild(notification);
 
         setTimeout(() => {
@@ -455,7 +406,6 @@
                     const firstItem = items[0];
                     const itemWidth = firstItem.getBoundingClientRect().width;
 
-                    // Calculate the gap dynamically from computed layout
                     let gap = 32;
                     if (items.length > 1) {
                         const secondItem = items[1];
@@ -466,7 +416,6 @@
                     track.style.transform = `translateX(-${offset}px)`;
                 }
 
-                // Enable/disable buttons based on limits
                 prevBtn.disabled = currentIndex === 0;
                 nextBtn.disabled = currentIndex >= maxIndex;
             }
@@ -489,14 +438,12 @@
                 }
             });
 
-            // Update on resize
             let resizeTimeout;
             window.addEventListener('resize', function() {
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(updateCarousel, 100);
             });
 
-            // Initial calculation
             setTimeout(updateCarousel, 100);
         }
 
@@ -510,158 +457,80 @@
                     showNotification('Link berhasil disalin ke clipboard!', 'success');
                 }).catch(() => {
                     showNotification('Gagal menyalin link', 'error');
-                navigator.clipboard.writeText(this.dataset.url).then(() => {
-                    showNotification('Link copied to clipboard!', 'success');
-                }).catch(() => {
-                    showNotification('Failed to copy link', 'error');
                 });
             });
         }
 
-        // Delete button
-        const deleteBtn = document.querySelector('.delete-btn');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                if (confirm('Apakah Anda yakin ingin menghapus ekosistem ini secara permanen?')) {
-                    const id = this.dataset.ekosistemId;
-                    const btn = this;
-                    
-                    btn.disabled = true;
-                    btn.classList.add('opacity-50', 'cursor-not-allowed');
-                    btn.innerHTML = '<span class="animate-spin text-xl">⏳</span> Menghapus...';
-
-                    fetch(`/ekosistem/${id}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': getCsrfToken(),
-                            'Accept': 'application/json'
-                        }
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            showNotification('Data ekosistem berhasil dihapus', 'success');
-                            setTimeout(() => window.location.href = '{{ route("ekosistem.index") }}', 1000);
-                        } else {
-                            showNotification(data.message || 'Gagal menghapus data', 'error');
-                            resetBtn(btn);
-                        }
-                    })
-                    .catch(err => {
-                        showNotification('Terjadi kesalahan jaringan', 'error');
-                        resetBtn(btn);
-                    });
+        // Bookmark button
+        const bookmarkBtn = document.querySelector('.bookmark-btn');
+        if (bookmarkBtn) {
+            // Check initial state
+            fetch('/favorites', {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': getCsrfToken(),
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success' && Array.isArray(data.data)) {
+                    const type = bookmarkBtn.dataset.type;
+                    const itemId = parseInt(bookmarkBtn.dataset.itemId);
+                    const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
+                    if (isBookmarked) {
+                        setBookmarkActive(bookmarkBtn);
+                    }
                 }
             });
-        }
-    });
 
-    function resetBtn(btn) {
-        btn.disabled = false;
-        btn.classList.remove('opacity-50', 'cursor-not-allowed');
-        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg> Hapus Ekosistem';
-    }
-</script>
+            bookmarkBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const btn = this;
+                const type = btn.dataset.type;
+                const itemId = btn.dataset.itemId;
+                const isBookmarked = btn.classList.contains('bookmarked');
+                const method = isBookmarked ? 'DELETE' : 'POST';
 
-<script type="module">
-document.addEventListener('DOMContentLoaded', function() {
-    const bookmarkBtn = document.querySelector('.bookmark-btn');
-    if (!bookmarkBtn) return;
-
-    fetch('/favorites', {
-        method: 'GET',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'success' && Array.isArray(data.data)) {
-            const type = bookmarkBtn.dataset.type;
-            const itemId = parseInt(bookmarkBtn.dataset.itemId);
-            const isBookmarked = data.data.some(fav => fav.type === type && fav.item_id === itemId);
-            if (isBookmarked) {
-                setBookmarkActive(bookmarkBtn);
-            }
-        }
-    });
-
-    bookmarkBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const btn = this;
-        const type = btn.dataset.type;
-        const itemId = btn.dataset.itemId;
-        const isBookmarked = btn.classList.contains('bookmarked');
-        const method = isBookmarked ? 'DELETE' : 'POST';
-
-        fetch('/favorites', {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
-            },
-            body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                if (isBookmarked) {
-                    setBookmarkInactive(btn);
-                    showNotification('Dihapus dari bookmark', 'info');
-                } else {
-                    setBookmarkActive(btn);
-                    showNotification('Berhasil disimpan ke bookmark', 'success');
-                }
-            } else {
-                showNotification(data.message, 'error');
-            }
-        });
-    });
-
-    function setBookmarkActive(btn) {
-        btn.classList.add('bookmarked', 'bg-white', 'text-ocean-900');
-        btn.classList.remove('bg-white/10', 'text-white', 'hover:text-ocean-600');
-        const icon = btn.querySelector('.bookmark-icon');
-        if (icon) icon.setAttribute('fill', 'currentColor');
-    }
-
-    function setBookmarkInactive(btn) {
-        btn.classList.remove('bookmarked', 'bg-white', 'text-ocean-900');
-        btn.classList.add('bg-white/10', 'text-white', 'hover:text-ocean-600');
-        const icon = btn.querySelector('.bookmark-icon');
-        if (icon) icon.setAttribute('fill', 'none');
-    }
-                if (!confirm('Are you sure you want to delete this ecosystem? This cannot be undone.')) return;
-
-                const ekosistemId = this.dataset.ekosistemId;
-                this.disabled = true;
-
-                fetch(`/ekosistem/${ekosistemId}`, {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': getCsrfToken() }
+                fetch('/favorites', {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken(),
+                    },
+                    body: JSON.stringify({ type: type, item_id: parseInt(itemId) })
                 })
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        showNotification('Ecosystem deleted successfully', 'success');
-                        setTimeout(() => window.location.href = '{{ route('ekosistem.index') }}', 1500);
+                        if (isBookmarked) {
+                            setBookmarkInactive(btn);
+                            showNotification('Dihapus dari bookmark', 'info');
+                        } else {
+                            setBookmarkActive(btn);
+                            showNotification('Berhasil disimpan ke bookmark', 'success');
+                        }
                     } else {
                         showNotification(data.message, 'error');
-                        this.disabled = false;
                     }
-                })
-                .catch(() => {
-                    showNotification('An error occurred. Please try again.', 'error');
-                    this.disabled = false;
                 });
             });
         }
-    });
 
-    function getCsrfToken() {
-        return document.querySelector('meta[name="csrf-token"]')?.content || '';
-    }
+        function setBookmarkActive(btn) {
+            btn.classList.add('bookmarked', 'bg-white', 'text-ocean-900');
+            btn.classList.remove('bg-white/10', 'text-white', 'hover:text-ocean-600');
+            const icon = btn.querySelector('.bookmark-icon');
+            if (icon) icon.setAttribute('fill', 'currentColor');
+        }
+
+        function setBookmarkInactive(btn) {
+            btn.classList.remove('bookmarked', 'bg-white', 'text-ocean-900');
+            btn.classList.add('bg-white/10', 'text-white', 'hover:text-ocean-600');
+            const icon = btn.querySelector('.bookmark-icon');
+            if (icon) icon.setAttribute('fill', 'none');
+        }
+
+    });
 </script>
 @endpush
 @endsection

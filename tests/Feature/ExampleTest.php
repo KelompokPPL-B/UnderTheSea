@@ -17,11 +17,10 @@ test('dashboard is accessible by authenticated users', function () {
     $response->assertSee('Dashboard');
 });
 
-test('dashboard is accessible by guest users', function () {
+test('dashboard is redirected to login for guest users', function () {
     $response = $this->get('/dashboard');
 
-    $response->assertStatus(200);
-    $response->assertSee('Dashboard');
+    $response->assertRedirect('/login');
 });
 
 

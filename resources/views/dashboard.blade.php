@@ -295,11 +295,6 @@
                                     <a href="{{ route('ikan.show', $item->id_ikan) }}" class="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-0.5 rounded transition">View</a>
                                     @if(auth()->user()->isAdmin())
                                         <a href="{{ route('ikan.edit', $item->id_ikan) }}" class="text-xs text-amber-600 hover:text-amber-800 bg-amber-50 px-2 py-0.5 rounded transition">Edit</a>
-                                        <form action="{{ route('ikan.destroy', $item->id_ikan) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this fish?')" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-xs text-red-600 hover:text-red-800 bg-red-50 px-2 py-0.5 rounded transition">Delete</button>
-                                        </form>
                                     @endif
                                 </div>
                             </div>
@@ -333,11 +328,6 @@
                                     <a href="{{ route('ekosistem.show', $eco->id_ekosistem) }}" class="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-0.5 rounded transition">View</a>
                                     @if(auth()->user()->isAdmin())
                                         <a href="{{ route('ekosistem.edit', $eco->id_ekosistem) }}" class="text-xs text-amber-600 hover:text-amber-800 bg-amber-50 px-2 py-0.5 rounded transition">Edit</a>
-                                        <form action="{{ route('ekosistem.destroy', $eco->id_ekosistem) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this ecosystem?')" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-xs text-red-600 hover:text-red-800 bg-red-50 px-2 py-0.5 rounded transition">Delete</button>
-                                        </form>
                                     @endif
                                 </div>
                             </div>
@@ -369,11 +359,6 @@
                                     <a href="{{ route('aksi.show', $act->id_aksi) }}" class="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-0.5 rounded transition">View</a>
                                     @if(auth()->user()->isAdmin() || auth()->id() === $act->created_by)
                                         <a href="{{ route('aksi.edit', $act->id_aksi) }}" class="text-xs text-amber-600 hover:text-amber-800 bg-amber-50 px-2 py-0.5 rounded transition">Edit</a>
-                                        <form action="{{ route('aksi.destroy', $act->id_aksi) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this action?')" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-xs text-red-600 hover:text-red-800 bg-red-50 px-2 py-0.5 rounded transition">Delete</button>
-                                        </form>
                                     @endif
                                 </div>
                             </div>
@@ -474,7 +459,7 @@
         <!-- User Stats Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
             <!-- Bookmarks -->
-            <a href="{{ route('bookmarks.index') }}" class="bg-white p-6 rounded-2xl shadow-card border-l-4 border-amber-500 hover:shadow-hover transition duration-300 group hover:scale-[1.01] flex items-center justify-between">
+            <a href="{{ route('favorites.index') }}" class="bg-white p-6 rounded-2xl shadow-card border-l-4 border-amber-500 hover:shadow-hover transition duration-300 group hover:scale-[1.01] flex items-center justify-between">
                 <div>
                     <p class="text-xs font-bold uppercase text-gray-400 tracking-wider">Bookmark Saya</p>
                     <p class="text-3xl font-extrabold text-gray-800 mt-1 group-hover:text-ocean-600 transition">{{ $bookmarkCount }}</p>

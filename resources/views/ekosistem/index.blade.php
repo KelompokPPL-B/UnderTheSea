@@ -66,24 +66,47 @@
 
                     <div class="search-error-msg text-red-500 text-sm font-semibold mt-2 pl-6 hidden text-left"></div>
                 </form>
+            </div>
 
-                <div class="relative w-full md:w-auto min-w-[160px] animate-fade-in">
-                    <select
-                        onchange="window.location.href='{{ route('ekosistem.index') }}?sort=' + this.value + '&search={{ request('search') }}'"
-                        class="appearance-none w-full bg-white/80 backdrop-blur-md border border-white/50 text-ocean-700 font-semibold py-3.5 pl-6 pr-10 rounded-full shadow-lg hover:bg-white transition-all cursor-pointer outline-none focus:ring-2 focus:ring-ocean-300"
-                    >
-                        <option value="newest" {{ $currentSort === 'newest' ? 'selected' : '' }}>✨ Terbaru</option>
-                        <option value="oldest" {{ $currentSort === 'oldest' ? 'selected' : '' }}>⏳ Terlama</option>
-                        <option value="name_asc" {{ $currentSort === 'name_asc' ? 'selected' : '' }}>Name A–Z</option>
-                        <option value="name_desc" {{ $currentSort === 'name_desc' ? 'selected' : '' }}>Name Z–A</option>
-                    </select>
-
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-ocean-500">
-                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+            <!-- Likes & Bookmarks Filter Pills -->
+            <div class="flex flex-wrap justify-center items-center gap-3 mt-6 relative z-30">
+                <!-- Likes Filter Button -->
+                @if(request('filter_likes') !== null)
+                    <a href="{{ request()->fullUrlWithQuery(['filter_likes' => null]) }}" 
+                       class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#009ee2] hover:bg-[#0089c4] text-white font-bold text-sm shadow-md transform hover:-translate-y-0.5 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current text-white" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                         </svg>
-                    </div>
-                </div>
+                        <span>Like Saya</span>
+                    </a>
+                @else
+                    <button type="button" id="btn-filter-likes"
+                       class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-gray-200 text-gray-700 font-bold text-sm shadow-sm hover:bg-gray-50 transform hover:-translate-y-0.5 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                        <span>Like Saya</span>
+                    </button>
+                @endif
+
+                <!-- Bookmarks Filter Button -->
+                @if(request('filter_bookmarks') !== null)
+                    <a href="{{ request()->fullUrlWithQuery(['filter_bookmarks' => null]) }}" 
+                       class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#009ee2] hover:bg-[#0089c4] text-white font-bold text-sm shadow-md transform hover:-translate-y-0.5 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current text-white" viewBox="0 0 24 24">
+                            <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                        </svg>
+                        <span>Bookmark Saya</span>
+                    </a>
+                @else
+                    <button type="button" id="btn-filter-bookmarks"
+                       class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-gray-200 text-gray-700 font-bold text-sm shadow-sm hover:bg-gray-50 transform hover:-translate-y-0.5 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                        </svg>
+                        <span>Bookmark Saya</span>
+                    </button>
+                @endif
             </div>
         </div>
 
@@ -155,7 +178,12 @@
 
                     @auth
                         @if(auth()->user()->isAdmin())
-                            <a href="{{ route('ekosistem.create') }}" class="btn btn-primary btn-sm">+ Add New Ecosystem</a>
+                            <a href="{{ route('ekosistem.create') }}" class="bg-gradient-to-r from-ocean-600 to-emerald-500 hover:from-ocean-700 hover:to-emerald-600 text-white font-bold py-2.5 px-5 rounded-xl shadow-md hover:shadow-emerald-500/20 transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                Tambah Ekosistem
+                            </a>
                         @endif
                     @endauth
                 </div>
@@ -335,19 +363,6 @@
                     </div>
                 </div>
 
-                @auth
-                    @if(auth()->user()->isAdmin())
-                        <div class="mb-8 flex justify-end z-20 relative">
-                            <a href="{{ route('ekosistem.create') }}" class="bg-gradient-to-r from-ocean-600 to-emerald-500 hover:from-ocean-700 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-emerald-500/40 transform hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                                </svg>
-                                Tambah Ekosistem
-                            </a>
-                        </div>
-                    @endif
-                @endauth
-
                 <!-- Search Result Info -->
                 @if(request('search'))
                     <div class="mb-8 flex items-center justify-between bg-white/60 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/50 shadow-sm animate-fade-in">
@@ -381,6 +396,16 @@
                     }
                     .shimmer-btn:hover .shimmer-bar {
                         animation: shimmer 1s ease-out;
+                    }
+                    @keyframes heartBeat {
+                        0% { transform: scale(1); }
+                        14% { transform: scale(1.18); }
+                        28% { transform: scale(1); }
+                        42% { transform: scale(1.18); }
+                        70% { transform: scale(1); }
+                    }
+                    .animate-heart-beat {
+                        animation: heartBeat 0.45s ease-in-out;
                     }
                 </style>
 
@@ -425,6 +450,27 @@
                                     @endif
 
                                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none"></div>
+
+                                    <!-- Floating Like & Bookmark Buttons -->
+                                    <div class="absolute top-5 right-5 z-20 flex gap-2">
+                                        <!-- Like Button -->
+                                        <button type="button" 
+                                            class="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 btn-like focus:outline-none" 
+                                            data-id="{{ $item->id_ekosistem }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 hover:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                            </svg>
+                                        </button>
+
+                                        <!-- Bookmark Button -->
+                                        <button type="button" 
+                                            class="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 btn-bookmark focus:outline-none" 
+                                            data-id="{{ $item->id_ekosistem }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                            </svg>
+                                        </button>
+                                    </div>
 
                                     <!-- Location Tag -->
                                     @if($item->lokasi)
@@ -620,6 +666,134 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchQuery) {
         document.querySelectorAll('.search-highlightable').forEach(el => {
             highlightText(el, searchQuery);
+        });
+    }
+
+    // --- LIKES & BOOKMARKS LOGIC ---
+
+    const SVG_HEART_EMPTY = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 hover:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`;
+    const SVG_HEART_FILLED = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#ef4444] fill-current animate-heart-beat" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+
+    const SVG_BOOKMARK_EMPTY = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>`;
+    const SVG_BOOKMARK_FILLED = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#009ee2] fill-current" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>`;
+
+    function getLikedEcosystems() {
+        try {
+            return JSON.parse(localStorage.getItem('liked_ekosistems')) || [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function setLikedEcosystems(ids) {
+        localStorage.setItem('liked_ekosistems', JSON.stringify(ids));
+    }
+
+    function getBookmarkedEcosystems() {
+        try {
+            return JSON.parse(localStorage.getItem('bookmarked_ekosistems')) || [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function setBookmarkedEcosystems(ids) {
+        localStorage.setItem('bookmarked_ekosistems', JSON.stringify(ids));
+    }
+
+    // Initialize Like button states from localStorage
+    const likedIds = getLikedEcosystems();
+    document.querySelectorAll('.btn-like').forEach(btn => {
+        const id = parseInt(btn.dataset.id);
+        if (likedIds.includes(id)) {
+            btn.classList.add('liked');
+            btn.innerHTML = SVG_HEART_FILLED;
+        } else {
+            btn.innerHTML = SVG_HEART_EMPTY;
+        }
+    });
+
+    // Handle Like button clicks
+    document.querySelectorAll('.btn-like').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = parseInt(this.dataset.id);
+            let currentLikes = getLikedEcosystems();
+            
+            if (currentLikes.includes(id)) {
+                currentLikes = currentLikes.filter(item => item !== id);
+                this.classList.remove('liked');
+                this.innerHTML = SVG_HEART_EMPTY;
+            } else {
+                currentLikes.push(id);
+                this.classList.add('liked');
+                this.innerHTML = SVG_HEART_FILLED;
+            }
+            setLikedEcosystems(currentLikes);
+        });
+    });
+
+    // Filter by Likes button
+    const btnFilterLikes = document.getElementById('btn-filter-likes');
+    if (btnFilterLikes) {
+        btnFilterLikes.addEventListener('click', function() {
+            const liked = getLikedEcosystems();
+            const likedQuery = liked.join(',');
+            
+            const url = new URL(window.location.href);
+            url.searchParams.set('filter_likes', likedQuery);
+            url.searchParams.delete('filter_bookmarks');
+            url.searchParams.delete('page');
+            window.location.href = url.toString();
+        });
+    }
+
+    // Initialize Bookmark button states from localStorage
+    const bookmarkedIds = getBookmarkedEcosystems();
+    document.querySelectorAll('.btn-bookmark').forEach(btn => {
+        const id = parseInt(btn.dataset.id);
+        if (bookmarkedIds.includes(id)) {
+            btn.classList.add('bookmarked');
+            btn.innerHTML = SVG_BOOKMARK_FILLED;
+        } else {
+            btn.innerHTML = SVG_BOOKMARK_EMPTY;
+        }
+    });
+
+    // Handle Bookmark button clicks client-side
+    document.querySelectorAll('.btn-bookmark').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = parseInt(this.dataset.id);
+            let currentBookmarks = getBookmarkedEcosystems();
+            
+            if (currentBookmarks.includes(id)) {
+                currentBookmarks = currentBookmarks.filter(item => item !== id);
+                this.classList.remove('bookmarked');
+                this.innerHTML = SVG_BOOKMARK_EMPTY;
+            } else {
+                currentBookmarks.push(id);
+                this.classList.add('bookmarked');
+                this.innerHTML = SVG_BOOKMARK_FILLED;
+            }
+            setBookmarkedEcosystems(currentBookmarks);
+        });
+    });
+
+    // Filter by Bookmarks button
+    const btnFilterBookmarks = document.getElementById('btn-filter-bookmarks');
+    if (btnFilterBookmarks) {
+        btnFilterBookmarks.addEventListener('click', function() {
+            const bookmarked = getBookmarkedEcosystems();
+            const bookmarkedQuery = bookmarked.join(',');
+            
+            const url = new URL(window.location.href);
+            url.searchParams.set('filter_bookmarks', bookmarkedQuery);
+            url.searchParams.delete('filter_likes');
+            url.searchParams.delete('page');
+            window.location.href = url.toString();
         });
     }
 });

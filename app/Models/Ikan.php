@@ -20,6 +20,15 @@ class Ikan extends Model
         'fakta_unik',
         'gambar',
         'created_by',
+
+        // English aliases/attributes
+        'name',
+        'scientific_name',
+        'description',
+        'diet',
+        'size',
+        'conservation_status',
+        'image',
     ];
 
     // Alias supaya kode/view lama yang pakai English tetap aman

@@ -28,6 +28,10 @@ class IkanController extends Controller
 
         $sort = $request->query('sort', 'newest');
         $search = $request->query('search');
+        $filterLikes = $request->query('filter_likes');
+        $filterBookmarks = $request->query('filter_bookmarks');
+        $filterHabitat = $request->query('habitat');
+        $filterStatus = $request->query('status');
 
         $query = Ikan::query();
 
@@ -39,6 +43,35 @@ class IkanController extends Controller
             });
         }
 
+        // FILTER HABITAT
+        if (!empty($filterHabitat)) {
+            $query->where('habitat', $filterHabitat);
+        }
+
+        // FILTER CONSERVATION STATUS
+        if (!empty($filterStatus)) {
+            $query->where('status_konservasi', $filterStatus);
+        }
+
+        if ($filterLikes !== null) {
+            if (empty(trim($filterLikes))) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $ids = array_filter(explode(',', $filterLikes));
+                $query->whereIn('id_ikan', $ids);
+            }
+        }
+
+        if ($filterBookmarks !== null) {
+            if (empty(trim($filterBookmarks))) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $ids = array_filter(explode(',', $filterBookmarks));
+                $query->whereIn('id_ikan', $ids);
+            }
+        }
+
+        // SORT IKAN
         if ($sort === 'oldest') {
             $query->orderBy('created_at', 'asc');
         } elseif ($sort === 'name_asc') {
@@ -50,12 +83,37 @@ class IkanController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
+        // Fetch distinct habitat and status lists for filter dropdowns
+        $habitatList = Ikan::whereNotNull('habitat')
+            ->where('habitat', '<>', '')
+            ->distinct()
+            ->pluck('habitat')
+            ->toArray();
+        sort($habitatList);
+
+        $statusList = Ikan::whereNotNull('status_konservasi')
+            ->where('status_konservasi', '<>', '')
+            ->distinct()
+            ->pluck('status_konservasi')
+            ->toArray();
+        sort($statusList);
+
+        // PAGINATION
         $ikans = $query->paginate(12)->withQueryString();
 
         // Biar view lama yang masih pakai $ikan tetap aman
         $ikan = $ikans;
 
-        return view('ikan.index', compact('ikans', 'ikan', 'sort', 'search'));
+        return view('ikan.index', compact(
+            'ikans',
+            'ikan',
+            'sort',
+            'search',
+            'habitatList',
+            'statusList',
+            'filterHabitat',
+            'filterStatus'
+        ));
     }
 
     public function create()
