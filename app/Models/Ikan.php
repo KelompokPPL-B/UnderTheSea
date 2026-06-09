@@ -11,11 +11,6 @@ class Ikan extends Model
     protected $table = 'ikan';
     protected $primaryKey = 'id_ikan';
 
-    /**
-     * Expose English attribute names for forms and controllers.
-     * The database columns remain in Indonesian; use accessors/mutators
-     * to map `name` -> `nama`, `description` -> `deskripsi`, `image` -> `gambar`.
-     */
     protected $fillable = [
         'nama',
         'deskripsi',
@@ -36,7 +31,7 @@ class Ikan extends Model
         'image',
     ];
 
-    // Accessors and mutators to map English attributes to DB columns
+    // Alias supaya kode/view lama yang pakai English tetap aman
     public function getNameAttribute()
     {
         return $this->attributes['nama'] ?? null;
@@ -47,26 +42,6 @@ class Ikan extends Model
         $this->attributes['nama'] = $value;
     }
 
-    public function getScientificNameAttribute()
-    {
-        return $this->attributes['scientific_name'] ?? null;
-    }
-
-    public function setScientificNameAttribute($value)
-    {
-        $this->attributes['scientific_name'] = $value;
-    }
-
-    public function getHabitatAttribute()
-    {
-        return $this->attributes['habitat'] ?? null;
-    }
-
-    public function setHabitatAttribute($value)
-    {
-        $this->attributes['habitat'] = $value;
-    }
-
     public function getDescriptionAttribute()
     {
         return $this->attributes['deskripsi'] ?? null;
@@ -75,26 +50,6 @@ class Ikan extends Model
     public function setDescriptionAttribute($value)
     {
         $this->attributes['deskripsi'] = $value;
-    }
-
-    public function getDietAttribute()
-    {
-        return $this->attributes['diet'] ?? null;
-    }
-
-    public function setDietAttribute($value)
-    {
-        $this->attributes['diet'] = $value;
-    }
-
-    public function getSizeAttribute()
-    {
-        return $this->attributes['size'] ?? null;
-    }
-
-    public function setSizeAttribute($value)
-    {
-        $this->attributes['size'] = $value;
     }
 
     public function getImageAttribute()
@@ -117,7 +72,7 @@ class Ikan extends Model
         $this->attributes['status_konservasi'] = $value;
     }
 
-    // Relasi ke User (creator)
+    // Relasi ke User pembuat data
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -137,10 +92,15 @@ class Ikan extends Model
                     ->where('content_type', 'ikan');
     }
 
-    // Helper: cek apakah user sudah bookmark ikan ini
+    // Cek apakah user sudah bookmark ikan ini
     public function isFavoritedBy(?User $user): bool
     {
-        if (!$user) return false;
-        return $this->favorites()->where('user_id', $user->id)->exists();
+        if (!$user) {
+            return false;
+        }
+
+        return $this->favorites()
+                    ->where('user_id', $user->id)
+                    ->exists();
     }
 }

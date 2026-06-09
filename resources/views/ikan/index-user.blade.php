@@ -413,20 +413,6 @@
         color: #004b83;
     }
 
-    #ikan-page .fish-bookmark {
-        color: #0077c8;
-        font-size: 14px;
-        font-weight: 700;
-        margin-bottom: 12px;
-        display: inline-block;
-        text-decoration: none;
-        background: transparent;
-        border: none;
-        text-align: left;
-        cursor: pointer;
-        padding: 0;
-    }
-
     #ikan-page .view-btn {
         margin-top: auto;
         display: block;
@@ -834,6 +820,11 @@ function loadBookmarkStatesCard() {
 function initializeLikesAndBookmarks() {
     const SVG_HEART_EMPTY = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`;
     const SVG_HEART_FILLED = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#ef4444] fill-current animate-heart-beat" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+function setupLiveSearch() {
+    const input = document.getElementById('fish-search');
+    const button = document.getElementById('fish-search-btn');
+    const grid = document.getElementById('fish-grid');
+    const emptyState = document.getElementById('fish-empty-state');
 
     const SVG_BOOKMARK_EMPTY = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>`;
     const SVG_BOOKMARK_FILLED = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#009ee2] fill-current" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>`;

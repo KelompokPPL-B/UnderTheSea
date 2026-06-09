@@ -35,11 +35,11 @@ class IkanController extends Controller
 
         $query = Ikan::query();
 
-        // SEARCH IKAN
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                    ->orWhere('habitat', 'like', "%{$search}%");
+                    ->orWhere('habitat', 'like', "%{$search}%")
+                    ->orWhere('status_konservasi', 'like', "%{$search}%");
             });
         }
 
@@ -101,7 +101,7 @@ class IkanController extends Controller
         // PAGINATION
         $ikans = $query->paginate(12)->withQueryString();
 
-        // Alias supaya aman kalau view lama masih pakai variable $ikan
+        // Biar view lama yang masih pakai $ikan tetap aman
         $ikan = $ikans;
 
         return view('ikan.index', compact(
@@ -118,29 +118,9 @@ class IkanController extends Controller
 
     public function create()
     {
+        abort_unless(auth()->user()?->isAdmin(), 403);
+
         return view('ikan.create');
-    }
-
-    public function show($id)
-    {
-        $ikan = Ikan::findOrFail($id);
-
-        if (auth()->check()) {
-            $this->pointsService->awardPoints(auth()->id(), 'ikan', $id);
-        }
-
-        return view('ikan.show', compact('ikan'));
-    }
-
-    public function edit($id)
-    {
-        $ikan = Ikan::findOrFail($id);
-
-        if (!auth()->user()->isAdmin() && auth()->id() !== $ikan->created_by) {
-            abort(403);
-        }
-
-        return view('ikan.edit', compact('ikan'));
     }
 
     public function store(Request $request)
@@ -149,16 +129,22 @@ class IkanController extends Controller
 
         $validated = $request->validate([
             'nama'              => 'required|string|max:255',
-            'deskripsi'         => 'nullable|string',
-            'habitat'           => 'nullable|string|max:255',
-            'karakteristik'     => 'nullable|string',
-            'status_konservasi' => 'nullable|string|max:100',
-            'fakta_unik'        => 'nullable|string',
+            'deskripsi'         => 'required|string',
+            'habitat'           => 'required|string|max:255',
+            'karakteristik'     => 'required|string',
+            'status_konservasi' => 'required|string|max:100',
+            'fakta_unik'        => 'required|string',
             'gambar'            => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ], [
-            'gambar.image' => 'File yang diunggah harus berupa gambar.',
-            'gambar.mimes' => 'Format gambar harus JPG, JPEG, atau PNG.',
-            'gambar.max'   => 'Ukuran gambar maksimal 2MB.',
+            'nama.required'              => 'Nama ikan wajib diisi.',
+            'deskripsi.required'         => 'Deskripsi wajib diisi.',
+            'habitat.required'           => 'Habitat wajib diisi.',
+            'karakteristik.required'     => 'Karakteristik wajib diisi.',
+            'status_konservasi.required' => 'Status konservasi wajib diisi.',
+            'fakta_unik.required'        => 'Fakta unik wajib diisi.',
+            'gambar.image'               => 'File yang diunggah harus berupa gambar.',
+            'gambar.mimes'               => 'Format gambar harus JPG, JPEG, atau PNG.',
+            'gambar.max'                 => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         $validated = SanitizationService::sanitizeArray($validated);
@@ -175,28 +161,50 @@ class IkanController extends Controller
             ->with('success', 'Fish created successfully!');
     }
 
+    public function show($id)
+    {
+        $ikan = Ikan::findOrFail($id);
+
+        if (auth()->check()) {
+            $this->pointsService->awardPoints(auth()->id(), 'ikan', $id);
+        }
+
+        return view('ikan.show', compact('ikan'));
+    }
+
+    public function edit($id)
+    {
+        abort_unless(auth()->user()?->isAdmin(), 403);
+
+        $ikan = Ikan::findOrFail($id);
+
+        return view('ikan.edit', compact('ikan'));
+    }
+
     public function update(Request $request, $id)
     {
         abort_unless(auth()->user()?->isAdmin(), 403);
 
         $ikan = Ikan::findOrFail($id);
 
-        if (!auth()->user()->isAdmin() && auth()->id() !== $ikan->created_by) {
-            abort(403);
-        }
-
         $validated = $request->validate([
             'nama'              => 'required|string|max:255',
-            'deskripsi'         => 'nullable|string',
-            'habitat'           => 'nullable|string|max:255',
-            'karakteristik'     => 'nullable|string',
-            'status_konservasi' => 'nullable|string|max:100',
-            'fakta_unik'        => 'nullable|string',
+            'deskripsi'         => 'required|string',
+            'habitat'           => 'required|string|max:255',
+            'karakteristik'     => 'required|string',
+            'status_konservasi' => 'required|string|max:100',
+            'fakta_unik'        => 'required|string',
             'gambar'            => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ], [
-            'gambar.image' => 'File yang diunggah harus berupa gambar.',
-            'gambar.mimes' => 'Format gambar harus JPG, JPEG, atau PNG.',
-            'gambar.max'   => 'Ukuran gambar maksimal 2MB.',
+            'nama.required'              => 'Nama ikan wajib diisi.',
+            'deskripsi.required'         => 'Deskripsi wajib diisi.',
+            'habitat.required'           => 'Habitat wajib diisi.',
+            'karakteristik.required'     => 'Karakteristik wajib diisi.',
+            'status_konservasi.required' => 'Status konservasi wajib diisi.',
+            'fakta_unik.required'        => 'Fakta unik wajib diisi.',
+            'gambar.image'               => 'File yang diunggah harus berupa gambar.',
+            'gambar.mimes'               => 'Format gambar harus JPG, JPEG, atau PNG.',
+            'gambar.max'                 => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         $validated = SanitizationService::sanitizeArray($validated);
@@ -213,7 +221,7 @@ class IkanController extends Controller
 
         $ikan->update($validated);
 
-        return redirect()->route('ikan.show', $id)
+        return redirect()->route('ikan.show', $ikan->id_ikan)
             ->with('success', 'Fish updated successfully!');
     }
 
@@ -229,10 +237,7 @@ class IkanController extends Controller
 
         $ikan->delete();
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Fish deleted successfully',
-            'data'    => null,
-        ]);
+        return redirect()->route('ikan.index')
+            ->with('success', 'Fish deleted successfully!');
     }
 }
